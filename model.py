@@ -1,6 +1,7 @@
 """Models and database functions for project."""
-
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 
 db = SQLAlchemy()
 
@@ -22,7 +23,7 @@ class User(db.Model):
 
     def __repr__(self):
         """Provide better representation."""
-        return "<User id={} email={}>".format(self.id, self.email)
+        return "<User id={} fname={} email={}>".format(self.id, self.fname, self.email)
 
 
 
@@ -42,7 +43,7 @@ class Contact(db.Model):
 
     def __repr__(self):
         """Provide better representation."""
-        return "<Contact id={} name={}>".format(self.id, self.fname)
+        return "<Contact id={} name={}>".format(self.id, self.name)
 
 
 
@@ -54,15 +55,12 @@ class Event(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     contact_id = db.Column(db.Integer, db.ForeignKey('contacts.id'), nullable=False)
     template_id = db.Column(db.Integer, db.ForeignKey('templates.id'), nullable=False)
-    
-    # *** MAKE THIS DATETIME TYPE / or calendar feature later -- look it up *
-    date = db.Column(db.String(10), nullable=False)
-
+    #default date is tomorrow
+    date = db.Column(db.DateTime, default=(datetime.datetime.today() + datetime.timedelta(days=1)), nullable=False)
     # an event has one contact, and a contact can have multiple events
     contacts = db.relationship("Contact", secondary="contactsevents", backref="events")
-    
     # an event has one template, and a template can belong to multiple events
-    template = db.relationship("Template", backref=db.backref("events")) 
+    template = db.relationship("Template", backref=db.backref("events"))
 
     def __repr__(self):
         """Provide better representation."""
@@ -72,7 +70,7 @@ class Event(db.Model):
 class ContactEvent(db.Model):
     """Association table between contacts and events."""
 
-    __tablename__ = "contactevents"
+    __tablename__ = "contactsevents"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     contact_id = db.Column(db.Integer, db.ForeignKey('contacts.id'), nullable=False)
@@ -89,7 +87,7 @@ class Template(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
-    text = db.Column(db.String(1000), nullable=False)
+    text = db.Column(db.Text, nullable=False)
 
     
     def __repr__(self):
@@ -98,7 +96,7 @@ class Template(db.Model):
 
 
 class Input(db.Model):
-    """A template can have many inputs (will go into the text field of template). 
+    """A template can have many inputs (will go into the text field of template).
     An input can belong to many templates.
 
     name = 'memory', 
@@ -156,7 +154,8 @@ if __name__ == "__main__":
     # As a convenience, if we run this module interactively, it will leave
     # you in a state of being able to work with the database directly.
 
-    from server import app
+    # from server import app
+    app = Flask(__name__)
     connect_to_db(app)
     print "Connected to DB."
     db.create_all()
