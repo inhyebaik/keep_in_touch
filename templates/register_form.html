@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- allows user to sign in or register -->
+<h2>Register</h2>
+
+    <form action='/register', method='POST'>
+        Email: <input type='text' name='email' required><br>
+        Password: <input type='password' name='password' required><br>
+        First name: <input type='text' name='fname' required><br>
+        Last name: <input type='text' name='lname' required><br>
+        Phone: <input type='text' name='phone'><br>
+        <input type="submit" value="Sign Up">
+    </form>
+
+<br><br>
+
+<h2>Log in</h2>
+
+    <form action='/register', method='POST'>
+        Email: <input type='text' name='email' required><br>
+        Password: <input type='password' name='password' required><br>
+        <input type="submit" value="Log In">
+    </form>
+
+{% endblock %}
