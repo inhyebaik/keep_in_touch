@@ -37,9 +37,8 @@ class Contact(db.Model):
     email = db.Column(db.String(64), nullable=False)
     phone = db.Column(db.String(15))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    
     # A contact belongs to a user
-    user = db.relationship("User", backref=db.backref("contacts"))
+    user = db.relationship("User", backref=db.backref("contacts", order_by=id))
 
     def __repr__(self):
         """Provide better representation."""

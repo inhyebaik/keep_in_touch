@@ -6,9 +6,9 @@
     <title>Keep in Touch</title>
 </head>
 <body>
-  <ul>
+  <ul class='red'>
     {% for message in get_flashed_messages() %}
-      <li>{{ message }} </li>
+      <li> {{ message }} </li>
     {% endfor %}
   </ul>
   <h1>Keep in Touch</h1>
@@ -16,7 +16,7 @@
   {% if session.get('user_id') %}
         <a href="/logout">Log Out</a>
   {% else %}
-        <a href="/register">Log In or Register</a>
+        <a href="/register_login">Log In or Register</a>
   {% endif %}
   <hr>
 
