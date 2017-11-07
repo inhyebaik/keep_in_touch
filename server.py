@@ -92,7 +92,7 @@ def login_process():
         else:
             # if password doesn't match, redirect to register page
             flash("Wrong credentials -- Try again")
-            return redirect('/register')
+            return redirect('/register_login')
     else:
         # alert if email doesn't exist; prompt and redirect to register
         flash("Email does not exist in database: please register")

@@ -43,9 +43,6 @@ imemory = Input(name=np[2][0], prompt=np[2][1])
 isignoff = Input(name=np[3][0], prompt=np[3][1])
 db.session.add_all([igreet, ithank, imemory, isignoff])
 db.session.commit()
-# Need to add each in association table item in order to be able to call 
-# .templates on an input instance, and vice versa. 
-# Is there a way to automatically do so? (same for ContactEvent instances)
 # ADD TEMPLATEINPUT ASSOCIATIONS
 ti1 = TemplateInput(template_id=ty.id, input_id=igreet.id)
 ti2 = TemplateInput(template_id=ty.id, input_id=ithank.id)
