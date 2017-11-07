@@ -25,3 +25,17 @@
 // }
 
 // $('#genre-option').on('change', handleGenre);
+
+
+ // copied from http://jsfiddle.net/trixta/h7YdJ/ for calendar input on new event
+// webshims.setOptions('forms-ext', {
+//     replaceUI: 'auto',
+//     types: 'date'
+// });
+// webshims.polyfill('forms forms-ext');
+
+// $(function(){
+//     $('[type="date"].min-today').prop('min', function(){
+//         return new Date().toJSON().split('T')[0];
+//     });
+// });

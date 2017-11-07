@@ -26,7 +26,6 @@ q = random_quote(QUOTES)
 author = q[0]
 quote = q[1]
 
-
 @app.route('/')
 def index():
     """Homepage."""
@@ -121,6 +120,50 @@ def user_profile(user_id):
     """
     user = User.query.filter(User.id == user_id).one()
     return render_template("user_profile.html", user=user, author=author,  quote=quote)
+
+
+@app.route('/add_event')
+def add_event():
+    """Let logged in users add new event.""" 
+    user_id = session.get("user_id")
+    if user_id:
+        user = User.query.filter(User.id == user_id).one()
+        return render_template("event_form.html", user=user, author=author, quote=quote)
+    else:
+        flash("You must log in or register to add events")
+        return redirect("/register_login")
+
+
+@app.route('/add_event', methods=['POST'])
+def handle_event_form():
+    """Validates and adds new event to DB."""
+    # first need to add the contact and template before adding event 
+    name = request.form.get('contact_name')
+    email = request.form.get('contact_email')
+    phone = request.form.get('contact_phone')
+    user_id = session.get("user_id")
+    new_contact = Contact(name=name, email=email, phone=phone, user_id=user_id)
+    db.session.add(new_contact)
+    db.session.commit()
+
+    template_id = int(request.form.get('template_id'))
+
+    # add event
+    contact_id = new_contact.id
+    date = request.form.get('date')
+    new_event = Event(contact_id=contact_id, template_id=template_id, date=date)
+    print new_event
+    db.session.add(new_event)
+    db.session.commit()
+
+    # add ContactEvent association
+    new_ce = ContactEvent(contact_id=contact_id, event_id=new_event.id)
+    print new_ce
+    db.session.add(new_ce)
+    db.session.commit()
+    flash("You have successfully added a new event for {}!".format(name))
+    url = '/users/{}'.format(user_id)
+    return redirect(url)
 
 
 @app.route('/edit_event/<event_id>')

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2><u>Add Event</u></h2>
+<form id='newevent' action='/add_event', method='POST'>
+Contact's name: <input type='text' name='contact_name'> <br>
+Contact's email: <input type='email' name='contact_email'><br>
+Contact's phone: <input type='tel' name='contact_phone'><br>
+Template: 
+<select name='template_id'>
+<option value='1'>Follow Up</option>
+<option value='2'>Thank You</option>
+</select>
+<br>
+Date to be sent: <input type="date" name='date' class="min-today" id="min" placeholder="YYYY-MM-DD" data-date-split-input="true" />
+<br>
+<input type='submit' value='Add Event'>
+{% endblock %}
