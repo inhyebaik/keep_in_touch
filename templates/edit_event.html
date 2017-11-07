@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2><u>Event Details</u></h2>
+<form id='editevent'>
+
+Message type: <input type='text' name='template_name' value='{{event.template.name.title()}}'> <br> <br>
+
+Message: <br>
+<textarea name="template_text" form="editevent">{{event.template.text}}</textarea>
+
+<br><br>
+Recipient name: <input type='text' name='contact_name' value='{{event.contacts[0].name}}'> <br>
+
+Send to this address: <input type='text' name='contact_email' value='{{event.contacts[0].email}}'><br><br>
+To be sent on:  
+ <input type='text' name='event_date' value='{{ event.date }}'>
+<br><br>
+<input type="submit" value="Modify Details">
+</form>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>{{ user.fname}} {{user.lname}}'s profile</h2>
+Email: {{ user.email }}
+<br>
+Phone: {{ user.phone }}
+<br>
+
+<p class='green'> {{user.fname}}'s Events</p>
+<table cellspacing="15">
+    <tr>
+        <th><u>Contact Name</u></th>
+        <th><u>Email</u></th>
+        <th><u>Phone</u></th>
+        <th><u>Template</u></u></th>
+        <th><u>Date (to be sent)</u></th>
+        <th></th>
+    </tr>
+    <tr> 
+        
+    {% for contact in user.contacts %}
+    {% for event in contact.events %}
+        <td> {{ contact.name }} </td>
+        <td> {{ contact.email }}</td>
+        <td> {{ contact.phone }}</td>
+        <td> {{event.template.name}} message </td>
+        <td> {{ event.date}} </td>
+    <td><a href="/edit_event/{{event.id}}">view/modify</a></td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+</table>
+
+<br>
+<br>
+<a href="/add_event">Add a new event</a>
+
+{% endblock %}
