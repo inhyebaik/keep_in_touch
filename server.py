@@ -181,7 +181,6 @@ def handle_event_form():
     db.session.commit()
 
     flash("You have successfully added a new event for {}!".format(name))
-    # url = '/users/{}'.format(user_id)
     url = '/edit_event/{}'.format(new_event.id)
     # redirect them to add inputs to the message
     return redirect(url)
@@ -208,12 +207,18 @@ def handle_event_form():
 @app.route('/edit_event/<event_id>')
 def show_event(event_id):
     """Show specific event to view or modify"""
-    event = Event.query.filter(Event.id == event_id).one()
-    user_id = session.get("user_id")
-    user = User.query.filter(User.id == user_id).one()
 
-    return render_template("edit_event.html", event=event, 
-        user=user, author=author, quote=quote)
+    # make sure the user is logged in
+    user_id = session.get("user_id")
+    if user_id:
+        user = User.query.filter(User.id == user_id).one()
+        event = Event.query.filter(Event.id == event_id).first()
+        return render_template("edit_event.html", event=event, user=user, author=author, quote=quote)
+    else:
+        flash("You must log in or register to modify events")
+        return redirect("/register_login")
+
+
 
 
 if __name__ == "__main__":

@@ -38,7 +38,7 @@ def example_data():
     db.session.add_all([ce1, ce2, ce3, ce4])
     db.session.commit()
     # ADD INPUTS
-    np = [ ["greet", "Hello!"],
+    np = [ ["greet", "Hello"],
             ["body", "Thank you for meeting with me"],  
             ["sign_off", "Sincerely"] ]
     greet = Input(name=np[0][0], text=np[0][1])
