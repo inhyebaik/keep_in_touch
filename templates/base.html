@@ -3,9 +3,14 @@
 <head>
     <link rel="stylesheet" href="/static/styles.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <title>Ratings</title>
+    <title>Keep in Touch</title>
 </head>
 <body>
+  <ul>
+    {% for message in get_flashed_messages() %}
+      <li>{{ message }} </li>
+    {% endfor %}
+  </ul>
   <h1>Keep in Touch</h1>
 <!-- check if there's a session. If so, add link to log out, else log in -->
   {% if session.get('user_id') %}
@@ -16,11 +21,9 @@
   <hr>
 
   {% block content %} put your content here {% endblock %}
-  <ul>
-    {% for message in get_flashed_messages() %}
-      <li>{{ message }} </li>
-    {% endfor %}
-  </ul>
-<script src="/static/styles.js"></script>
+  
+
+
+<script src="/static/project.js"></script>
 </body>
 </html>

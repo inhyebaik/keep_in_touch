@@ -16,8 +16,8 @@ class User(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     email = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
-    fname = db.Column(db.String(20), nullable=False)
-    lname = db.Column(db.String(20), nullable=False)
+    fname = db.Column(db.String(20)) # make nullable=False after testing, for more refined log in/register page
+    lname = db.Column(db.String(20)) # make nullable=False after testing, for more refined log in/register page
     phone = db.Column(db.String(15))
 
 
@@ -159,8 +159,3 @@ if __name__ == "__main__":
     connect_to_db(app)
     print "Connected to DB."
     db.create_all()
-
-
-
-
-
