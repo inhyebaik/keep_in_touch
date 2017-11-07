@@ -50,3 +50,6 @@ let yyyy = today.getFullYear();
     if(mm<10){ mm='0'+mm } 
 today = yyyy+'-'+mm+'-'+dd;
 document.getElementById("neweventdate").setAttribute("min", today);
+document.getElementById("editeventdate").setAttribute("min", today)
+
+

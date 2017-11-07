@@ -111,6 +111,7 @@ def log_out():
     flash("You have successfully logged out!")
     return redirect("/")
 
+
 @app.route('/users/<user_id>')
 def user_profile(user_id):
     """Shows specific user's details
@@ -217,6 +218,34 @@ def show_event(event_id):
     else:
         flash("You must log in or register to modify events")
         return redirect("/register_login")
+
+
+@app.route('/edit_event', methods=['POST'])
+def modify_db():
+    """Allow user to change input fields that will go into DB."""
+    
+    user_id = session.get("user_id")
+    event_id = request.form.get(event_id)
+    contact_id = request.form.get(contact_id)
+
+    user = User.query.filter(User.id == user_id).one()
+    event = Event.query.filter(Event.id == event_id).one()
+    contact = Contact.query.filter(Contact.id == contact_id).one()
+
+    # modify table attributes with form inputs
+    event.template.id = request.form('template_id')
+    contact.name = request.form.get('contact_name')
+    event.template.text = request.form.get('template_text')
+    contact.email = request.form.get('contact_email')
+    contact.phone = request.form.get('contact_phone')
+    event.date = request.form.get('date')
+    
+    db.session.commit()
+    flash("Your event/contact has been modified")
+    
+    # redirect to the user's info page
+    url = '/users/{}'.format(new_user.id)
+    return redirect(url)
 
 
 

@@ -2,27 +2,38 @@
 {% block content %}
 
 <h2><u>Event Details</u></h2>
-<form id='editevent'>
 
-Message type: <input type='text' name='template_name' value='{{event.template.name.title()}}'> <br> <br>
+<form id='editevent' action='/edit_event', method='POST'>
 
-Recipient name: <input type='text' name='contact_name' value='{{event.contacts[0].name}}'> <br>
+<input type='hidden' name='event_id' value='{{ event.id }}'>
+<input type='hidden' name='contact_id' value='{{ event.contacts[0].id }}'>
 
+Contact name: <input type='text' name='contact_name' value='{{event.contacts[0].name}}' required> <br>
+
+Template: 
+    <select name='template_id'>
+        <option value='1'>Follow Up</option>
+        <option value='2'>Thank You</option>
+    </select> <br> <br>
+    
+    
 Message: <br>
-    <textarea name="template_text" form="editevent">
+<textarea name="template_text" form="editevent">
+{{ event.template.inputs[0].text}} {{ event.contacts[0].name.title() }}, 
 
-        {{ event.template.inputs[0].text}} {{ event.contacts[0].name.title() }}, 
+{{ event.template.inputs[1].text }} 
 
-        {{ event.template.inputs[1].text }} 
+{{ event.template.inputs[2].text }}, 
+{{ user.fname }} {{ user.lname }}
+</textarea><br><br>
 
-        {{ event.template.inputs[2].text }}, 
-        {{ user.fname }} {{ user.lname }}
 
-    </textarea>
+Contact's email: <input type='email' name='contact_email' value='{{event.contacts[0].email}}' required><br>
 
-<br><br>
-Send to this address: <input type='text' name='contact_email' value='{{event.contacts[0].email}}'><br><br>
-To be sent on: <input type='text' name='event_date' value='{{ event.date }}'> <br><br>
+Contact's phone: <input type='tel' name='contact_phone' value='{{event.contacts[0].phone}}'> <br>
+
+Date to be sent: {{ event.date }} <input type="date" name='date' min="" class="min-today" id="editeventdate" placeholder="YYYY-MM-DD" data-date-split-input="true" required/><br><br>
+
 <input type="submit" value="Modify Details">
 </form>
 
