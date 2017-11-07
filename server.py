@@ -8,7 +8,8 @@ from flask_sqlalchemy import SQLAlchemy
 from model import (User, Event, ContactEvent, Contact, Template, TemplateInput,
                    Input, db, connect_to_db)
 import datetime
-
+import random
+from quotes import *
 
 app = Flask(__name__)
 # app.config['JSON_SORT_KEYS'] = False
@@ -21,11 +22,15 @@ app.secret_key = "ABC"
 # error.
 app.jinja_env.undefined = StrictUndefined
 
+q = random_quote(QUOTES)
+author = q[0]
+quote = q[1]
+
+
 @app.route('/')
 def index():
     """Homepage."""
-
-    return render_template("homepage.html")
+    return render_template("homepage.html", author=author, quote=quote)
 
 
 @app.route('/users')
@@ -33,14 +38,14 @@ def user_list():
     """Show list of users."""
 
     users = User.query.all()
-    return render_template("user_list.html", users=users)
+    return render_template("user_list.html", users=users, author=author, quote=quote)
 
 
 @app.route('/register_login')
 def register_form():
     """Prompts user to register/sign in"""
 
-    return render_template("register_login_form.html")
+    return render_template("register_login_form.html", author=author, quote=quote)
 
 
 @app.route('/register', methods=['POST'])
@@ -115,14 +120,14 @@ def user_profile(user_id):
     Shows user's events list
     """
     user = User.query.filter(User.id == user_id).one()
-    return render_template("user_profile.html", user=user)
+    return render_template("user_profile.html", user=user, author=author,  quote=quote)
 
 
 @app.route('/edit_event/<event_id>')
 def show_event(event_id):
     """Show specific event to view or modify"""
     event = Event.query.filter(Event.id == event_id).one()
-    return render_template("edit_event.html", event=event)
+    return render_template("edit_event.html", event=event, author=author,  quote=quote)
 
 
 if __name__ == "__main__":

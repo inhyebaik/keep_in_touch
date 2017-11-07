@@ -2,6 +2,16 @@ body {
     font-family: sans-serif;
 }
 
+footer {
+    font-size: 13px;
+   position: absolute;
+   padding: 8px;
+   bottom:0;
+   width:90%;
+   height:60px;   /* Height of the footer */
+   background: lightGray;
+}
+
 h1 {
     color: blue;
     font-weight: bold;
@@ -23,6 +33,7 @@ td a {
     font-size: 12px;
     font-weight: bold;
 }
+
 
 .red {
     color: red;
