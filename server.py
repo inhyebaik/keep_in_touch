@@ -137,7 +137,8 @@ def add_event():
 @app.route('/add_event', methods=['POST'])
 def handle_event_form():
     """Validates and adds new event to DB."""
-    # first need to add the contact and template before adding event 
+    
+    # first add the contact and template before adding event 
     name = request.form.get('contact_name')
     email = request.form.get('contact_email')
     phone = request.form.get('contact_phone')
@@ -152,25 +153,67 @@ def handle_event_form():
     contact_id = new_contact.id
     date = request.form.get('date')
     new_event = Event(contact_id=contact_id, template_id=template_id, date=date)
-    print new_event
     db.session.add(new_event)
     db.session.commit()
 
     # add ContactEvent association
-    new_ce = ContactEvent(contact_id=contact_id, event_id=new_event.id)
-    print new_ce
-    db.session.add(new_ce)
+    ce = ContactEvent(contact_id=contact_id, event_id=new_event.id)
+    db.session.add(ce)
     db.session.commit()
+
+    # get inputs from form
+    greet_val = request.form.get('greet')
+    body_val = request.form.get('body')
+    sign_off_val = request.form.get('sign_off')
+
+    # instantiate new inputs; add inputs to session
+    igreet = Input(name='greet', text=greet_val)
+    ibody = Input(name='body', text=body_val)
+    isign_off = Input(name='sign_off', text=sign_off_val)
+    db.session.add_all([igreet, ibody, isign_off])
+    db.session.commit()
+
+    # add TemplateInput association
+    ti1 = TemplateInput(template_id=template_id, input_id=igreet.id)
+    ti2 = TemplateInput(template_id=template_id, input_id=ibody.id)
+    ti3 = TemplateInput(template_id=template_id, input_id=isign_off.id)
+    db.session.add_all([ti1, ti2, ti3])
+    db.session.commit()
+
     flash("You have successfully added a new event for {}!".format(name))
-    url = '/users/{}'.format(user_id)
+    # url = '/users/{}'.format(user_id)
+    url = '/edit_event/{}'.format(new_event.id)
+    # redirect them to add inputs to the message
     return redirect(url)
+
+
+# @app.route('/handle_inputs', methods=['POST'])
+# def handle_inputs():
+#     """Adds inputs to database."""
+
+#     template_id = request.form.get('template_id')
+#     greet = request.form.get('greet')
+#     body = request.form.get('template_text')
+#     sign_off = request.form.get('sign_off')
+
+#     new_input = Input(greet=greet, body=body, sign_off=sign_off)
+#     db.session.add(new_input)
+#     db.session.commit()
+
+#     new_ti = TemplateInput(input_id=new_input.id, template_id=template_id)
+#     db.session.add(new_ti)
+#     db.session.commit()
 
 
 @app.route('/edit_event/<event_id>')
 def show_event(event_id):
     """Show specific event to view or modify"""
     event = Event.query.filter(Event.id == event_id).one()
-    return render_template("edit_event.html", event=event, author=author,  quote=quote)
+    user_id = session.get("user_id")
+    user = User.query.filter(User.id == user_id).one()
+
+    return render_template("edit_event.html", event=event, 
+        user=user, author=author, quote=quote)
 
 
 if __name__ == "__main__":

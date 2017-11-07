@@ -104,7 +104,7 @@ class Input(db.Model):
            'body', 
            'sign_off'
 
-    prompt = 'how did you meet?', 
+    text = 'how did you meet?', 
              'how do you want to greet?', 
              'how do you want to sign off?', 
              'what do you want to follow up on?'
@@ -114,14 +114,15 @@ class Input(db.Model):
     __tablename__ = "inputs"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+        # greet, body, sign_off
     name = db.Column(db.String(64), nullable=False)
-    prompt = db.Column(db.String(500), nullable=False)
+    text = db.Column(db.String(500), nullable=False)
 
     templates = db.relationship("Template", secondary="templatesinputs", backref="inputs")
 
     def __repr__(self):
         """Provide better representation."""
-        return "<Input id={} name={} prompt={}>".format(self.id, self.name, self.prompt)
+        return "<Input id={} name={} text={}>".format(self.id, self.name, self.text)
 
 
 
