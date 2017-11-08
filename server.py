@@ -216,6 +216,19 @@ def modify_db():
     url = '/users/{}'.format(user.id)
     return redirect(url)
 
+@app.route('/remove_event', methods=['POST'])
+def remove_event():
+    """Delete record from DB."""
+
+    event_id = request.form.get('event_id')
+    ce = ContactEvent.query.filter(ContactEvent.event_id == event_id).delete()
+    Event.query.filter(Event.id == event_id).delete()
+    db.session.commit()
+
+    user_id = session['user_id']
+    flash("You have successfully deleted this event")
+    url = '/users/{}'.format(user_id)
+    return redirect(url)
 
 
 if __name__ == "__main__":

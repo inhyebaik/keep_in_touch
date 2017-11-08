@@ -1,7 +1,5 @@
 from sqlalchemy import func
-
-from model import (User, Event, ContactEvent, Contact, Template, TemplateInput,
-                   Input, db, connect_to_db)
+from model import User, Event, ContactEvent, Contact, Template, db, connect_to_db
 
 
 import datetime
