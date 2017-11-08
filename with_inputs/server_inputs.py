@@ -167,6 +167,24 @@ def handle_event_form():
     db.session.add(ce)
     db.session.commit()
 
+    # get inputs from form
+    # greet_val = request.form.get('greet')
+    # body_val = request.form.get('body')
+    # sign_off_val = request.form.get('sign_off')
+
+    # # instantiate new inputs; add inputs to session
+    # igreet = Input(name='greet', text=greet_val)
+    # ibody = Input(name='body', text=body_val)
+    # isign_off = Input(name='sign_off', text=sign_off_val)
+    # db.session.add_all([igreet, ibody, isign_off])
+    # db.session.commit()
+
+    # # add TemplateInput association
+    # ti1 = TemplateInput(template_id=new_template.id, input_id=igreet.id)
+    # ti2 = TemplateInput(template_id=new_template.id, input_id=ibody.id)
+    # ti3 = TemplateInput(template_id=new_template.id, input_id=isign_off.id)
+    # db.session.add_all([ti1, ti2, ti3])
+    # db.session.commit()
 
     flash("You have successfully added a new event for {}!".format(name))
     url = '/edit_event/{}'.format(new_event.id)

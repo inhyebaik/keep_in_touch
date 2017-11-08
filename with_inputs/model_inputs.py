@@ -45,7 +45,6 @@ class Contact(db.Model):
         return "<Contact id={} name={}>".format(self.id, self.name)
 
 
-
 class Event(db.Model):
     """Events table."""
 
@@ -94,46 +93,46 @@ class Template(db.Model):
         return "<Template id={} name={} text={}>".format(self.id, self.name, self.text)
 
 
-# class Input(db.Model):
-#     """A template can have many inputs (will go into the text field of template).
-#     An input can belong to many templates.
+class Input(db.Model):
+    """A template can have many inputs (will go into the text field of template).
+    An input can belong to many templates.
 
-#     name = 'memory', 
-#            'how_you_met', 
-#            'greeting', 
-#            'body', 
-#            'sign_off'
+    name = 'memory', 
+           'how_you_met', 
+           'greeting', 
+           'body', 
+           'sign_off'
 
-#     text = 'how did you meet?', 
-#              'how do you want to greet?', 
-#              'how do you want to sign off?', 
-#              'what do you want to follow up on?'
+    text = 'how did you meet?', 
+             'how do you want to greet?', 
+             'how do you want to sign off?', 
+             'what do you want to follow up on?'
 
-#     """
+    """
 
-#     __tablename__ = "inputs"
+    __tablename__ = "inputs"
 
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#         # greet, body, sign_off
-#     name = db.Column(db.String(64), nullable=False)
-#     text = db.Column(db.String(500), nullable=False)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+        # greet, body, sign_off
+    name = db.Column(db.String(64), nullable=False)
+    text = db.Column(db.String(500), nullable=False)
 
-#     templates = db.relationship("Template", secondary="templatesinputs", backref="inputs")
+    templates = db.relationship("Template", secondary="templatesinputs", backref="inputs")
 
-#     def __repr__(self):
-#         """Provide better representation."""
-#         return "<Input id={} name={} text={}>".format(self.id, self.name, self.text)
+    def __repr__(self):
+        """Provide better representation."""
+        return "<Input id={} name={} text={}>".format(self.id, self.name, self.text)
 
 
 
-# class TemplateInput(db.Model):
-#     """Association table between Templates and Inputs tables"""
+class TemplateInput(db.Model):
+    """Association table between Templates and Inputs tables"""
 
-#     __tablename__ = "templatesinputs"
+    __tablename__ = "templatesinputs"
 
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     template_id = db.Column(db.Integer, db.ForeignKey('templates.id'), nullable=False)
-#     input_id = db.Column(db.Integer, db.ForeignKey('inputs.id'), nullable=False)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    template_id = db.Column(db.Integer, db.ForeignKey('templates.id'), nullable=False)
+    input_id = db.Column(db.Integer, db.ForeignKey('inputs.id'), nullable=False)
 
     
 ##############################################################################

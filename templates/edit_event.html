@@ -1,40 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2><u>Event Details</u></h2>
+<h2><u>Edit Event Details</u></h2>
 
-<form id='editevent' action='/edit_event', method='POST'>
+<form action='/handle_edits', method='POST'>
 
 <input type='hidden' name='event_id' value='{{ event.id }}'>
 <input type='hidden' name='contact_id' value='{{ event.contacts[0].id }}'>
 
 Contact name: <input type='text' name='contact_name' value='{{event.contacts[0].name}}' required> <br>
-
-Template: 
+Contact's email: <input type='email' name='contact_email' value='{{event.contacts[0].email}}' required><br>
+Contact's phone: <input type='tel' name='contact_phone' value='{{event.contacts[0].phone}}'> <br>
+<br>
+<!-- Template: 
     <select name='template_id'>
         <option value='1'>Follow Up</option>
         <option value='2'>Thank You</option>
-    </select> <br> <br>
+    </select> <br>
+     -->
     
-    
-Message: <br>
-<textarea name="template_text" form="editevent">
-{{ event.template.inputs[0].text}} {{ event.contacts[0].name.title() }}, 
-
-{{ event.template.inputs[1].text }} 
-
-{{ event.template.inputs[2].text }}, 
-{{ user.fname }} {{ user.lname }}
-</textarea><br><br>
+Template Text: <br>
+<textarea name="template_text">
+Dear {{event.contacts[0].name}}, 
+{{event.template.text}}
+{{user.fname}}
+</textarea><br>
 
 
-Contact's email: <input type='email' name='contact_email' value='{{event.contacts[0].email}}' required><br>
+Date to be sent: <input type="date" name='date' min="" class="min-today" id="editeventdate" placeholder="YYYY-MM-DD" data-date-split-input="true" required/> originally set to {{ event.date }} <br><br>
 
-Contact's phone: <input type='tel' name='contact_phone' value='{{event.contacts[0].phone}}'> <br>
-
-Date to be sent: {{ event.date }} <input type="date" name='date' min="" class="min-today" id="editeventdate" placeholder="YYYY-MM-DD" data-date-split-input="true" required/><br><br>
-
-<input type="submit" value="Modify Details">
+<input type="submit" value="Modify Event/Contact">
 </form>
 
 

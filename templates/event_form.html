@@ -6,12 +6,6 @@
 Contact's name: <input type='text' name='contact_name' required> <br>
 Contact's email: <input type='email' name='contact_email' required><br>
 Contact's phone: <input type='tel' name='contact_phone'><br>
-Template: 
-    <select name='template_id'>
-    <option value='1'>Follow Up</option>
-    <option value='2'>Thank You</option>
-    </select>
-<br>
 Date to be sent: <input type="date" name='date' min="" class="min-today" id="neweventdate" placeholder="YYYY-MM-DD" data-date-split-input="true" required/>
 <br><br>
 
@@ -24,18 +18,26 @@ Date to be sent: <input type="date" name='date' min="" class="min-today" id="new
         </select> <br>
 
     
-    2. What do you want to thank them for?  <br><br>
-        <textarea name="body">Thank you for </textarea> <br><br>
-    
-    3. How do you want to sign off? 
+2. What do you want to thank them for?
+<input type='text' name='template_name' required>
+<br>
+
+3. What do you want them to know? <br>
+<input type='text' name='template_text' value="thank you for..." required>
+<!-- <textarea name="template_text">
+Thank you for
+</textarea>
+ -->
+<br>
+
+    4. How do you want to sign off? 
         <select name='sign_off'>
             <option value='sincerely'>Sincerely</option>
             <option value='yours'>Yours</option>
             <option value='best'>Best</option>
         </select> <br><br>
 
-
-<input type='submit' value='Add Contact, Event, Template, and Inputs'>
+<input type='submit' value='Add Contact, Event, and Message'>
 </form>
 
 
