@@ -16,10 +16,7 @@ app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC"
 
-# Normally, if you use an undefined variable in Jinja2, it fails
-# silently. This is horrible. Fix this so that, instead, it raises an
-# error.
-app.jinja_env.undefined = StrictUndefined
+app.jinja_env.undefined = StrictUndefined #raise error if you use undefined variable in Jinja2
 
 q = random_quote(QUOTES)
 author = q[0]
@@ -56,6 +53,7 @@ def register_process():
     fname = request.form.get('fname')
     lname = request.form.get('lname')
     phone = request.form.get('phone')
+    
     # fetch that user from DB as object
     db_user = User.query.filter(User.email == email).first()
 
@@ -86,19 +84,18 @@ def login_process():
     db_user = User.query.filter(User.email == email).first()
     # if that user exists in DB:
     if db_user:
-        # verify password, redirect to their user info page;
-        # add user_id to the session
+        # verify password; redirect to their profile
         if db_user.password == password:
-            session['user_id'] = db_user.id
+            session['user_id'] = db_user.id # add user_id to the session
             flash("You have successfully logged in!")
             url = '/users/{}'.format(db_user.id)
             return redirect(url)
         else:
-            # if password doesn't match, redirect to register page
+            # if password doesn't match, redirect to register/login
             flash("Wrong credentials -- Try again")
             return redirect('/register_login')
     else:
-        # alert if email doesn't exist; prompt and redirect to register
+        # alert if email doesn't exist; prompt and redirect to register/login
         flash("Email does not exist in database: please register")
         return redirect('/register_login')
 
@@ -169,7 +166,7 @@ def handle_event_form():
     db.session.add(ce)
     db.session.commit()
 
-
+    # redirect to edit_event page 
     flash("You have successfully added a new event for {}!".format(name))
     url = '/edit_event/{}'.format(new_event.id)
     return redirect(url)
