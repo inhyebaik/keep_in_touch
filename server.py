@@ -5,8 +5,7 @@ from flask import (Flask, render_template, redirect, request, flash, session,
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 
-from model import (User, Event, ContactEvent, Contact, Template, TemplateInput,
-                   Input, db, connect_to_db)
+from model import (User, Event, ContactEvent, Contact, Template, db, connect_to_db)
 import datetime
 import random
 from quotes import *
@@ -29,6 +28,7 @@ quote = q[1]
 @app.route('/')
 def index():
     """Homepage."""
+
     return render_template("homepage.html", author=author, quote=quote)
 
 
@@ -115,7 +115,6 @@ def log_out():
 @app.route('/users/<user_id>')
 def user_profile(user_id):
     """Shows specific user's details
-
     Shows user's contacts list
     Shows user's events list
     """
@@ -125,7 +124,8 @@ def user_profile(user_id):
 
 @app.route('/add_event')
 def add_event():
-    """Let logged in users add new event.""" 
+    """Let logged in users go to the new event form.""" 
+    
     user_id = session.get("user_id")
     if user_id:
         user = User.query.filter(User.id == user_id).one()
@@ -137,9 +137,11 @@ def add_event():
 
 @app.route('/add_event', methods=['POST'])
 def handle_event_form():
-    """Validates and adds new event to DB."""
+    """Validates and adds new event and template to DB."""
     
-    # first add the contact and template before adding event 
+    # Need to add the contact and template before creating an event 
+
+    # add contact
     name = request.form.get('contact_name')
     email = request.form.get('contact_email')
     phone = request.form.get('contact_phone')
@@ -148,7 +150,7 @@ def handle_event_form():
     db.session.add(new_contact)
     db.session.commit()
 
-    # template_id = int(request.form.get('template_id'))
+    # add template
     template_name = request.form.get('template_name')
     template_text = request.form.get('template_text')
     new_template = Template(name=template_name, text=template_text)
@@ -170,7 +172,6 @@ def handle_event_form():
 
     flash("You have successfully added a new event for {}!".format(name))
     url = '/edit_event/{}'.format(new_event.id)
-    # redirect them to add inputs to the message
     return redirect(url)
 
 
@@ -192,29 +193,28 @@ def show_event(event_id):
 @app.route('/handle_edits', methods=['POST'])
 def modify_db():
     """Allow user to change input fields that will go into DB."""
-    user_id = session.get("user_id")
-    # import pdb; pdb.set_trace()
-    event_id = int(request.form.get('event_id'))
-    # contact_id = int(request.form.get(contact_id))
 
+    # get user and event primary keys we are modifying for 
+    user_id = session.get("user_id")
+    event_id = int(request.form.get('event_id'))
+
+    # get the user, event, and contact objects we are modifying for
     user = User.query.filter(User.id == user_id).one()
     event = Event.query.filter(Event.id == event_id).one()
     contact = Contact.query.filter(Contact.id == event.contact_id).one()
 
-    # modify table attributes with form inputs
+    # update contact, event, template objects in the DB
     contact.name = request.form.get('contact_name')
     event.template.text = request.form.get('template_text')
     contact.email = request.form.get('contact_email')
     contact.phone = request.form.get('contact_phone')
     event.date = request.form.get('date')
-    
     db.session.commit()
-    flash("Your event/contact has been modified")
+    flash("Your event/contact has been modified successfully!")
     
-    # redirect to the user's info page
+    # redirect user to their profile
     url = '/users/{}'.format(user.id)
     return redirect(url)
-
 
 
 

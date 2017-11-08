@@ -1,7 +1,7 @@
 from model import User, Event, ContactEvent, Contact, Template, TemplateInput, Input, db
 import datetime
 
-
+# currently this is basically the seed file with input tables
 # ADD USERS
 jane = User(email='j@gmail.com', password='a', fname='Jane', lname='Hacks')
 bob = User(email='h@gmail.com', password='a', fname='Bob', lname='Baller')
