@@ -3,12 +3,12 @@ body {
 }
 
 footer {
-    font-size: 13px;
-   position: absolute;
+    font-size: 12px;
+    font-family: monospace;
+   position: relative;
    padding: 2px;
    bottom:0;
    width:80%;
-   height:50px;   /* Height of the footer */
    background: lightGray;
 }
 

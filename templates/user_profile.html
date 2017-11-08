@@ -7,6 +7,21 @@ Email: {{ user.email }}
 Phone: {{ user.phone }}
 <br>
 
+<!-- Contacts list, with events -->
+<p class='green'> People {{user.fname}} Will Keep in Touch With</p>
+<ol> {% for contact in user.contacts %}
+    <li> 
+        {{ contact.name }} 
+        <a href="/remove_contact/{{contact.id}}" style='font-size: 12px'><b>delete contact and events</b></a> 
+    </li> 
+        <ul> {% for event in contact.events %}
+            <li>{{ event.template.name }} ({{event.date}}) <a href="/edit_event/{{event.id}}" style='font-size: 12px'><b>view/modify event</b></a></li>
+        {% endfor %} 
+        </ul>
+    {% endfor %}
+</ol>
+
+<!-- Table of events -->
 <p class='green'> {{user.fname}}'s Events</p>
 <table cellspacing="15">
     <tr>
@@ -15,10 +30,9 @@ Phone: {{ user.phone }}
         <th><u>Phone</u></th>
         <th><u>Template</u></u></th>
         <th><u>Date (to be sent)</u></th>
-        <th></th>
+        <th></th> <!-- "empty" row for view/modify link for each event  -->
     </tr>
     <tr> 
-        
     {% for contact in user.contacts %}
     {% for event in contact.events %}
         <td> {{ contact.name }} </td>
@@ -26,7 +40,7 @@ Phone: {{ user.phone }}
         <td> {{ contact.phone }}</td>
         <td> {{event.template.name}} message </td>
         <td> {{ event.date}} </td>
-    <td><a href="/edit_event/{{event.id}}">view/modify</a></td>
+        <td><a href="/edit_event/{{event.id}}">view/modify event</a></td>
     </tr>
     {% endfor %}
     {% endfor %}
@@ -34,6 +48,6 @@ Phone: {{ user.phone }}
 
 <br>
 <br>
-<a href="/add_event">Add a new event</a>
+<a href="/add_event"> <b>Add a new event</b></a>
 
 {% endblock %}
