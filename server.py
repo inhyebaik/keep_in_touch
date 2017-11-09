@@ -214,26 +214,37 @@ def modify_db():
 @app.route('/remove_event', methods=['POST'])
 def remove_event():
     """Delete event (but not the contact) from DB."""
+   
+    user_id = session.get("user_id")
+    if user_id:
+        # get event_id from hidden input;  
+        event_id = request.form.get('event_id')
+        # delete ContactEvent association table link 
+        ContactEvent.query.filter(ContactEvent.event_id == event_id).delete()
+        # and then delete the Event
+        Event.query.filter(Event.id == event_id).delete()
+        db.session.commit()
+        flash("You have successfully deleted this event")
+        url = '/users/{}'.format(user_id)
+        return redirect(url)
+    else:
+        flash("You must log in or register to remove events")
+        return redirect("/register_login")
 
-    # get event_id from hidden input;  
-    event_id = request.form.get('event_id')
-    # delete ContactEvent association table link 
-    ContactEvent.query.filter(ContactEvent.event_id == event_id).delete()
-    # and then delete the Event
-    Event.query.filter(Event.id == event_id).delete()
-    db.session.commit()
-
-    user_id = session['user_id']
-    flash("You have successfully deleted this event")
-    url = '/users/{}'.format(user_id)
-    return redirect(url)
 
 @app.route('/remove_contact/<contact_id>')
 def confirm(contact_id):
     """Confirmation page to delete contact and their events)"""
     
-    contact = Contact.query.get(contact_id)
-    return render_template('confirm_delete_contact.html', contact=contact, author=author, quote=quote)
+    user_id = session.get("user_id")
+    if user_id:
+        contact = Contact.query.get(contact_id)
+        return render_template('confirm_delete_contact.html', contact=contact, author=author, quote=quote)
+    else:
+        flash("You must log in or register to remove contacts")
+        return redirect("/register_login")  
+
+    
     
 @app.route('/remove_contact', methods=['POST'])
 def remove_contact():
@@ -243,16 +254,16 @@ def remove_contact():
     contact_id = request.form.get('contact_id')
     # delete the ContactEvent association 
     ContactEvent.query.filter(ContactEvent.contact_id == contact_id).delete()
-    # delete the Contact
-    Contact.query.filter(Contact.id == contact_id).delete()
     # delete their Events
     Event.query.filter(Event.contact_id == contact_id).delete()
+    # delete the Contact
+    Contact.query.filter(Contact.id == contact_id).delete()
     
     ####### delete Templates
     
     db.session.commit()
     flash("You have successfully deleted this contact")
-    user_id = session['user_id']
+    user_id = session.get('user_id')
     url = '/users/{}'.format(user_id)
     return redirect(url)
 
