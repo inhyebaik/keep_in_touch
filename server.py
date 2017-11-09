@@ -174,11 +174,10 @@ def handle_event_form():
 def show_event(event_id):
     """Show specific event to view or modify"""
 
-    # make sure the user is logged in
-    user_id = session.get("user_id")
+    user_id = session.get("user_id") # make sure the user is logged in
     if user_id:
         user = User.query.get(user_id)
-        event = Event.query.filter(Event.id == event_id).first()
+        event = Event.query.get(event_id)
         return render_template("edit_event.html", event=event, user=user, author=author, quote=quote)
     else:
         flash("You must log in or register to modify events")
@@ -187,15 +186,15 @@ def show_event(event_id):
 
 @app.route('/handle_edits', methods=['POST'])
 def modify_db():
-    """Allow user to change input fields that will go into DB."""
+    """Allow user to change event and template that will go into DB."""
 
     # get user and event primary keys we are modifying for 
     user_id = session.get("user_id")
     event_id = int(request.form.get('event_id'))
 
     # get the user, event, and contact objects we are modifying for
-    user = User.query.filter(User.id == user_id).one()
-    event = Event.query.filter(Event.id == event_id).one()
+    user = User.query.get(user_id)
+    event = Event.query.get(event_id)
     contact = Contact.query.filter(Contact.id == event.contact_id).one()
 
     # update contact, event, template objects in the DB
@@ -234,7 +233,7 @@ def remove_event():
 
 @app.route('/remove_contact/<contact_id>')
 def confirm(contact_id):
-    """Confirmation page to delete contact and their events)"""
+    """Confirmation page to delete contact (and their events and templates) from DB."""
     
     user_id = session.get("user_id")
     if user_id:
@@ -248,25 +247,42 @@ def confirm(contact_id):
     
 @app.route('/remove_contact', methods=['POST'])
 def remove_contact():
-    """Delete contact (and their events) from DB."""
+    """Delete contact (and their events, and templates) from DB."""
     
-    # get contact_id from hidden input; 
-    contact_id = request.form.get('contact_id')
-    # delete the ContactEvent association 
-    ContactEvent.query.filter(ContactEvent.contact_id == contact_id).delete()
-    # delete their Events
-    Event.query.filter(Event.contact_id == contact_id).delete()
-    # delete the Contact
-    Contact.query.filter(Contact.id == contact_id).delete()
-    
-    ####### delete Templates
-    
-    db.session.commit()
-    flash("You have successfully deleted this contact")
-    user_id = session.get('user_id')
-    url = '/users/{}'.format(user_id)
-    return redirect(url)
+    user_id = session.get("user_id")
+    if user_id:
+        # get contact_id from hidden input; 
+        contact_id = request.form.get('contact_id')
+        # delete the ContactEvent association 
+        ContactEvent.query.filter(ContactEvent.contact_id == contact_id).delete()
+        
+        #### delete their Events and their templates    
 
+        events = Event.query.filter(Event.contact_id == contact_id).all()
+
+        # delete the template for each event
+        for event in events:
+            template_id = event.template.id
+            Event.query.filter(Event.id == event.id).delete()
+            Template.query.filter(Template.id == template_id).delete()
+            db.session.commit()
+
+        # delete the events
+        Event.query.filter(Event.contact_id == contact_id).delete()
+        db.session.commit()
+
+        # delete the Contact
+        Contact.query.filter(Contact.id == contact_id).delete()
+        db.session.commit()
+
+        flash("You have successfully deleted this contact")
+        user_id = session.get('user_id')
+        url = '/users/{}'.format(user_id)
+        return redirect(url)
+    else:
+        flash("You must log in or register to remove contacts")
+        return redirect("/register_login")  
+    
 
 
 if __name__ == "__main__":
