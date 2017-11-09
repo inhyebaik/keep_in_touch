@@ -53,13 +53,11 @@ class Event(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     contact_id = db.Column(db.Integer, db.ForeignKey('contacts.id'), nullable=False)
-    template_id = db.Column(db.Integer, db.ForeignKey('templates.id'), nullable=False)
     #default date is tomorrow
     date = db.Column(db.DateTime, default=(datetime.datetime.today() + datetime.timedelta(days=1)), nullable=False)
     # an event has one contact, and a contact can have multiple events
     contacts = db.relationship("Contact", secondary="contactsevents", backref="events")
-    # an event has one template, and a template can belong to multiple events
-    template = db.relationship("Template", backref=db.backref("events"))
+    
 
     def __repr__(self):
         """Provide better representation."""
@@ -87,6 +85,8 @@ class Template(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     text = db.Column(db.Text, nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
+    event = db.relationship("Event", backref=db.backref("template"))
 
     
     def __repr__(self):
