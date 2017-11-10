@@ -6,9 +6,9 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 
 from model import (User, Event, ContactEvent, Contact, Template, db, connect_to_db)
-import datetime
 import random
 from quotes import *
+
 
 app = Flask(__name__)
 # app.config['JSON_SORT_KEYS'] = False
@@ -289,6 +289,7 @@ def remove_contact():
         flash("You must log in or register to remove contacts")
         return redirect("/register_login")  
     
+
 
 
 if __name__ == "__main__":
