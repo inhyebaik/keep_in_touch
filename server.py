@@ -145,9 +145,15 @@ def handle_event_form():
     db.session.add(new_contact)
     db.session.commit()
 
+    # get inputs from form for template text
+    greet = request.form.get('greet')
+    sign_off = request.form.get('sign_off')
+    body = request.form.get('contact_name')
+    user_fname = User.query.get(user_id).fname
+    template_text = "{} {} \n {} \n{},\n{}".format(greet, name, body, sign_off, user_fname)
+
     # add template
     template_name = request.form.get('template_name')
-    template_text = request.form.get('template_text')
     new_template = Template(name=template_name, text=template_text)
     db.session.add(new_template)
     db.session.commit()
@@ -178,6 +184,7 @@ def show_event(event_id):
     if user_id:
         user = User.query.get(user_id)
         event = Event.query.get(event_id)
+
         return render_template("edit_event.html", event=event, user=user, author=author, quote=quote)
     else:
         flash("You must log in or register to modify events")
@@ -204,10 +211,10 @@ def modify_db():
     contact.phone = request.form.get('contact_phone')
     event.date = request.form.get('date')
     db.session.commit()
-    flash("Your event/contact has been modified successfully!")
     
+    flash("Your event/contact has been modified successfully! We'll remind you on {}".format(event.date))
     # redirect user to their profile
-    url = '/users/{}'.format(user.id)
+    url = '/users/{}'.format(user_id)
     return redirect(url)
 
 @app.route('/remove_event', methods=['POST'])
@@ -250,29 +257,28 @@ def remove_contact():
     """Delete contact (and their events, and templates) from DB."""
     
     user_id = session.get("user_id")
-    if user_id:
-        # get contact_id from hidden input; 
-        contact_id = request.form.get('contact_id')
+    contact_id = request.form.get('contact_id')
+
+    if user_id: 
         # delete the ContactEvent association 
         ContactEvent.query.filter(ContactEvent.contact_id == contact_id).delete()
         
         #### delete their Events and their templates    
-
         events = Event.query.filter(Event.contact_id == contact_id).all()
-
-        # delete the template for each event
+        # get the template ids for all of the events for that one contact
+        template_ids = []
         for event in events:
-            template_id = event.template.id
-            Event.query.filter(Event.id == event.id).delete()
-            Template.query.filter(Template.id == template_id).delete()
-            db.session.commit()
-
+            template_ids.append(event.template.id)
         # delete the events
         Event.query.filter(Event.contact_id == contact_id).delete()
         db.session.commit()
+        # delete the templates
+        for template_id in template_ids:
+            Template.query.filter(Template.id == template_id).delete()
+            db.session.commit()
 
-        # delete the Contact
-        Contact.query.filter(Contact.id == contact_id).delete()
+        # delete the contact
+        Contact.query.get(contact_id).delete()
         db.session.commit()
 
         flash("You have successfully deleted this contact")

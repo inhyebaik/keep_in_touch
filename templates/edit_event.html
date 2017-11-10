@@ -10,27 +10,21 @@
 
 Contact name: <input type='text' name='contact_name' value='{{event.contacts[0].name}}' required> <br>
 Contact's email: <input type='email' name='contact_email' value='{{event.contacts[0].email}}' required><br>
-Contact's phone: <input type='tel' name='contact_phone' value='{{event.contacts[0].phone}}'> <br>
-<br>
-<!-- Template: 
-    <select name='template_id'>
-        <option value='1'>Follow Up</option>
-        <option value='2'>Thank You</option>
-    </select> <br>
-     -->
-    
-Template Text: <br>
-<textarea name="template_text">
-Dear {{event.contacts[0].name}}, 
-{{event.template.text}}
-{{user.fname}}
-</textarea><br>
+Contact's phone: <input type='tel' name='contact_phone' value='{{event.contacts[0].phone}}'> <br><br>
+
+Template name: <input type='text' name='template_name' value='{{event.template.name}}'> <br>
+Template Text: <br><textarea name="template_text">{{event.template.text}}</textarea><br>
 
 
-Date to be sent: <input type="date" name='date' min="" class="min-today" id="editeventdate" placeholder="YYYY-MM-DD" data-date-split-input="true" required/> originally set to {{ event.date }} <br><br>
+Date to be sent: 
+
+<input type="date" name='date' class="datefield" min="" max="" value="{{event.date.year}}-{{ event.date.month}}-{{ event.date.day}}" data-date-split-input="true" required/>
+
+<br><br>
 
 <input type="submit" value="Modify Event/Contact">
 </form>
+
 
 <form action="/remove_event" method='POST'>
     <input type='hidden' name='event_id' value='{{ event.id }}'>

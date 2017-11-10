@@ -6,7 +6,7 @@
 Contact's name: <input type='text' name='contact_name' required> <br>
 Contact's email: <input type='email' name='contact_email' required><br>
 Contact's phone: <input type='tel' name='contact_phone'><br>
-Date to be sent: <input type="date" name='date' min="" class="min-today" id="neweventdate" placeholder="YYYY-MM-DD" data-date-split-input="true" required/>
+Date to be sent: <input type="date" name='date' class="datefield"min="" max="" id="neweventdate" data-date-split-input="true" required/>
 <br><br>
 
 <h3>Add Input to the Message: </h3>
@@ -18,16 +18,16 @@ Date to be sent: <input type="date" name='date' min="" class="min-today" id="new
         </select> <br>
 
     
-2. What do you want to thank them for?
+2. What's the subject or purpose of this message? (Keep it short!)
 <input type='text' name='template_name' required>
 <br>
 
 3. What do you want them to know? <br>
-<input type='text' name='template_text' value="thank you for..." required>
-<!-- <textarea name="template_text">
-Thank you for
+<!-- <input type='text' name='template_text' value="thank you for..." required> -->
+<textarea name="body">
+Thank you for...
 </textarea>
- -->
+ 
 <br>
 
     4. How do you want to sign off? 
