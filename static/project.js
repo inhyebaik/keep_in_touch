@@ -3,7 +3,6 @@
 
 // ensure event dates are today or in the future
 let today = new Date();
-// debugger;
 let dd = today.getDate();
 let mm = today.getMonth()+1; //January is 0!
 let yyyy = today.getFullYear();
