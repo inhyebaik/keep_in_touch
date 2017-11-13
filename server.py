@@ -9,6 +9,10 @@ from model import (User, Event, ContactEvent, Contact, Template, db, connect_to_
 import random
 from quotes import *
 
+import time, datetime
+import schedule
+
+
 
 app = Flask(__name__)
 # app.config['JSON_SORT_KEYS'] = False
