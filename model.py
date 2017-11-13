@@ -243,7 +243,7 @@ def send_email(event):
 
 def remind_user(event):
     """Email user of event coming up."""
-    
+    import pdb; pdb.set_trace()
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     to_email = event.contacts[0].user.email
     to_name = event.contacts[0].user.fname
@@ -309,10 +309,10 @@ def job():
     remind_all_users(events)
     send_all_emails(events)
 
-
 # schedule.every().day.at("00:00").do(job)
-schedule.every().day.at("23:15").do(job)
+
 # schedule.every(20).seconds.do(job)
+schedule.every().day.at("23:15").do(job)
 
 
 def connect_to_db(app, uri='postgresql:///project'):
