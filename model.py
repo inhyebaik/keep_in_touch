@@ -1,15 +1,13 @@
 """Models and database functions for project."""
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import datetime
 import time, datetime
 import schedule
 
 import sendgrid
 import json
 import os
-import time, datetime
-import schedule
+
 
 db = SQLAlchemy()
 
@@ -143,46 +141,10 @@ class Template(db.Model):
 #     input_id = db.Column(db.Integer, db.ForeignKey('inputs.id'), nullable=False)
 
     
+
 ##############################################################################
-# Helper functions
-
-
-def connect_to_db(app, uri='postgresql:///project'):
-    """Connect the database to our Flask app."""
-
-    # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = uri
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    db.app = app
-    db.init_app(app)
-
-
-if __name__ == "__main__":
-    # As a convenience, if we run this module interactively, it will leave
-    # you in a state of being able to work with the database directly.
-
-    # from server import app
-    app = Flask(__name__)
-    connect_to_db(app)
-    print "Connected to DB."
-    db.create_all()
-
-
-
-
-# def job():
-#     """Checks if there are any events today."""
-#     e = datetime.datetime(2017, 12, 30, 0, 0)
-#     todays_events = Event.query.filter(Event.date == e).all()
-#     return todays_events
-
-# schedule.every(5).seconds.do(job)
-
-# while True:
-#     schedule.run_pending()
-#     time.sleep(3)
-# schedule.every().day.at("00:00").do(return_todays_events)
-# schedule.every(3).seconds.do(return_todays_events)
+## for sending emails ##
+##############################################################################
 
 def return_todays_events():
     """Checks if there are any events today."""
@@ -208,25 +170,32 @@ def remind_all_users(events):
     """ Takes a list of today's events (Event objects) and sends out emails
         to the user 
     """ 
+    if events == []:
+        return "No events today"
+
     for event in events:
         remind_user(event)
 
 
 def send_all_emails(events):
     """ Takes a list of today's events (Event objects) and sends out emails 
-        to the contact
+        to the contacts
     """ 
+    if events == []:
+        return "No events today"
+        
     for event in events:
         send_email(event)
 
 
 def send_email(event):
-
+    """Send template text to contacts."""
+    
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     to_email = event.contacts[0].email
     to_name = event.contacts[0].name
 
-    from_name = event.contacts[0].user.fname + event.contacts[0].user.lname
+    from_name = event.contacts[0].user.fname 
     from_email = event.contacts[0].email
 
     subject = event.template.name
@@ -273,13 +242,15 @@ def send_email(event):
 
 
 def remind_user(event):
+    """Email user of event coming up."""
+    
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     to_email = event.contacts[0].user.email
     to_name = event.contacts[0].user.fname
     from_name = "Keep in Touch Team"
     from_email = "inb125@mail.harvard.edu"
     subject = "Reminder to Keep in Touch with {}".format(event.contacts[0].name)
-    message_text = "Just wanted to remind you that {} is coming up and we will send a {} for {} soon!".format(event.date, event.template.name, event.contacts[0].name)
+    message_text = "Just wanted to remind you that {} is coming up and we will send a {} message for {} soon!".format(event.date, event.template.name, event.contacts[0].name)
     data = {
       # "send_at": send_at_time, 
       "from": {
@@ -318,34 +289,54 @@ def remind_user(event):
 
 
 def convert_to_unix(timeobject):
-    """ Takes a datetime object and returns a unix timestamp"""
+    """ Takes a datetime object; returns a unix timestamp"""
     return time.mktime(timeobject.timetuple()) 
 
 
+# def job():
+#     """Schedule job instance"""
+#     # for testing
+#     e = datetime.datetime(2017, 11, 13, 0, 0)
+#     events = return_events(e)
+#     remind_all_users(events)
+#     send_all_emails(events)
+
+## for the real app, use today ##
+##################################
+def job():
+    """Schedule job instance"""
+    events = return_todays_events()
+    remind_all_users(events)
+    send_all_emails(events)
 
 
-# SendGrid stuff 
+# schedule.every().day.at("00:00").do(job)
+schedule.every().day.at("23:15").do(job)
+# schedule.every(20).seconds.do(job)
 
 
-def convert_to_unix():
-    """ Takes a datetime object and returns a unix timestamp in 3 seconds later"""
-    now = datetime.datetime.now()
-    # five seconds later
-    f = now + datetime.timedelta(seconds=5)
-    return time.mktime(f.timetuple()) 
+def connect_to_db(app, uri='postgresql:///project'):
+    """Connect the database to our Flask app."""
+
+    # Configure to use our PstgreSQL database
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db.app = app
+    db.init_app(app)
 
 
-def scheduled_events():
-    """ If the day is today, we set the email"""
+if __name__ == "__main__":
+    # As a convenience, if we run this module interactively, it will leave
+    # you in a state of being able to work with the database directly.
 
-    today = datetime.datetime.now()
-
-    if [event.date.day, event.date.month, event.date.year] == [today.day, today.month, today.year]:
-        send_at_time = convert_to_unix(event.date)
-
-        
-
-
-
-
+    # from server import app
+    app = Flask(__name__)
+    connect_to_db(app)
+    print "Connected to DB."
+    db.create_all()
+    
+    # for scheduling emails 
+    print datetime.datetime.now() # check what time it is in vagrant
+    while True: 
+        schedule.run_pending()
 

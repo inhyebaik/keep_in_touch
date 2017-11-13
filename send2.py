@@ -1,37 +1,29 @@
-import sendgrid
-import json
-import os
 import time, datetime
 import schedule
 
+import sendgrid
+import json
+import os
 
-# def job():
-#     """Checks if there are any events today."""
-#     e = datetime.datetime(2017, 12, 30, 0, 0)
-#     todays_events = Event.query.filter(Event.date == e).all()
-#     return todays_events
-
-# schedule.every(5).seconds.do(job)
-
-# while True:
-#     schedule.run_pending()
-#     time.sleep(3)
-# schedule.every().day.at("00:00").do(return_todays_events)
-# schedule.every(3).seconds.do(return_todays_events)
 
 def return_todays_events():
     """Checks if there are any events today."""
     t = datetime.datetime.now()
     today = datetime.datetime(t.year, t.month, t.day, 0, 0)
     todays_events = Event.query.filter(Event.date == today).all()
-    return todays_events
+    if todays_events == []:
+        return "No events!"
+    else:
+        return todays_events
 
 
 def return_events(date):
     """Checks if there are any events today."""
     todays_events = Event.query.filter(Event.date == date).all()
     if todays_events == []:
-    return todays_events
+        return "No events!"
+    else:
+        return todays_events
 
 
 def remind_all_users(events):
@@ -44,14 +36,15 @@ def remind_all_users(events):
 
 def send_all_emails(events):
     """ Takes a list of today's events (Event objects) and sends out emails 
-        to the contact
+        to the contacts
     """ 
     for event in events:
         send_email(event)
 
 
 def send_email(event):
-    """Sends email to contacts on event dates"""
+    """Send template text to contacts."""
+    
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     to_email = event.contacts[0].email
     to_name = event.contacts[0].name
@@ -103,7 +96,8 @@ def send_email(event):
 
 
 def remind_user(event):
-    """Reminds users of event"""
+    """Email user of event coming up."""
+    
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     to_email = event.contacts[0].user.email
     to_name = event.contacts[0].user.fname
@@ -149,34 +143,36 @@ def remind_user(event):
 
 
 def convert_to_unix(timeobject):
-    """ Takes a datetime object and returns a unix timestamp"""
+    """ Takes a datetime object; returns a unix timestamp"""
     return time.mktime(timeobject.timetuple()) 
 
 
+def job():
+    """Schedule job instance"""
+    # for testing
+    e = datetime.datetime(2017, 12, 30, 0, 0)
+    events = return_events(e)
+    remind_all_users(events)
+    send_all_emails(events)
 
+    ## for the real app, use today ##
+    ##################################
+    # events = return_todays_events()
+    # remind_all_users(events)
+    # send_all_emails(events)
 
-# SendGrid stuff 
+# schedule.every().day.at("00:00").do(return_todays_events)
+schedule.every(5).seconds.do(job)
 
+while True:
+    schedule.run_pending()
+    time.sleep(3)
 
-def convert_to_unix():
-    """ Takes a datetime object and returns a unix timestamp in 3 seconds later"""
-    now = datetime.datetime.now()
-    # five seconds later
-    f = now + datetime.timedelta(seconds=5)
-    return time.mktime(f.timetuple()) 
-
-
-def scheduled_events():
-    """ If the day is today, we set the email"""
-
-    today = datetime.datetime.now()
-
-    if [event.date.day, event.date.month, event.date.year] == [today.day, today.month, today.year]:
-        send_at_time = convert_to_unix(event.date)
-
-
-
-
+# if __name__ == "__main__":
+    
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(3)
 
 
 
