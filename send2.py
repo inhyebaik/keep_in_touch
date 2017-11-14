@@ -9,6 +9,18 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+"""For texting."""
+from twilio.twiml.messaging_response import MessagingResponse
+from twilio.rest import Client
+
+
+# source secrets and create client
+account = os.environ.get('TWILIO_TEST_ACCOUNT')
+token = os.environ.get('TWILIO_TEST_TOKEN')
+twilio_num = os.environ.get('TWILIO_NUMBER')
+my_num = os.environ.get('MY_NUMBER')
+client = Client(account, token)
+
 
 ##############################################################################
 ## for sending emails ##
@@ -46,25 +58,43 @@ def return_tmrws_events():
 
 
 def remind_all_users(events):
-    """ Takes a list of tomorrow's events (Event objects) and sends out reminder emails
-        to the user 
-    """ 
+    """ Takes a list of tomorrow's events (EVENT OBJECTS): texts & emails reminders
+        to the user
+    """
     if events == []:
         return "No events today"
 
     for event in events:
+        text_reminder(event)
         remind_user(event)
 
 
 def send_all_emails(events):
-    """ Takes a list of today's events (Event objects) and sends out emails 
+    """ Takes a list of today's events (EVENT OBJECTS) and sends out emails
         to the contacts
-    """ 
+    """
     if events == []:
         return "No events today"
-        
+  
     for event in events:
         send_email(event)
+
+
+### TEXTING REMINDER WITH TWILIO ###
+def text_reminder(event):
+    """Text reminder to user of an event; asks if they want to update msg"""
+
+    user_phone = event.contacts[0].user.phone
+    user_fname = event.contacts[0].user.fname
+    c_name = event.contacts[0].name
+
+    # Send an SMS
+    my_msg = "Hello {}, your event coming up on {} for {}.\nYour message\
+              currently is: '{}'\nIf you'd like to update this message, please \
+              reply with your new message (in one SMS response)".format(user_fname,
+                                                                        event.date,
+                                                                        c_name)
+    message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
 
 
 def send_email(event):
@@ -119,7 +149,7 @@ def send_email(event):
     print(response.body)
     print(response.headers)
 
-# remind you via email to contact someone (specifically networking/interviews) 
+# remind you via email to contact someone
 
 def remind_user(event):
     """Email user of event coming up."""
@@ -132,7 +162,7 @@ def remind_user(event):
     subject = "Reminder to Keep in Touch with {}".format(event.contacts[0].name)
     message_text = "Just wanted to remind you that {} is coming up and we will send a {} message for {} soon!".format(event.date, event.template.name, event.contacts[0].name)
     data = {
-      # "send_at": send_at_time, 
+      # "send_at": send_at_time,
       "from": {
         "email": from_email,
         "name": from_name
@@ -192,6 +222,18 @@ def job():
     events = return_todays_events()
     send_all_emails(events)
 
+# schedule.every().day.at("00:00").do(job)
+
+schedule.every(20).seconds.do(job)
+
+# schedule.every().day.at("23:24").do(job)
+
+
+
+
+
+
+
 
 
 def connect_to_db(app, uri='postgresql:///project'):
@@ -203,19 +245,11 @@ def connect_to_db(app, uri='postgresql:///project'):
     db.app = app
     db.init_app(app)
 
-
-# schedule.every().day.at("00:00").do(job)
-
-schedule.every(20).seconds.do(job)
-
-# schedule.every().day.at("23:24").do(job)
-
 if __name__ == "__main__":
     # from server import app
     app = Flask(__name__)
     connect_to_db(app)
     print "Connected to DB."
-    
     # for scheduling emails 
     print datetime.datetime.now() # check what time it is in vagrant
     while True: 

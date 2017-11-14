@@ -84,9 +84,7 @@ class ContactEvent(db.Model):
 
 
 class Template(db.Model):
-    """ 
-    A template belongs to an event 
-    """
+    """A template belongs to an event"""
 
     __tablename__ = "templates"
 

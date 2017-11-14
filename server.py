@@ -125,7 +125,7 @@ def user_profile(user_id):
 
 @app.route('/add_event')
 def add_event():
-    """Let logged in users go to the new event form.""" 
+    """Let logged in users go to the new event form."""
     
     user_id = session.get("user_id")
     if user_id:
@@ -139,8 +139,7 @@ def add_event():
 @app.route('/add_event', methods=['POST'])
 def handle_event_form():
     """Validates and adds new event and template to DB."""
-    
-    # Need to add the contact and template before creating an event 
+    # Need to add the contact and template before creating an event
 
     # add contact
     name = request.form.get('contact_name')
@@ -176,7 +175,7 @@ def handle_event_form():
     db.session.add(ce)
     db.session.commit()
 
-    # redirect to edit_event page 
+    # redirect to edit_event page
     flash("You have successfully added a new event for {}!".format(name))
     url = '/edit_event/{}'.format(new_event.id)
     return redirect(url)
@@ -256,9 +255,9 @@ def confirm(contact_id):
         return render_template('confirm_delete_contact.html', contact=contact, author=author, quote=quote)
     else:
         flash("You must log in or register to remove contacts")
-        return redirect("/register_login")  
+        return redirect("/register_login")
 
-    
+
     
 @app.route('/remove_contact', methods=['POST'])
 def remove_contact():
@@ -295,7 +294,7 @@ def remove_contact():
         return redirect(url)
     else:
         flash("You must log in or register to remove contacts")
-        return redirect("/register_login")  
+        return redirect("/register_login")
     
 
 
