@@ -5,6 +5,14 @@ import sendgrid
 import json
 import os
 
+"""Models and database functions for project."""
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+
+##############################################################################
+## for sending emails ##
+##############################################################################
 
 def return_todays_events():
     """Checks if there are any events today."""
@@ -30,6 +38,9 @@ def remind_all_users(events):
     """ Takes a list of today's events (Event objects) and sends out emails
         to the user 
     """ 
+    if events == []:
+        return "No events today"
+
     for event in events:
         remind_user(event)
 
@@ -38,6 +49,9 @@ def send_all_emails(events):
     """ Takes a list of today's events (Event objects) and sends out emails 
         to the contacts
     """ 
+    if events == []:
+        return "No events today"
+        
     for event in events:
         send_email(event)
 
@@ -49,11 +63,12 @@ def send_email(event):
     to_email = event.contacts[0].email
     to_name = event.contacts[0].name
 
-    from_name = event.contacts[0].user.fname + event.contacts[0].user.lname
+    from_name = event.contacts[0].user.fname 
     from_email = event.contacts[0].email
 
     subject = event.template.name
     message_text = event.template.text
+    print message_text
 
     data = {
       # "send_at": send_at_time, 
@@ -97,14 +112,14 @@ def send_email(event):
 
 def remind_user(event):
     """Email user of event coming up."""
-    
+
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     to_email = event.contacts[0].user.email
     to_name = event.contacts[0].user.fname
     from_name = "Keep in Touch Team"
     from_email = "inb125@mail.harvard.edu"
     subject = "Reminder to Keep in Touch with {}".format(event.contacts[0].name)
-    message_text = "Just wanted to remind you that {} is coming up and we will send a {} for {} soon!".format(event.date, event.template.name, event.contacts[0].name)
+    message_text = "Just wanted to remind you that {} is coming up and we will send a {} message for {} soon!".format(event.date, event.template.name, event.contacts[0].name)
     data = {
       # "send_at": send_at_time, 
       "from": {
@@ -147,34 +162,49 @@ def convert_to_unix(timeobject):
     return time.mktime(timeobject.timetuple()) 
 
 
+# def job():
+#     """Schedule job instance"""
+#     # for testing
+#     e = datetime.datetime(2017, 11, 13, 0, 0)
+#     events = return_events(e)
+#     remind_all_users(events)
+#     send_all_emails(events)
+
+## for the real app, use today ##
+##################################
 def job():
     """Schedule job instance"""
-    # for testing
-    e = datetime.datetime(2017, 12, 30, 0, 0)
-    events = return_events(e)
+    events = return_todays_events()
     remind_all_users(events)
     send_all_emails(events)
 
-    ## for the real app, use today ##
-    ##################################
-    # events = return_todays_events()
-    # remind_all_users(events)
-    # send_all_emails(events)
 
-# schedule.every().day.at("00:00").do(return_todays_events)
-schedule.every(5).seconds.do(job)
 
-while True:
-    schedule.run_pending()
-    time.sleep(3)
+def connect_to_db(app, uri='postgresql:///project'):
+    """Connect the database to our Flask app."""
 
-# if __name__ == "__main__":
+    # Configure to use our PstgreSQL database
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db.app = app
+    db.init_app(app)
+
+
+# schedule.every().day.at("00:00").do(job)
+
+schedule.every(20).seconds.do(job)
+
+# schedule.every().day.at("23:24").do(job)
+
+if __name__ == "__main__":
+    # from server import app
+    app = Flask(__name__)
+    connect_to_db(app)
+    print "Connected to DB."
     
-#     while True:
-#         schedule.run_pending()
-#         time.sleep(3)
-
-
-
+    # for scheduling emails 
+    print datetime.datetime.now() # check what time it is in vagrant
+    while True: 
+        schedule.run_pending()
 
 

@@ -9,8 +9,12 @@ from model import (User, Event, ContactEvent, Contact, Template, db, connect_to_
 import random
 from quotes import *
 
+# for the email sending
 import time, datetime
 import schedule
+import sendgrid
+import json
+import os
 
 
 
@@ -223,16 +227,18 @@ def modify_db():
 
 @app.route('/remove_event', methods=['POST'])
 def remove_event():
-    """Delete event (but not the contact) from DB."""
+    """Delete event and template (but not the contact) from DB."""
    
     user_id = session.get("user_id")
     if user_id:
         # get event_id from hidden input;  
         event_id = request.form.get('event_id')
+        template_id = Event.query.get(event_id).template_id
         # delete ContactEvent association table link 
         ContactEvent.query.filter(ContactEvent.event_id == event_id).delete()
         # and then delete the Event
         Event.query.filter(Event.id == event_id).delete()
+        Template.query.filter(Template.id == template_id).delete()
         db.session.commit()
         flash("You have successfully deleted this event")
         url = '/users/{}'.format(user_id)
@@ -272,7 +278,7 @@ def remove_contact():
         # get the template ids for all of the events for that one contact
         template_ids = []
         for event in events:
-            template_ids.append(event.template.id)
+            template_ids.append(event.template_id)
         # delete the events
         Event.query.filter(Event.contact_id == contact_id).delete()
         db.session.commit()
@@ -282,7 +288,7 @@ def remove_contact():
             db.session.commit()
 
         # delete the contact
-        Contact.query.get(contact_id).delete()
+        Contact.query.filter(Contact.id == contact_id).delete()
         db.session.commit()
 
         flash("You have successfully deleted this contact")
