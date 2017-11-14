@@ -25,17 +25,28 @@ def return_todays_events():
         return todays_events
 
 
-def return_events(date):
+def return_tmrws_events():
     """Checks if there are any events today."""
-    todays_events = Event.query.filter(Event.date == date).all()
-    if todays_events == []:
+    t = datetime.datetime.now()
+    tmrw = datetime.datetime(t.year, t.month, t.day + 1, 0, 0)
+    events = Event.query.filter(Event.date == tmrw).all()
+    if events == []:
         return "No events!"
     else:
-        return todays_events
+        return events
+
+
+# def return_events(date):
+#     """Checks if there are any events today."""
+#     todays_events = Event.query.filter(Event.date == date).all()
+#     if todays_events == []:
+#         return "No events!"
+#     else:
+#         return todays_events
 
 
 def remind_all_users(events):
-    """ Takes a list of today's events (Event objects) and sends out emails
+    """ Takes a list of tomorrow's events (Event objects) and sends out reminder emails
         to the user 
     """ 
     if events == []:
@@ -108,7 +119,7 @@ def send_email(event):
     print(response.body)
     print(response.headers)
 
-
+# remind you via email to contact someone (specifically networking/interviews) 
 
 def remind_user(event):
     """Email user of event coming up."""
@@ -170,12 +181,15 @@ def convert_to_unix(timeobject):
 #     remind_all_users(events)
 #     send_all_emails(events)
 
+
 ## for the real app, use today ##
 ##################################
 def job():
     """Schedule job instance"""
+    tmrws = return_tmrws_events()
+    remind_all_users(tmrws)
+    
     events = return_todays_events()
-    remind_all_users(events)
     send_all_emails(events)
 
 
