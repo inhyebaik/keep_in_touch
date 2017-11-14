@@ -65,9 +65,9 @@ def send_all_emails(events):
     """ Takes a list of today's events (EVENT OBJECTS) and sends out emails
         to the contacts
     """
-    if events == []:
+    if events == [] or events == "No events!":
         return "No events today"
- 
+
     for event in events:
         send_email(event)
 
@@ -76,10 +76,11 @@ def remind_all_users(events):
     """ Takes a list of tomorrow's events (EVENT OBJECTS): texts & emails reminders
         to the user
     """
-    if events == []:
+    if events == [] or events == "No events!":
         return "No events today"
-
+    print "REMIND ALL USERS: this is the events:{}".format(events)
     for event in events:
+        print event
         text_reminder(event)
         remind_user(event)
 
@@ -87,7 +88,7 @@ def remind_all_users(events):
 ### TEXTING REMINDER WITH TWILIO ###
 def text_reminder(event):
     """Text reminder to user of an event; asks if they want to update msg"""
-
+    print "this is the event: {}".format(event)
     user_phone = event.contacts[0].user.phone
     user_fname = event.contacts[0].user.fname
     c_name = event.contacts[0].name
@@ -220,16 +221,13 @@ def convert_to_unix(timeobject):
 def job():
     """Schedule job instance"""
 
-    tmrw_events = return_tmrws_events()
     today_events = return_todays_events()
-    remind_all_users(tmrw_events)
     send_all_emails(today_events)
+    tmrw_events = return_tmrws_events()
+    remind_all_users(tmrw_events)
 
 # schedule.every().day.at("00:00").do(job)
-schedule.every(20).seconds.do(job)
-
-
-
+schedule.every(2).seconds.do(job)
 
 
 

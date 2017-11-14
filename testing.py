@@ -26,7 +26,8 @@ client = Client(account, token)
 
 
 ##############################################################################
-# Model definitions
+# model.py basically
+#############################################################################
 
 class User(db.Model):
     """User of website."""
@@ -109,8 +110,10 @@ class Template(db.Model):
     def __repr__(self):
         """Provide better representation."""
         return "<Template id={} name={} text={}>".format(self.id, self.name, self.text)
+
+
 ##############################################################################
-## for sending emails ##
+# remind_send.py
 ##############################################################################
 
 def return_todays_events():
