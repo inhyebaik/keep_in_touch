@@ -240,7 +240,6 @@ def send_email(event):
     print(response.headers)
 
 
-
 def remind_user(event):
     """Email user of event coming up."""
 
@@ -310,29 +309,19 @@ def job():
     send_all_emails(events)
 
 
-
-def connect_to_db(app, uri='postgresql:///project'):
-    """Connect the database to our Flask app."""
-
-    # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = uri
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    db.app = app
-    db.init_app(app)
-
-
 # schedule.every().day.at("00:00").do(job)
 
 schedule.every(5).seconds.do(job)
 
+
 def connect_to_db(app, uri='postgresql:///project'):
     """Connect the database to our Flask app."""
-
     # Configure to use our PstgreSQL database
     app.config['SQLALCHEMY_DATABASE_URI'] = uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
+
 
 
 if __name__ == "__main__":
@@ -345,6 +334,8 @@ if __name__ == "__main__":
     print "Connected to DB."
     db.create_all()
     print datetime.datetime.now() # check what time it is in vagrant
+
+    #### uncomment this to test the scheduled emails ####
     # while True: 
     #     schedule.run_pending()
 
