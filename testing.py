@@ -1,13 +1,29 @@
+# testing in model.py
+
 """Models and database functions for project."""
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import time, datetime
-import schedule
 
-import sendgrid, json, os, schedule
+""" testing email sending."""
+import time, datetime, sendgrid, json, os, schedule
+
+"""For texting."""
+from twilio.twiml.messaging_response import MessagingResponse
+from twilio.rest import Client
 
 
 db = SQLAlchemy()
+app = Flask(__name__)
+
+
+# source secrets and create client
+account = os.environ.get('TWILIO_TEST_ACCOUNT')
+token = os.environ.get('TWILIO_TEST_TOKEN')
+twilio_num = os.environ.get('TWILIO_NUMBER')
+my_num = os.environ.get('MY_NUMBER')
+client = Client(account, token)
+
+
 
 ##############################################################################
 # Model definitions
@@ -93,50 +109,6 @@ class Template(db.Model):
     def __repr__(self):
         """Provide better representation."""
         return "<Template id={} name={} text={}>".format(self.id, self.name, self.text)
-
-
-# class Input(db.Model):
-#     """A template can have many inputs (will go into the text field of template).
-#     An input can belong to many templates.
-
-#     name = 'memory', 
-#            'how_you_met', 
-#            'greeting', 
-#            'body', 
-#            'sign_off'
-
-#     text = 'how did you meet?', 
-#              'how do you want to greet?', 
-#              'how do you want to sign off?', 
-#              'what do you want to follow up on?'
-
-#     """
-
-#     __tablename__ = "inputs"
-
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#         # greet, body, sign_off
-#     name = db.Column(db.String(64), nullable=False)
-#     text = db.Column(db.String(500), nullable=False)
-
-#     templates = db.relationship("Template", secondary="templatesinputs", backref="inputs")
-
-#     def __repr__(self):
-#         """Provide better representation."""
-#         return "<Input id={} name={} text={}>".format(self.id, self.name, self.text)
-
-
-
-# class TemplateInput(db.Model):
-#     """Association table between Templates and Inputs tables"""
-
-#     __tablename__ = "templatesinputs"
-
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     template_id = db.Column(db.Integer, db.ForeignKey('templates.id'), nullable=False)
-#     input_id = db.Column(db.Integer, db.ForeignKey('inputs.id'), nullable=False)
-
-    
 ##############################################################################
 ## for sending emails ##
 ##############################################################################
@@ -152,35 +124,65 @@ def return_todays_events():
         return todays_events
 
 
-def return_events(date):
+def return_tmrws_events():
     """Checks if there are any events today."""
-    todays_events = Event.query.filter(Event.date == date).all()
-    if todays_events == []:
+    t = datetime.datetime.now()
+    tmrw = datetime.datetime(t.year, t.month, t.day + 1, 0, 0)
+    events = Event.query.filter(Event.date == tmrw).all()
+    if events == []:
         return "No events!"
     else:
-        return todays_events
+        return events
 
 
-def remind_all_users(events):
-    """ Takes a list of today's events (Event objects) and sends out emails
-        to the user 
-    """ 
-    if events == []:
-        return "No events today"
-
-    for event in events:
-        remind_user(event)
+# def return_events(date):
+#     """Checks if there are any events today."""
+#     todays_events = Event.query.filter(Event.date == date).all()
+#     if todays_events == []:
+#         return "No events!"
+#     else:
+#         return todays_events
 
 
 def send_all_emails(events):
-    """ Takes a list of today's events (Event objects) and sends out emails 
+    """ Takes a list of today's events (EVENT OBJECTS) and sends out emails
         to the contacts
-    """ 
-    if events == []:
+    """
+    if events == [] or events == "No events!":
         return "No events today"
-        
+
     for event in events:
         send_email(event)
+
+
+def remind_all_users(events):
+    """ Takes a list of tomorrow's events (EVENT OBJECTS): texts & emails reminders
+        to the user
+    """
+    if events == [] or events == "No events!":
+        return "No events today"
+    print "REMIND ALL USERS: this is the events:{}".format(events)
+    for event in events:
+        print event
+        text_reminder(event)
+        remind_user(event)
+
+
+### TEXTING REMINDER WITH TWILIO ###
+def text_reminder(event):
+    """Text reminder to user of an event; asks if they want to update msg"""
+    print "this is the event: {}".format(event)
+    user_phone = event.contacts[0].user.phone
+    user_fname = event.contacts[0].user.fname
+    c_name = event.contacts[0].name
+
+    # Send an SMS
+    my_msg = "Hello {}, your event coming up on {} for {}.\nYour message\
+              currently is: '{}'\nIf you'd like to update this message, please \
+              reply with your new message (in one SMS response)".format(user_fname,
+                                                                        event.date,
+                                                                        c_name)
+    message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
 
 
 def send_email(event):
@@ -190,7 +192,7 @@ def send_email(event):
     to_email = event.contacts[0].email
     to_name = event.contacts[0].name
 
-    from_name = event.contacts[0].user.fname 
+    from_name = event.contacts[0].user.fname
     from_email = event.contacts[0].email
 
     subject = event.template.name
@@ -198,7 +200,7 @@ def send_email(event):
     print message_text
 
     data = {
-      # "send_at": send_at_time, 
+      # "send_at": send_at_time,
 
       "from": {
         "email": from_email,
@@ -235,6 +237,7 @@ def send_email(event):
     print(response.body)
     print(response.headers)
 
+# remind you via email to contact someone
 
 def remind_user(event):
     """Email user of event coming up."""
@@ -247,7 +250,7 @@ def remind_user(event):
     subject = "Reminder to Keep in Touch with {}".format(event.contacts[0].name)
     message_text = "Just wanted to remind you that {} is coming up and we will send a {} message for {} soon!".format(event.date, event.template.name, event.contacts[0].name)
     data = {
-      # "send_at": send_at_time, 
+      # "send_at": send_at_time,
       "from": {
         "email": from_email,
         "name": from_name
@@ -285,7 +288,7 @@ def remind_user(event):
 
 def convert_to_unix(timeobject):
     """ Takes a datetime object; returns a unix timestamp"""
-    return time.mktime(timeobject.timetuple()) 
+    return time.mktime(timeobject.timetuple())
 
 
 # def job():
@@ -300,13 +303,15 @@ def convert_to_unix(timeobject):
 ##################################
 def job():
     """Schedule job instance"""
-    events = return_todays_events()
-    remind_all_users(events)
-    send_all_emails(events)
+
+    today_events = return_todays_events()
+    send_all_emails(today_events)
+    tmrw_events = return_tmrws_events()
+    remind_all_users(tmrw_events)
 
 # schedule.every().day.at("00:00").do(job)
+schedule.every(2).seconds.do(job)
 
-schedule.every(5).seconds.do(job)
 
 
 def connect_to_db(app, uri='postgresql:///project'):
@@ -317,19 +322,12 @@ def connect_to_db(app, uri='postgresql:///project'):
     db.app = app
     db.init_app(app)
 
-
-
 if __name__ == "__main__":
-    # As a convenience, if we run this module interactively, it will leave
-    # you in a state of being able to work with the database directly.
-
     # from server import app
     app = Flask(__name__)
     connect_to_db(app)
     print "Connected to DB."
-    db.create_all()
+    # for scheduling emails 
     print datetime.datetime.now() # check what time it is in vagrant
-
-    #### uncomment this to test the scheduled emails ####
-    # while True: 
-    #     schedule.run_pending()
+    while True:
+        schedule.run_pending()

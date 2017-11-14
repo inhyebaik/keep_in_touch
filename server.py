@@ -10,11 +10,14 @@ import random
 from quotes import *
 
 # for the email sending
-import time, datetime
+import os, time, datetime
 import schedule
 import sendgrid
 import json
-import os
+
+# for texting
+from twilio.twiml.messaging_response import MessagingResponse
+from twilio.rest import Client
 
 app = Flask(__name__)
 # app.config['JSON_SORT_KEYS'] = False
@@ -27,6 +30,28 @@ app.jinja_env.undefined = StrictUndefined #raise error if you use undefined vari
 q = random_quote(QUOTES)
 author = q[0]
 quote = q[1]
+
+
+# source secrets and create client
+account = os.environ.get('TWILIO_TEST_ACCOUNT')
+token = os.environ.get('TWILIO_TEST_TOKEN')
+twilio_num = os.environ.get('TWILIO_NUMBER')
+my_num = os.environ.get('MY_NUMBER')
+client = Client(account, token)
+
+
+# The session object makes use of a secret key.
+SECRET_KEY = 'a secret key'
+app = Flask(__name__)
+app.config.from_object(__name__)
+
+
+callers = {
+    twilio_num: "Keep in Touch",
+    my_num: "Ada Hackbright",
+    # "+14158675310": "Boots",
+    # "+14158675311": "Virgil",
+}
 
 @app.route('/')
 def index():
@@ -59,7 +84,6 @@ def register_process():
     fname = request.form.get('fname')
     lname = request.form.get('lname')
     phone = request.form.get('phone')
-    
     # fetch that user from DB as object
     db_user = User.query.filter(User.email == email).first()
 
@@ -117,8 +141,7 @@ def log_out():
 
 @app.route('/users/<user_id>')
 def user_profile(user_id):
-    """Shows specific user's info; all of their events and contacts """
-    
+    """Shows specific user's info; all of their events and contacts."""
     user = User.query.get(user_id)
     return render_template("user_profile.html", user=user, author=author,  quote=quote)
 
@@ -126,7 +149,7 @@ def user_profile(user_id):
 @app.route('/add_event')
 def add_event():
     """Let logged in users go to the new event form."""
-    
+   
     user_id = session.get("user_id")
     if user_id:
         user = User.query.get(user_id)
@@ -153,9 +176,9 @@ def handle_event_form():
     # get inputs from form for template text
     greet = request.form.get('greet')
     sign_off = request.form.get('sign_off')
-    body = request.form.get('contact_name')
+    body = request.form.get('body')
     user_fname = User.query.get(user_id).fname
-    template_text = "{} {} \n {} \n{},\n{}".format(greet, name, body, sign_off, user_fname)
+    template_text = "{} {}, \n{} \n{},\n{}".format(greet, name, body, sign_off, user_fname)
 
     # add template
     template_name = request.form.get('template_name')
@@ -200,7 +223,7 @@ def show_event(event_id):
 def modify_db():
     """Allow user to change event and template that will go into DB."""
 
-    # get user and event primary keys we are modifying for 
+    # get user and event primary keys we are modifying for
     user_id = session.get("user_id")
     event_id = int(request.form.get('event_id'))
 
@@ -216,7 +239,6 @@ def modify_db():
     contact.phone = request.form.get('contact_phone')
     event.date = request.form.get('date')
     db.session.commit()
-    
     flash("Your event/contact has been modified successfully! We'll remind you on {}".format(event.date))
     # redirect user to their profile
     url = '/users/{}'.format(user_id)
@@ -225,7 +247,7 @@ def modify_db():
 @app.route('/remove_event', methods=['POST'])
 def remove_event():
     """Delete event and template (but not the contact) from DB."""
-   
+ 
     user_id = session.get("user_id")
     if user_id:
         # get event_id from hidden input;  
@@ -248,7 +270,7 @@ def remove_event():
 @app.route('/remove_contact/<contact_id>')
 def confirm(contact_id):
     """Confirmation page to delete contact (and their events and templates) from DB."""
-    
+
     user_id = session.get("user_id")
     if user_id:
         contact = Contact.query.get(contact_id)
@@ -295,8 +317,34 @@ def remove_contact():
     else:
         flash("You must log in or register to remove contacts")
         return redirect("/register_login")
-    
 
+##### TWILIO MESSAGING HANDLER, USING NGROK 5000 ########
+@app.route("/sms", methods=['GET', 'POST'])
+def handle_reminder_response():
+    """Handle user response to reminder"""
+
+    to_number = request.values.get('To')
+    from_number = request.values.get('From', None)
+    name = callers[from_number] if from_number in callers else "Cool User"
+    user_response = request.values.get('Body', "meow")
+    print user_response
+
+    # get today's date to fetch the event
+    t = datetime.datetime.now()
+    today = datetime.datetime(t.year, t.month, t.day, 0, 0)
+    # fetch user from DB to update message
+    user = User.query.filter(User.phone == to_number).one()
+    # unwieldy looping to find the event object...find a better way to do this!
+    for contact in user.contacts:
+        for event in contact.events:
+            if event.date == today:
+                event.template.text = user_response
+
+    message = "Thanks, {}! Your new message will be updated as: {}".format(name, user_response)
+
+    resp = MessagingResponse()
+    resp.message(body=message)
+    return str(resp)
 
 
 if __name__ == "__main__":
@@ -308,4 +356,3 @@ if __name__ == "__main__":
     # Use the DebugToolbar
     DebugToolbarExtension(app)
     app.run(port=5000, host='0.0.0.0')
-

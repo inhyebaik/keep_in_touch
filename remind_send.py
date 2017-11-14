@@ -14,6 +14,10 @@ from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 
 
+db = SQLAlchemy()
+app = Flask(__name__)
+
+
 # source secrets and create client
 account = os.environ.get('TWILIO_TEST_ACCOUNT')
 token = os.environ.get('TWILIO_TEST_TOKEN')
@@ -57,6 +61,17 @@ def return_tmrws_events():
 #         return todays_events
 
 
+def send_all_emails(events):
+    """ Takes a list of today's events (EVENT OBJECTS) and sends out emails
+        to the contacts
+    """
+    if events == []:
+        return "No events today"
+ 
+    for event in events:
+        send_email(event)
+
+
 def remind_all_users(events):
     """ Takes a list of tomorrow's events (EVENT OBJECTS): texts & emails reminders
         to the user
@@ -67,17 +82,6 @@ def remind_all_users(events):
     for event in events:
         text_reminder(event)
         remind_user(event)
-
-
-def send_all_emails(events):
-    """ Takes a list of today's events (EVENT OBJECTS) and sends out emails
-        to the contacts
-    """
-    if events == []:
-        return "No events today"
-  
-    for event in events:
-        send_email(event)
 
 
 ### TEXTING REMINDER WITH TWILIO ###
@@ -104,7 +108,7 @@ def send_email(event):
     to_email = event.contacts[0].email
     to_name = event.contacts[0].name
 
-    from_name = event.contacts[0].user.fname 
+    from_name = event.contacts[0].user.fname
     from_email = event.contacts[0].email
 
     subject = event.template.name
@@ -112,7 +116,7 @@ def send_email(event):
     print message_text
 
     data = {
-      # "send_at": send_at_time, 
+      # "send_at": send_at_time,
 
       "from": {
         "email": from_email,
@@ -200,7 +204,7 @@ def remind_user(event):
 
 def convert_to_unix(timeobject):
     """ Takes a datetime object; returns a unix timestamp"""
-    return time.mktime(timeobject.timetuple()) 
+    return time.mktime(timeobject.timetuple())
 
 
 # def job():
@@ -211,25 +215,18 @@ def convert_to_unix(timeobject):
 #     remind_all_users(events)
 #     send_all_emails(events)
 
-
 ## for the real app, use today ##
 ##################################
 def job():
     """Schedule job instance"""
-    tmrws = return_tmrws_events()
-    remind_all_users(tmrws)
-    
-    events = return_todays_events()
-    send_all_emails(events)
+
+    tmrw_events = return_tmrws_events()
+    today_events = return_todays_events()
+    remind_all_users(tmrw_events)
+    send_all_emails(today_events)
 
 # schedule.every().day.at("00:00").do(job)
-
 schedule.every(20).seconds.do(job)
-
-# schedule.every().day.at("23:24").do(job)
-
-
-
 
 
 
@@ -238,7 +235,6 @@ schedule.every(20).seconds.do(job)
 
 def connect_to_db(app, uri='postgresql:///project'):
     """Connect the database to our Flask app."""
-
     # Configure to use our PstgreSQL database
     app.config['SQLALCHEMY_DATABASE_URI'] = uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -252,7 +248,5 @@ if __name__ == "__main__":
     print "Connected to DB."
     # for scheduling emails 
     print datetime.datetime.now() # check what time it is in vagrant
-    while True: 
+    while True:
         schedule.run_pending()
-
-

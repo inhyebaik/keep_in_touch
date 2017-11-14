@@ -3,6 +3,7 @@
 
 <h2><u>Create Event</u></h2>
 <form id='newevent' action='/add_event', method='POST'>
+
 Contact's name: <input type='text' name='contact_name' required> <br>
 Contact's email: <input type='email' name='contact_email' required><br>
 Contact's phone: <input type='tel' name='contact_phone'><br>
@@ -12,9 +13,9 @@ Date to be sent: <input type="date" name='date' class="datefield"min="" max="" i
 <h3>Add Input to the Message: </h3>
 1. How do you want to greet them? 
         <select name='greet'>
-            <option value='dear'>Dear</option>
-            <option value='hey'>Hey</option>
-            <option value='hello'>Hello</option>
+            <option value='Dear'>Dear</option>
+            <option value='Hey'>Hey</option>
+            <option value='Hello'>Hello</option>
         </select> <br>
 
     
@@ -23,7 +24,7 @@ Date to be sent: <input type="date" name='date' class="datefield"min="" max="" i
 <br>
 
 3. What do you want them to know? <br>
-<!-- <input type='text' name='template_text' value="thank you for..." required> -->
+<!-- <input type='text' name='body' value="thank you for..." required> -->
 <textarea name="body">
 Thank you for...
 </textarea>
@@ -32,9 +33,9 @@ Thank you for...
 
     4. How do you want to sign off? 
         <select name='sign_off'>
-            <option value='sincerely'>Sincerely</option>
-            <option value='yours'>Yours</option>
-            <option value='best'>Best</option>
+            <option value='Sincerely'>Sincerely</option>
+            <option value='Yours'>Yours</option>
+            <option value='Best'>Best</option>
         </select> <br><br>
 
 <input type='submit' value='Add Contact, Event, and Message'>
