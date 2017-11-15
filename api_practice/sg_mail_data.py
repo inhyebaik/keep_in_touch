@@ -50,15 +50,6 @@ def return_tmrws_events():
         return events
 
 
-# def return_events(date):
-#     """Checks if there are any events today."""
-#     todays_events = Event.query.filter(Event.date == date).all()
-#     if todays_events == []:
-#         return "No events!"
-#     else:
-#         return todays_events
-
-
 def send_all_emails(events):
     """ Takes a list of today's events (EVENT OBJECTS) and sends out emails
         to the contacts

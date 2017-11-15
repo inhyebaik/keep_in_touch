@@ -75,7 +75,8 @@ def register_process():
         return redirect('/register_login')
     else:
         # Register new user; add to DB; log them in; save user_id to session
-        new_user = User(email=email, password=password, fname=fname, lname=lname, phone=phone)
+        new_user = User(email=email, password=password, fname=fname, lname=lname,
+                        phone=phone)
         db.session.add(new_user)
         db.session.commit()
         flash("You're now added as a new user! Welcome!")
@@ -123,7 +124,7 @@ def log_out():
 def user_profile(user_id):
     """Shows specific user's info; all of their events and contacts."""
     user = User.query.get(user_id)
-    return render_template("user_profile.html", user=user, author=author,  quote=quote)
+    return render_template("user_profile.html", user=user, author=author, quote=quote)
 
 
 @app.route('/add_event')
@@ -157,7 +158,8 @@ def handle_event_form():
     sign_off = request.form.get('sign_off')
     body = request.form.get('body')
     user_fname = User.query.get(user_id).fname
-    template_text = "{} {}, \n{} \n{},\n{}".format(greet, name, body, sign_off, user_fname)
+    template_text = "{} {}, \n{} \n{},\n{}".format(greet, name, body, sign_off,
+                                                   user_fname)
 
     # add template
     template_name = request.form.get('template_name')
@@ -248,8 +250,7 @@ def remove_event():
 
 @app.route('/remove_contact/<contact_id>')
 def confirm(contact_id):
-    """Confirmation page to delete contact (and their events and templates) from DB."""
-
+    """Confirmation page to delete contact (and their events,templates) from DB."""
     user_id = session.get("user_id")
     if user_id:
         contact = Contact.query.get(contact_id)
@@ -263,14 +264,11 @@ def confirm(contact_id):
 @app.route('/remove_contact', methods=['POST'])
 def remove_contact():
     """Delete contact (and their events, and templates) from DB."""
-    
     user_id = session.get("user_id")
     contact_id = request.form.get('contact_id')
-
-    if user_id: 
+    if user_id:
         # delete the ContactEvent association 
         ContactEvent.query.filter(ContactEvent.contact_id == contact_id).delete()
-        
         #### delete their Events and their templates    
         events = Event.query.filter(Event.contact_id == contact_id).all()
         # get the template ids for all of the events for that one contact
@@ -284,11 +282,9 @@ def remove_contact():
         for template_id in template_ids:
             Template.query.filter(Template.id == template_id).delete()
             db.session.commit()
-
         # delete the contact
         Contact.query.filter(Contact.id == contact_id).delete()
         db.session.commit()
-
         flash("You have successfully deleted this contact")
         user_id = session.get('user_id')
         url = '/users/{}'.format(user_id)
@@ -304,7 +300,6 @@ def text_reminder(event):
     user_phone = event.contacts[0].user.phone
     user_fname = event.contacts[0].user.fname
     c_name = event.contacts[0].name
-
     # Send an SMS
     my_msg = "\n\n\nHello {}, your event's coming up tomorrow for {}.\n\n--------\n\nYour message \
 currently is:\n'{}'\n\n--------\n\nIf you'd like to update this message, please \
@@ -318,11 +313,9 @@ reply with your new message (in one SMS response. Please add 'event_id={}' in yo
 @app.route("/sms", methods=['GET', 'POST'])
 def handle_reminder_response():
     """Handle user response to reminder"""
-
     to_number = request.values.get('To') # Keep in Touch's phone
     from_number = request.values.get('From', None) # user's phone
     user_response = request.values.get('Body')
-
     # Fetch user from DB to update event template text
     user = User.query.filter(User.phone == from_number).one()
     user_fname = user.fname
@@ -356,6 +349,121 @@ def handle_reminder_response():
                     message = client.messages.create(to=from_number, from_=to_number, body=my_msg)
 
 
+##### SCHEDULING ######
+
+def return_todays_events():
+    """Checks if there are any events today."""
+    t = datetime.datetime.now()
+    # Get today's date -- YYYY, MM, DD only to match DB format
+    today = datetime.datetime(t.year, t.month, t.day, 0, 0)
+    todays_events = Event.query.filter(Event.date == today).all()
+    if todays_events == []:
+        return "No events!"
+    else:
+        return todays_events
+
+
+def return_tmrws_events():
+    """Checks if there are any events today."""
+    t = datetime.datetime.now()
+    # Get tomorrow's date -- YYYY, MM, DD only to match DB format
+    tmrw = datetime.datetime(t.year, t.month, t.day + 1, 0, 0)
+    # Fetch tomorrow's events
+    events = Event.query.filter(Event.date == tmrw).all()
+    if events == []:
+        return "No events!"
+    else:
+        return events
+
+
+def send_all_emails(events):
+    """ Takes a list of today's events (Event objects); emails contacts"""
+    if events == [] or events == "No events!":
+        return "No events today"
+    for event in events:
+        send_email(event)
+
+
+def remind_all_users(events):
+    """ Takes a list of tomorrow's events (Event objects); texts & emails users
+        reminders
+    """
+    if events == [] or events == "No events!":
+        return "No events today"
+    for event in events:
+        text_reminder(event)
+        remind_user(event)
+
+
+def text_reminder(event):
+    """Text reminder to user of an event; asks if they want to update msg"""
+    user_phone = event.contacts[0].user.phone
+    user_fname = event.contacts[0].user.fname
+    contact_name = event.contacts[0].name
+    # Send an SMS
+    my_msg = "\n\n\nHello {}, your event's coming up tomorrow for {}.\n\n--------\n\nYour message \
+currently is:\n'{}'\n\n--------\n\nIf you'd like to update this message, please \
+reply with your new message (in one SMS response. Please add 'event_id={}' in your response)".format(user_fname, contact_name, event.template.text, event.id)
+    message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
+    print "MESSAGE SENT to {}".format(user_phone)
+
+
+def send_email(event):
+    """Email contact on day of event on behalf of the user."""
+    message = Mail()
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    # Create from_email object from event object arg (the user)
+    from_address = event.contacts[0].email
+    from_name = event.contacts[0].user.fname
+    from_email = Email(from_address, from_name)
+    # Create to_email object from event object arg (the user's contact)
+    to_address = event.contacts[0].email
+    to_name = event.contacts[0].name
+    to_email = Email(to_address, to_name)
+    # Create mail object from event object arg
+    email_body = event.template.text
+    subject = event.template.name
+    content = Content("text/plain", email_body)
+    mail = Mail(from_email, subject, to_email, content)
+    # Send email, print confirmation/status
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
+
+
+def remind_user(event):
+    """Email user of event coming up."""
+    message = Mail()
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY')) 
+    # Create from_email object from event object arg
+    from_email = Email(my_email, "Keep in Touch Team")
+    # Create to email property from event object arg (the user)
+    to_address = event.contacts[0].user.email
+    to_name = event.contacts[0].user.fname
+    to_email = Email(to_address, to_name)
+    # Create mail to be sent (reminder email)
+    subject = "Remember to Keep in Touch"
+    email_body = "Just wanted to remind you that {} is coming up and we will send a {} message for {} soon!".format(event.date, event.template.name, event.contacts[0].name)
+    content = Content("text/plain", email_body)
+    mail = Mail(from_email, subject, to_email, content)
+    # Send reminder email and print confirmation/status
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
+
+# Set the schedule's job list
+def job():
+    """Schedule job instance"""
+    today_events = return_todays_events()
+    send_all_emails(today_events)
+    tmrw_events = return_tmrws_events()
+    remind_all_users(tmrw_events)
+
+schedule.every().day.at("00:00").do(job) # Check every day at midnight (for real app)
+# schedule.every(2).seconds.do(job  # Testing/demo purposes
+
 if __name__ == "__main__":
     app.debug = True
     app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
@@ -363,3 +471,8 @@ if __name__ == "__main__":
     # Use the DebugToolbar
     DebugToolbarExtension(app)
     app.run(port=5000, host='0.0.0.0')
+    print datetime.datetime.now() # check what time it is in vagrant
+    # for scheduling emails 
+    while True:
+        schedule.run_pending()
+
