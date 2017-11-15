@@ -10,10 +10,8 @@ import random
 from quotes import *
 
 # for the email sending
-import os, time, datetime
-import schedule
-import sendgrid
-import json
+import os, time, json, datetime, schedule, sendgrid
+from sendgrid.helpers.mail import *
 
 # for texting
 from twilio.twiml.messaging_response import MessagingResponse
@@ -374,13 +372,3 @@ if __name__ == "__main__":
     # Use the DebugToolbar
     DebugToolbarExtension(app)
     app.run(port=5000, host='0.0.0.0')
-
-    # # add users to callers list
-    # callers = {
-    #     twilio_num: "Keep in Touch Team",
-    #     # my_num: "Ada Hackbright",
-    #     # "+14158675310": "Boots",
-    #     # "+14158675311": "Virgil",
-    # }
-    # for user in User.query.all():
-    #     callers[user.phone] = user.fname + " " +user.lname

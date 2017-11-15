@@ -1,15 +1,10 @@
-# testing reminders
-# test incoming replies on server.py with handle_reminder_response()
-
-# testing reminders
-# test incoming replies on server.py with handle_reminder_response()
 
 """Models and database functions for project."""
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 """ testing email sending."""
-import time, datetime, json, os, schedule, sendgrid
+import time, datetime, sendgrid, json, os, schedule
 from sendgrid.helpers.mail import *
 
 """For texting."""
@@ -28,6 +23,10 @@ twilio_num = os.environ.get('TWILIO_NUMBER')
 my_num = os.environ.get('MY_NUMBER')
 client = Client(account, token)
 
+
+##############################################################################
+# remind_send.py
+##############################################################################
 
 def return_todays_events():
     """Checks if there are any events today."""
@@ -51,32 +50,49 @@ def return_tmrws_events():
         return events
 
 
+# def return_events(date):
+#     """Checks if there are any events today."""
+#     todays_events = Event.query.filter(Event.date == date).all()
+#     if todays_events == []:
+#         return "No events!"
+#     else:
+#         return todays_events
+
+
 def send_all_emails(events):
-    """ Takes a list of today's events (Event objects) and sends out emails
+    """ Takes a list of today's events (EVENT OBJECTS) and sends out emails
         to the contacts
     """
     if events == [] or events == "No events!":
         return "No events today"
+
     for event in events:
         send_email(event)
-        
+
 
 def remind_all_users(events):
-    """ Takes a list of tomorrow's events (Event objects): texts & emails reminders
+    """ Takes a list of tomorrow's events (EVENT OBJECTS): texts & emails reminders
         to the user
     """
     if events == [] or events == "No events!":
         return "No events today"
+    print "REMIND ALL USERS: these are the events:{}".format(events)
     for event in events:
+        print "this is the event : {}".format(event)
+        print "this is the event we will text_reminder: {}".format(event)
         text_reminder(event)
         remind_user(event)
 
 
+### TEXTING REMINDER WITH TWILIO ###
 def text_reminder(event):
     """Text reminder to user of an event; asks if they want to update msg"""
+    print "this is the event: {}".format(event)
+    print "this is the phone# we will text: {} for {}".format(event.contacts[0].user.phone, event.contacts[0].user.fname)
     user_phone = event.contacts[0].user.phone
     user_fname = event.contacts[0].user.fname
     c_name = event.contacts[0].name
+
     # Send an SMS
     my_msg = "\n\n\nHello {}, your event's coming up tomorrow for {}.\n\n--------\n\nYour message \
 currently is:\n'{}'\n\n--------\n\nIf you'd like to update this message, please \
@@ -85,59 +101,125 @@ reply with your new message (in one SMS response. Please add 'event_id={}' in yo
     print "MESSAGE SENT to {}".format(user_phone)
 
 
-# Email contact on day of event on behalf of the user
 def send_email(event):
     """Send template text to contacts."""
-    message = Mail()
+    
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-    # Create from_email object from event object arg (the user)
-    from_name = event.contacts[0].user.fname
-    from_email_address = event.contacts[0].email
-    from_email = Email(from_email_address, from_name)
-    # Create to_email object from event object arg (the user's contact)
-    to_email_address = event.contacts[0].email
+    to_email = event.contacts[0].email
     to_name = event.contacts[0].name
-    to_email = Email(to_email_address, to_name)
-    # Create mail object from event object arg
-    email_body = event.template.text
+
+    from_name = event.contacts[0].user.fname
+    from_email = event.contacts[0].email
+
     subject = event.template.name
-    content = Content("text/plain", email_body)
-    mail = Mail(from_email, subject, to_email, content)
-    # Send email, print confirmation/status
-    response = sg.client.mail.send.post(request_body=mail.get())
+    message_text = event.template.text
+    print message_text
+
+    data = {
+      # "send_at": send_at_time,
+
+      "from": {
+        "email": from_email,
+        "name": from_name
+      },
+
+      "personalizations": [
+        {
+          "to": [
+            {
+              "email": to_email,
+              "name": to_name,
+            }, 
+            # {
+            #   "email": email2,
+            #   "name": name2
+            # }
+          ],
+          "subject": subject
+        }
+      ],
+
+      "content": [
+        {
+          "type": "text/plain",
+          "value": message_text
+        }
+      ]
+
+    }
+
+    response = sg.client.mail.send.post(request_body=data)
     print(response.status_code)
     print(response.body)
     print(response.headers)
 
+# remind you via email to contact someone
 
-# Email user reminder of upcoming event 
 def remind_user(event):
     """Email user of event coming up."""
-    message = Mail()
-    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY')) 
-    # Create from_email object from event object arg
-    from_email = Email("inb125@mail.harvard.edu", "Keep in Touch Team")
-    # Create to email property from event object arg (the user)
-    to_email_address = event.contacts[0].user.email
+
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    to_email = event.contacts[0].user.email
     to_name = event.contacts[0].user.fname
-    to_email = Email(to_email_address, to_name)
-    # Create mail to be sent (reminder email)
-    subject = "Remember to Keep in Touch"
-    email_body = "Just wanted to remind you that {} is coming up and we will send a {} message for {} soon!".format(event.date, event.template.name, event.contacts[0].name)
-    content = Content("text/plain", email_body)
-    mail = Mail(from_email, subject, to_email, content)
-    # Send reminder email and print confirmation/status
-    response = sg.client.mail.send.post(request_body=mail.get())
+    from_name = "Keep in Touch Team"
+    from_email = "inb125@mail.harvard.edu"
+    subject = "Reminder to Keep in Touch with {}".format(event.contacts[0].name)
+    message_text = "Just wanted to remind you that {} is coming up and we will send a {} message for {} soon!".format(event.date, event.template.name, event.contacts[0].name)
+    data = {
+      # "send_at": send_at_time,
+      "from": {
+        "email": from_email,
+        "name": from_name
+      },
+
+      "personalizations": [
+        {
+          "to": [
+            {
+              "email": to_email,
+              "name": to_name,
+            }, 
+            # {
+            #   "email": email2,
+            #   "name": name2
+            # }
+          ],
+          "subject": subject
+        }
+      ],
+
+      "content": [
+        {
+          "type": "text/plain",
+          "value": message_text
+        }
+      ]
+
+    }
+    response = sg.client.mail.send.post(request_body=data)
     print(response.status_code)
     print(response.body)
     print(response.headers)
 
 
+def convert_to_unix(timeobject):
+    """ Takes a datetime object; returns a unix timestamp"""
+    return time.mktime(timeobject.timetuple())
+
+
+# def job():
+#     """Schedule job instance"""
+#     # for testing
+#     e = datetime.datetime(2017, 11, 13, 0, 0)
+#     events = return_events(e)
+#     remind_all_users(events)
+#     send_all_emails(events)
 
 ## for the real app, use today ##
 ##################################
 def job():
     """Schedule job instance"""
+
     today_events = return_todays_events()
     send_all_emails(today_events)
     tmrw_events = return_tmrws_events()
