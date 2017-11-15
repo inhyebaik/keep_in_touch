@@ -38,19 +38,7 @@ token = os.environ.get('TWILIO_TEST_TOKEN')
 twilio_num = os.environ.get('TWILIO_NUMBER')
 my_num = os.environ.get('MY_NUMBER')
 client = Client(account, token)
-
-
-# The session object makes use of a secret key.
-SECRET_KEY = 'a secret key'
-app = Flask(__name__)
 app.config.from_object(__name__)
-
-callers = {
-    twilio_num: "Keep in Touch",
-    # my_num: "Ada Hackbright",
-    # "+14158675310": "Boots",
-    # "+14158675311": "Virgil",
-}
 
 
 @app.route('/')
@@ -167,7 +155,7 @@ def handle_event_form():
     # add contact
     name = request.form.get('contact_name')
     email = request.form.get('contact_email')
-    phone = request.form.get('contact_phone')
+    phone = "+1" + request.form.get('contact_phone')
     user_id = session.get("user_id")
     new_contact = Contact(name=name, email=email, phone=phone, user_id=user_id)
     db.session.add(new_contact)
@@ -318,6 +306,23 @@ def remove_contact():
         flash("You must log in or register to remove contacts")
         return redirect("/register_login")
 
+
+### TEXTING REMINDER WITH TWILIO ###
+def text_reminder(event):
+    """Text reminder to user of an event; asks if they want to update msg"""
+    user_phone = event.contacts[0].user.phone
+    user_fname = event.contacts[0].user.fname
+    c_name = event.contacts[0].name
+
+    # Send an SMS
+    my_msg = "\n\n\nHello {}, your event's coming up tomorrow for {}.\n\n--------\n\nYour message \
+currently is:\n'{}'\n\n--------\n\nIf you'd like to update this message, please \
+reply with your new message (in one SMS response. Please add 'event_id={}' in your response)".format(user_fname, c_name, event.template.text, event.id)
+    message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
+    print "MESSAGE SENT to {}".format(user_phone)
+
+
+
 ##### TWILIO MESSAGING HANDLER, USING NGROK 5000 ########
 @app.route("/sms", methods=['GET', 'POST'])
 def handle_reminder_response():
@@ -325,42 +330,39 @@ def handle_reminder_response():
 
     to_number = request.values.get('To') # Keep in Touch's phone
     from_number = request.values.get('From', None) # user's phone
-    name = callers[from_number] if from_number in callers else "Cool User"
     user_response = request.values.get('Body')
+
+    # fetch user from DB to update event template text
+    user = User.query.filter(User.phone == from_number).one()
+    user_fname = user.fname
     event_id = None
+    
+    # get tomorrow's date to fetch the event
+    t = datetime.datetime.now()
+    today = datetime.datetime(t.year, t.month, t.day, 0, 0)
+    tmrw = datetime.datetime(t.year, t.month, t.day+1, 0, 0)
     
     if "event_id" in user_response.lower():
         eindex = user_response.index("event_id")
         # get the event_id from incoming text...they were instructed to end reply with "event_id=XX"
         event_id = int(user_response[(eindex + len("event_id=")):])
-
-    # get tomorrow's date to fetch the event
-    t = datetime.datetime.now()
-    today = datetime.datetime(t.year, t.month, t.day, 0, 0)
-    tmrw = datetime.datetime(t.year, t.month, t.day+1, 0, 0)
-
-    # fetch user from DB to update event template text
-    user = User.query.filter(User.phone == from_number).one()
-
-    if event_id:
         event = Event.query.get(event_id)
         new_text = user_response[:eindex].rstrip()
+        # update database 
         event.template.text = new_text
         db.session.commit()
-        message = "Thanks, {}! Your new message will be updated as: <event.template.text> {}".format(name, event.template.text)
+        # send confirmation text
+        message = "Thanks, {}! Your new message will be updated in the database as: '{}'".format(user_fname, event.template.text)
+        resp = MessagingResponse()
+        resp.message(body=message)
+        return str(resp)
     else:
-        print "crap couldn't find event_id in user response, just going to update all events on this day!"
-        # unwieldy looping to find the event object...find a better way to do this!
+        # text the user back prompting to add the "event_id" + same instructions.
         for contact in user.contacts:
             for event in contact.events:
-                if event.date == tmrw:  # what to do if you have multiple events for tmrw??? it will change all teh text for every event on that date. Somehow need to pass in event or template id
-                    event.template.text = user_response
-                    db.session.commit()
-        message = "Thanks, {}! Your new message will be updated as: <user_response> '{}' \n for <user.contacts> {}".format(name, user_response, user.contacts)
-
-    resp = MessagingResponse()
-    resp.message(body=message)
-    return str(resp)
+                if event.date == tmrw:
+                    my_msg = "You didn't add 'event_id={id}' in your response. Please text us the same message with the 'event_id={id}' at the end".format(id=event.id)
+                    message = client.messages.create(to=from_number, from_=to_number, body=my_msg)
 
 
 if __name__ == "__main__":
@@ -372,3 +374,13 @@ if __name__ == "__main__":
     # Use the DebugToolbar
     DebugToolbarExtension(app)
     app.run(port=5000, host='0.0.0.0')
+
+    # # add users to callers list
+    # callers = {
+    #     twilio_num: "Keep in Touch Team",
+    #     # my_num: "Ada Hackbright",
+    #     # "+14158675310": "Boots",
+    #     # "+14158675311": "Virgil",
+    # }
+    # for user in User.query.all():
+    #     callers[user.phone] = user.fname + " " +user.lname
