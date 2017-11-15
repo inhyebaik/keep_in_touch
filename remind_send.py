@@ -230,7 +230,6 @@ def job():
 schedule.every(2).seconds.do(job)
 
 
-
 def connect_to_db(app, uri='postgresql:///project'):
     """Connect the database to our Flask app."""
     # Configure to use our PstgreSQL database

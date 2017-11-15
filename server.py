@@ -5,7 +5,7 @@ from flask import (Flask, render_template, redirect, request, flash, session,
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 
-from model import (User, Event, ContactEvent, Contact, Template, db, connect_to_db)
+from model import User, Event, ContactEvent, Contact, Template, db, connect_to_db
 import random
 from quotes import *
 
@@ -45,13 +45,13 @@ SECRET_KEY = 'a secret key'
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-
 callers = {
     twilio_num: "Keep in Touch",
-    my_num: "Ada Hackbright",
+    # my_num: "Ada Hackbright",
     # "+14158675310": "Boots",
     # "+14158675311": "Virgil",
 }
+
 
 @app.route('/')
 def index():
@@ -83,7 +83,7 @@ def register_process():
     password = request.form.get('password')
     fname = request.form.get('fname')
     lname = request.form.get('lname')
-    phone = request.form.get('phone')
+    phone = "+1"+request.form.get('phone')
     # fetch that user from DB as object
     db_user = User.query.filter(User.email == email).first()
 
@@ -323,24 +323,40 @@ def remove_contact():
 def handle_reminder_response():
     """Handle user response to reminder"""
 
-    to_number = request.values.get('To')
-    from_number = request.values.get('From', None)
+    to_number = request.values.get('To') # Keep in Touch's phone
+    from_number = request.values.get('From', None) # user's phone
     name = callers[from_number] if from_number in callers else "Cool User"
-    user_response = request.values.get('Body', "meow")
-    print user_response
+    user_response = request.values.get('Body')
+    event_id = None
+    
+    if "event_id" in user_response.lower():
+        eindex = user_response.index("event_id")
+        # get the event_id from incoming text...they were instructed to end reply with "event_id=XX"
+        event_id = int(user_response[(eindex + len("event_id=")):])
 
-    # get today's date to fetch the event
+    # get tomorrow's date to fetch the event
     t = datetime.datetime.now()
     today = datetime.datetime(t.year, t.month, t.day, 0, 0)
-    # fetch user from DB to update message
-    user = User.query.filter(User.phone == to_number).one()
-    # unwieldy looping to find the event object...find a better way to do this!
-    for contact in user.contacts:
-        for event in contact.events:
-            if event.date == today:
-                event.template.text = user_response
+    tmrw = datetime.datetime(t.year, t.month, t.day+1, 0, 0)
 
-    message = "Thanks, {}! Your new message will be updated as: {}".format(name, user_response)
+    # fetch user from DB to update event template text
+    user = User.query.filter(User.phone == from_number).one()
+
+    if event_id:
+        event = Event.query.get(event_id)
+        new_text = user_response[:eindex].rstrip()
+        event.template.text = new_text
+        db.session.commit()
+        message = "Thanks, {}! Your new message will be updated as: <event.template.text> {}".format(name, event.template.text)
+    else:
+        print "crap couldn't find event_id in user response, just going to update all events on this day!"
+        # unwieldy looping to find the event object...find a better way to do this!
+        for contact in user.contacts:
+            for event in contact.events:
+                if event.date == tmrw:  # what to do if you have multiple events for tmrw??? it will change all teh text for every event on that date. Somehow need to pass in event or template id
+                    event.template.text = user_response
+                    db.session.commit()
+        message = "Thanks, {}! Your new message will be updated as: <user_response> '{}' \n for <user.contacts> {}".format(name, user_response, user.contacts)
 
     resp = MessagingResponse()
     resp.message(body=message)

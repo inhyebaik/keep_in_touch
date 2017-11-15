@@ -112,6 +112,7 @@ class Template(db.Model):
         return "<Template id={} name={} text={}>".format(self.id, self.name, self.text)
 
 
+
 ##############################################################################
 # remind_send.py
 ##############################################################################
@@ -164,9 +165,10 @@ def remind_all_users(events):
     """
     if events == [] or events == "No events!":
         return "No events today"
-    print "REMIND ALL USERS: this is the events:{}".format(events)
+    print "REMIND ALL USERS: these are the events:{}".format(events)
     for event in events:
-        print event
+        print "this is the event : {}".format(event)
+        print "this is the event we will text_reminder: {}".format(event)
         text_reminder(event)
         remind_user(event)
 
@@ -175,17 +177,17 @@ def remind_all_users(events):
 def text_reminder(event):
     """Text reminder to user of an event; asks if they want to update msg"""
     print "this is the event: {}".format(event)
+    print "this is the phone# we will text: {} for {}".format(event.contacts[0].user.phone, event.contacts[0].user.fname)
     user_phone = event.contacts[0].user.phone
     user_fname = event.contacts[0].user.fname
     c_name = event.contacts[0].name
 
     # Send an SMS
-    my_msg = "Hello {}, your event coming up on {} for {}.\nYour message\
-              currently is: '{}'\nIf you'd like to update this message, please \
-              reply with your new message (in one SMS response)".format(user_fname,
-                                                                        event.date,
-                                                                        c_name)
+    my_msg = "\n\n\nHello {}, your event's coming up tomorrow for {}.\n\n--------\n\nYour message \
+currently is:\n'{}'\n\n--------\n\nIf you'd like to update this message, please \
+reply with your new message (in one SMS response. Please add 'event_id={}' in your response)".format(user_fname, c_name, event.template.text, event.id)
     message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
+    print "MESSAGE SENT to {}".format(user_phone)
 
 
 def send_email(event):
@@ -307,8 +309,8 @@ def convert_to_unix(timeobject):
 def job():
     """Schedule job instance"""
 
-    today_events = return_todays_events()
-    send_all_emails(today_events)
+    # today_events = return_todays_events()
+    # send_all_emails(today_events)
     tmrw_events = return_tmrws_events()
     remind_all_users(tmrw_events)
 
