@@ -1,4 +1,5 @@
-# testing in model.py
+# testing reminders
+# test incoming replies on server.py with handle_reminder_response()
 
 """Models and database functions for project."""
 from flask import Flask
@@ -22,7 +23,6 @@ token = os.environ.get('TWILIO_TEST_TOKEN')
 twilio_num = os.environ.get('TWILIO_NUMBER')
 my_num = os.environ.get('MY_NUMBER')
 client = Client(account, token)
-
 
 
 ##############################################################################
