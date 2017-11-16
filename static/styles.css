@@ -45,6 +45,11 @@ textarea {
 
 .green {
     color: green;
-    font-weight: bold;
     font-size: 30px;
+}
+
+input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #000000;
 }
