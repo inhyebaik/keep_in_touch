@@ -124,7 +124,8 @@ def log_out():
 def user_profile(user_id):
     """Shows specific user's info; all of their events and contacts."""
     user = User.query.get(user_id)
-    return render_template("user_profile.html", user=user, author=author, quote=quote)
+    contacts = Contact.query.filter(Contact.user_id == user_id).all()
+    return render_template("user_profile.html", user=user, contacts=contacts, author=author, quote=quote)
 
 
 @app.route('/add_event')
@@ -221,7 +222,9 @@ def modify_db():
     contact.phone = request.form.get('contact_phone')
     event.date = request.form.get('date')
     db.session.commit()
-    flash("Your event/contact has been modified successfully! We'll remind you on {}".format(event.date))
+    flash("Your message for {} has been modified successfully.".format(contact.name))
+    flash("We'll send it to {} on {}.".format(contact.name, event.date))
+    flash("We'll remind you the day before (on {}/{}/{})".format(event.date.month, event.date.day-1, event.date.year))
     # redirect user to their profile
     url = '/users/{}'.format(user_id)
     return redirect(url)

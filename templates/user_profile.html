@@ -9,25 +9,25 @@ Phone: {{ user.phone }}
 
 <!-- Contacts list, with events -->
 <p class='green'> People {{user.fname}} Will Keep in Touch With:</p>
-<ol> {% for contact in user.contacts %}
+<ol> {% for contact in contacts %}
     <li> 
         <b>{{ contact.name }} </b>
 
         {% if contact.user_id == session.get('user_id') %}
-            
             <a href="/edit_contact/{{contact.id}}" style='font-size: 12px'><b>Edit contact info</b></a>
         {% endif %} 
     </li> 
-        <ul> {% for event in contact.events %}
-            <li>{{ event.template.name }} ({{event.date}}) 
-                {% if contact.user_id == session.get('user_id') %}
-                    <a href="/edit_event/{{event.id}}" style='font-size: 12px'><b>view/modify</b></a>
+        <ul> {% for event in contact.events|sort(attribute='date') %}
+            {% if contact.user_id == session.get('user_id') %}
+            <li>[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]  
+                    <a href="/edit_event/{{event.id}}">{{ event.template.name }}</a>
                 {% endif %} 
             </li>
         {% endfor %} 
-         <li><a href="/add_event/{{contact.id}}"><b>Add a new event for {{contact.name}}!</b></a></li>
-         <li><a href="/remove_contact/{{contact.id}}" style='font-size: 12px'><b>Delete {{contact.name}} and their events</b></a></li>
         </ul>
+         <a href="/add_event/{{contact.id}}"style='font-size: 12px'><b>Add a new event for {{contact.name}}</b></a><br>
+         <a href="/remove_contact/{{contact.id}}" style='font-size: 12px'><b>Delete {{contact.name}} and their events</b></a>
+        <br><br>
     {% endfor %}
 </ol>
 

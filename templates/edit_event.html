@@ -12,17 +12,17 @@ Contact name: <input type='text' name='contact_name' value='{{event.contacts[0].
 Contact's email: <input type='email' name='contact_email' value='{{event.contacts[0].email}}' required><br>
 Contact's phone: <input type='tel' name='contact_phone' value='{{event.contacts[0].phone}}'> <br><br>
 
-Template name: <input type='text' name='template_name' value='{{event.template.name}}'> <br>
-Template Text: <br><textarea name="template_text">{{event.template.text}}</textarea><br>
+Subject: <input type='text' name='template_name' value='{{event.template.name}}'> <br>
+Text: <br><textarea name="template_text">{{event.template.text}}</textarea><br>
 
 
 Date to be sent: 
 
 <input type="date" name='date' class="datefield" min="" max="" value="{{event.date.year}}-{{ event.date.month}}-{{ event.date.day}}" data-date-split-input="true" required/>
 
-<br>original date: {{event.date}}<br>
+<br> <i>original date: {{event.date.month}}/{{event.date.day}}/{{event.date.year}}</i><br>
 
-<input type="submit" value="Save Changes">
+<input type="submit" value="Save Event">
 </form>
 
 

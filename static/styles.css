@@ -41,13 +41,10 @@ textarea {
 
 .red {
     color: red;
-    font-weight: bold;
-    font-style: oblique;
 }
 
 .green {
     color: green;
     font-weight: bold;
-    font-style: oblique;
     font-size: 30px;
 }

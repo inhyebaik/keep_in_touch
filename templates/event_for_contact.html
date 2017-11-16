@@ -12,10 +12,9 @@ Contact's phone: {{ contact.phone }}<br>
 <h3>New Message: </h3>
 1. Date to be sent: <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" required/>
 <br>
-2. What's the subject or purpose of this message? (Keep it short!)
-<input type='text' name='template_name' required>
+2. What's the subject of this message? (Keep it short!)
+<input type='text' name='template_name' required> 
 <br>
-
 3. How do you want to greet them? 
         <select name='greet'>
             <option value='Dear'>Dear</option>
@@ -25,10 +24,17 @@ Contact's phone: {{ contact.phone }}<br>
     
 
 4. What do you want them to know? <br>
-<textarea name="body">
-Thank you for...
+...or choose a prefilled message if you'd like!         
+        <select class='template_type' name='template_type'>
+            <option value='ty'>Thank you</option>
+            <option value='hb'>Happy birthday</option>
+            <option value='fup'>Follow Up</option>
+        </select> 
+        <br>
+<textarea class='template_textarea' name="body">
+You're awesome!
 </textarea>
- 
+
 <br>
 
     4. How do you want to sign off? 
