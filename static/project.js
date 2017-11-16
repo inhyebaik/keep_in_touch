@@ -1,6 +1,29 @@
 "use strict";
 
 
+// get new quote for each refresh (base.html)
+$(document).ready(function() {
+    $('#quote-text').load('/quote');
+});
+
+// when user clicks on a contact name:
+// display all of contact's events, add_event for this contact, delete contact
+function someF(results) {
+    for (thing of results) {
+         $('contact-options').html("<li>" + thing + "</li>");
+    }
+}
+
+function showOptions(evt) {
+    evt.preventDefault();
+    let url = "/events.json";
+    let formInputs = { "contact_id" : $('#contact').val()};
+    $.post("/contact.json", formInputs, someF);
+}
+
+$('#contact').click(showOptions);
+
+
 // ensure event dates are today or in the future
 let today = new Date();
 let dd = today.getDate();

@@ -39,21 +39,42 @@ app.config.from_object(__name__)
 @app.route('/')
 def index():
     """Homepage."""
-    return render_template("homepage.html", author=author, quote=quote)
+    return render_template("homepage.html")
+
+
+@app.route('/quote')
+def return_quote():
+    """Returns random quote from QUOTES."""
+    q = random_quote(QUOTES)
+    author = q[0]
+    quote = q[1]
+    return quote+"<br>"+ "-"+author
+
+
+@app.route('/contact.json', methods=['POST'])
+def contact_stuff(): 
+    """Return contact events for given contact"""
+
+    contact_id = int(request.form.get('contact_id'))
+    c_events = Contact.query.get(contact_id).events
+    d = {}
+    for c in c_events:
+        d[c.date] = c.template.text
+    return jsonify(d)
 
 
 @app.route('/users')
 def user_list():
     """Show list of users."""
     users = User.query.all()
-    return render_template("user_list.html", users=users, author=author, quote=quote)
+    return render_template("user_list.html", users=users)
 
 
 @app.route('/register_login')
 def register_form():
     """Prompts user to register/sign in"""
 
-    return render_template("register_login_form.html", author=author, quote=quote)
+    return render_template("register_login_form.html")
 
 
 @app.route('/register', methods=['POST'])
@@ -125,7 +146,7 @@ def user_profile(user_id):
     """Shows specific user's info; all of their events and contacts."""
     user = User.query.get(user_id)
     contacts = Contact.query.filter(Contact.user_id == user_id).all()
-    return render_template("user_profile.html", user=user, contacts=contacts, author=author, quote=quote)
+    return render_template("user_profile.html", user=user, contacts=contacts)
 
 
 @app.route('/add_event')
@@ -134,7 +155,7 @@ def add_event():
     user_id = session.get("user_id")
     if user_id:
         user = User.query.get(user_id)
-        return render_template("event_form.html", user=user, author=author, quote=quote)
+        return render_template("event_form.html", user=user)
     else:
         flash("You must log in or register to add events")
         return redirect("/register_login")
@@ -196,7 +217,7 @@ def show_event(event_id):
         user = User.query.get(user_id)
         event = Event.query.get(event_id)
 
-        return render_template("edit_event.html", event=event, user=user, author=author, quote=quote)
+        return render_template("edit_event.html", event=event, user=user)
     else:
         flash("You must log in or register to modify events")
         return redirect("/register_login")
@@ -259,7 +280,7 @@ def confirm(contact_id):
     user_id = session.get("user_id")
     if user_id:
         contact = Contact.query.get(contact_id)
-        return render_template('confirm_delete_contact.html', contact=contact, author=author, quote=quote)
+        return render_template('confirm_delete_contact.html', contact=contact)
     else:
         flash("You must log in or register to remove contacts")
         return redirect("/register_login")
@@ -310,7 +331,7 @@ def add_event_for_contact(contact_id):
     if user_id:
         user = User.query.get(user_id)
         contact = Contact.query.get(contact_id)
-        return render_template("event_for_contact.html", user=user, contact=contact, author=author, quote=quote)
+        return render_template("event_for_contact.html", user=user, contact=contact)
     else:
         flash("You must log in or register to add events")
         return redirect("/register_login")
@@ -359,7 +380,7 @@ def edit_contact(contact_id):
     if user_id:
         user = User.query.get(user_id)
         contact = Contact.query.get(contact_id)
-        return render_template('edit_contact.html', contact=contact, author=author, quote=quote)
+        return render_template('edit_contact.html', contact=contact)
     else:
         flash("You must log in or register to add events")
         return redirect("/register_login")

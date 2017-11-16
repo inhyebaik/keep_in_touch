@@ -9,10 +9,11 @@ Phone: {{ user.phone }}
 
 <!-- Contacts list, with events -->
 <p class='green'> People {{user.fname}} Will Keep in Touch With:</p>
-<ol> {% for contact in contacts %}
-    <li> 
+<ul> {% for contact in contacts %}
+    <li id="contact" value='{{contact.id}}'> 
         <b>{{ contact.name }} </b>
         {% if contact.user_id == session.get('user_id') %}
+            <div id='contact-options'></div>
             <a href="/edit_contact/{{contact.id}}" style='font-size: 12px'><b>Edit contact info</b></a>
         {% endif %} 
     </li> 
@@ -30,7 +31,7 @@ Phone: {{ user.phone }}
          <a href="/remove_contact/{{contact.id}}" style='font-size: 12px'><b>Delete {{contact.name}} and their events</b></a><br><br>
          {% endif %} 
     {% endfor %}
-</ol>
+</ul>
 
 
 <!-- Table of events -->
