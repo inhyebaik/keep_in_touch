@@ -4,9 +4,10 @@ from flask import (Flask, render_template, redirect, request, flash, session,
                    jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
-
+from flask.ext.bcrypt import Bcrypt
 from model import User, Event, ContactEvent, Contact, Template, db, connect_to_db
 import random
+from werkzeug.security import generate_password_hash, check_password_hash
 from quotes import *
 
 # Email sending
@@ -16,6 +17,7 @@ from sendgrid.helpers.mail import *
 # Texting
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
+
 
 app = Flask(__name__)
 
@@ -83,6 +85,8 @@ def register_process():
     # Grab information from registration form
     email = request.form.get('email')
     password = request.form.get('password')
+    hashed_value = generate_password_hash(password)
+    print "this is the pw: {}           this is hashed_value: {}".format(password, hashed_value)
     fname = request.form.get('fname').title()
     lname = request.form.get('lname').title()
     phone = "+1"+request.form.get('phone')
@@ -96,7 +100,7 @@ def register_process():
         return redirect('/register_login')
     else:
         # Register new user; add to DB; log them in; save user_id to session
-        new_user = User(email=email, password=password, fname=fname, lname=lname,
+        new_user = User(email=email, password=hashed_value, fname=fname, lname=lname,
                         phone=phone)
         db.session.add(new_user)
         db.session.commit()
@@ -112,13 +116,15 @@ def login_process():
     """Logs user in; adds to session"""
     # Gets information from login input form
     email = request.form.get('login_email')
-    password = request.form.get('login_password')
+    login_password = request.form.get('login_password')
     # Fetch that user from DB as object
     db_user = User.query.filter(User.email == email).first()
     # If that user exists in DB:
     if db_user:
         # Verify password; redirect to their profile
-        if db_user.password == password:
+        print "this is the login_password:{}     this is the db pw:{}".format(login_password, db_user.password)
+        password = db_user.password
+        if check_password_hash(password, login_password):
             session['user_id'] = db_user.id # add user_id to the session
             flash("You have successfully logged in!")
             url = '/users/{}'.format(db_user.id)
@@ -131,7 +137,7 @@ def login_process():
         # Alert if email doesn't exist; prompt and redirect to register/login
         flash("Email does not exist in database: please register")
         return redirect('/register_login')
-
+        
 
 @app.route('/logout')
 def log_out():

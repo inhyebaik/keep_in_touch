@@ -2,7 +2,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import time, datetime
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 db = SQLAlchemy()
@@ -17,7 +17,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     email = db.Column(db.String(64), nullable=False)
-    password = db.Column(db.String(64), nullable=False)
+    password = db.Column(db.Text, nullable=False)
     fname = db.Column(db.String(20)) # make nullable=False after testing, for more refined log in/register page
     lname = db.Column(db.String(20)) # make nullable=False after testing, for more refined log in/register page
     phone = db.Column(db.String(15))
