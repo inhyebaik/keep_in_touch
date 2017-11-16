@@ -8,38 +8,41 @@ Phone: {{ user.phone }}
 <br>
 
 <!-- Contacts list, with events -->
-<p class='green'> People {{user.fname}} Will Keep in Touch With</p>
+<p class='green'> People {{user.fname}} Will Keep in Touch With:</p>
 <ol> {% for contact in user.contacts %}
     <li> 
-        {{ contact.name }} 
+        <b>{{ contact.name }} </b>
 
         {% if contact.user_id == session.get('user_id') %}
-            <a href="/remove_contact/{{contact.id}}" style='font-size: 12px'><b>delete contact and events</b></a>
+            
+            <a href="/edit_contact/{{contact.id}}" style='font-size: 12px'><b>Edit contact info</b></a>
         {% endif %} 
     </li> 
         <ul> {% for event in contact.events %}
             <li>{{ event.template.name }} ({{event.date}}) 
                 {% if contact.user_id == session.get('user_id') %}
-                    <a href="/edit_event/{{event.id}}" style='font-size: 12px'><b>view/modify event</b></a>
+                    <a href="/edit_event/{{event.id}}" style='font-size: 12px'><b>view/modify</b></a>
                 {% endif %} 
             </li>
         {% endfor %} 
+         <li><a href="/add_event/{{contact.id}}"><b>Add a new event for {{contact.name}}!</b></a></li>
+         <li><a href="/remove_contact/{{contact.id}}" style='font-size: 12px'><b>Delete {{contact.name}} and their events</b></a></li>
         </ul>
     {% endfor %}
 </ol>
 
 
-
 <!-- Table of events -->
-<p class='green'> {{user.fname}}'s Events</p>
+<!-- <p class='green'> {{user.fname}}'s Events</p>
 <table cellspacing="15">
     <tr>
         <th><u>Contact Name</u></th>
         <th><u>Email</u></th>
         <th><u>Phone</u></th>
         <th><u>Template</u></u></th>
-        <th><u>Date (to be sent)</u></th>
-        <th></th> <!-- "empty" row for view/modify link for each event  -->
+        <th><u>Date (to be sent)</u></th> -->
+        <!-- "empty" row for view/modify link for each event  -->
+        <!-- <th></th> 
     </tr>
     <tr> 
     {% for contact in user.contacts %}
@@ -54,9 +57,9 @@ Phone: {{ user.phone }}
     {% endfor %}
     {% endfor %}
 </table>
-
+-->
 <br>
-<br>
-<a href="/add_event"> <b>Create a new contact/event</b></a>
+<br> 
+<a href="/add_event"> <b>Add a new contact/event</b></a>
 
 {% endblock %}

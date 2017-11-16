@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Edit {{contact.name}}'s information</h2>
+
+<form action='/edit_contact/{{contact.id}}', method='POST'>
+Name: <input type='text' name='name' value='{{contact.name}}' required> <br>
+Email: <input type='text' name='email' value='{{contact.email}}' required> <br>
+Phone: <input type='text' name='phone' value='{{contact.phone}}'><br>
+
+<input type='hidden' name='contact_id' value='{{contact.id}}'><br>
+<input type='submit' value='Update info for {{contact.name}}'><br>
+</form>
+
+{%endblock%}

@@ -62,8 +62,8 @@ def register_process():
     # Grab information from registration form
     email = request.form.get('email')
     password = request.form.get('password')
-    fname = request.form.get('fname')
-    lname = request.form.get('lname')
+    fname = request.form.get('fname').title()
+    lname = request.form.get('lname').title()
     phone = "+1"+request.form.get('phone')
     # Fetch that user from DB as object
     db_user = User.query.filter(User.email == email).first()
@@ -185,6 +185,7 @@ def handle_event_form():
     return redirect(url)
 
 
+
 @app.route('/edit_event/<event_id>')
 def show_event(event_id):
     """Show specific event to view or modify"""
@@ -224,6 +225,7 @@ def modify_db():
     # redirect user to their profile
     url = '/users/{}'.format(user_id)
     return redirect(url)
+
 
 @app.route('/remove_event', methods=['POST'])
 def remove_event():
@@ -292,6 +294,89 @@ def remove_contact():
     else:
         flash("You must log in or register to remove contacts")
         return redirect("/register_login")
+
+
+
+
+####### specifically given a contact #################
+
+@app.route('/add_event/<contact_id>')
+def add_event_for_contact(contact_id):
+    """Let logged in users add an event given a contact."""
+    user_id = session.get("user_id")
+    if user_id:
+        user = User.query.get(user_id)
+        contact = Contact.query.get(contact_id)
+        return render_template("event_for_contact.html", user=user, contact=contact, author=author, quote=quote)
+    else:
+        flash("You must log in or register to add events")
+        return redirect("/register_login")
+
+
+
+@app.route('/handle_new_event_for_contact', methods=['POST'])
+def handle_new_event_for_contact():
+    """Handle new event for contact form; updates DB"""
+    # Get user object
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
+    # Get contact object (hidden input from event_for_contact.html)
+    contact_id = request.form.get('contact_id')
+    contact = Contact.query.get(contact_id)
+    # get inputs from form for template text
+    greet = request.form.get('greet')
+    sign_off = request.form.get('sign_off')
+    body = request.form.get('body')
+    user_fname = user.fname
+    template_text = "{} {}, \n{} \n{},\n{}".format(greet, contact.name, body, sign_off,
+                                                   user_fname)
+    # add template
+    template_name = request.form.get('template_name')
+    new_template = Template(name=template_name, text=template_text)
+    db.session.add(new_template)
+    db.session.commit()
+    # add event
+    date = request.form.get('date')
+    new_event = Event(contact_id=contact_id, template_id=new_template.id, date=date)
+    db.session.add(new_event)
+    db.session.commit()
+    # add ContactEvent association
+    ce = ContactEvent(contact_id=contact_id, event_id=new_event.id)
+    db.session.add(ce)
+    db.session.commit()
+    # redirect to edit_event page
+    flash("You have successfully added a new event for {}!".format(contact.name))
+    url = '/edit_event/{}'.format(new_event.id)
+    return redirect(url)
+
+
+@app.route('/edit_contact/<contact_id>')
+def edit_contact(contact_id):
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.get(user_id)
+        contact = Contact.query.get(contact_id)
+        return render_template('edit_contact.html', contact=contact, author=author, quote=quote)
+    else:
+        flash("You must log in or register to add events")
+        return redirect("/register_login")
+
+
+@app.route('/edit_contact/<contact_id>', methods=['POST'])
+def edit_contact_db(contact_id):
+    """Updates DB for contact's information // edit_contact.html form"""
+    # contact_id = request.form.get(contact_id)
+    name = request.form.get('name')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+    # Fetch contact from DB; update DB
+    contact = Contact.query.get(contact_id)
+    contact.name, contact.email, contact.phone = name, email, phone
+    db.session.commit()
+    flash("{}'s information has been updated!".format(contact.name))
+    user_id = session.get('user_id')
+    url = '/users/{}'.format(user_id)
+    return redirect(url)
 
 
 ### TEXTING REMINDER WITH TWILIO ###

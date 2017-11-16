@@ -11,7 +11,11 @@ Date to be sent: <input type="date" name='date' class="datefield"min="" max="" i
 <br><br>
 
 <h3>Add Input to the Message: </h3>
-1. How do you want to greet them? 
+1. What's the subject or purpose of this message? (Keep it short!)
+<input type='text' name='template_name' required>
+<br>
+
+2. How do you want to greet them? 
         <select name='greet'>
             <option value='Dear'>Dear</option>
             <option value='Hey'>Hey</option>
@@ -19,9 +23,6 @@ Date to be sent: <input type="date" name='date' class="datefield"min="" max="" i
         </select> <br>
 
     
-2. What's the subject or purpose of this message? (Keep it short!)
-<input type='text' name='template_name' required>
-<br>
 
 3. What do you want them to know? <br>
 <!-- <input type='text' name='body' value="thank you for..." required> -->
@@ -31,12 +32,12 @@ Thank you for...
  
 <br>
 
-    4. How do you want to sign off? 
-        <select name='sign_off'>
-            <option value='Sincerely'>Sincerely</option>
-            <option value='Yours'>Yours</option>
-            <option value='Best'>Best</option>
-        </select> <br><br>
+4. How do you want to sign off? 
+    <select name='sign_off'>
+        <option value='Sincerely'>Sincerely</option>
+        <option value='Yours'>Yours</option>
+        <option value='Best'>Best</option>
+    </select> <br><br>
 
 <input type='submit' value='Add Contact, Event, and Message'>
 </form>

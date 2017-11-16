@@ -62,8 +62,8 @@ def register_process():
     # Grab information from registration form
     email = request.form.get('email')
     password = request.form.get('password')
-    fname = request.form.get('fname')
-    lname = request.form.get('lname')
+    fname = request.form.get('fname').title()
+    lname = request.form.get('lname').title()
     phone = "+1"+request.form.get('phone')
     # Fetch that user from DB as object
     db_user = User.query.filter(User.email == email).first()
@@ -148,7 +148,6 @@ def handle_event_form():
     email = request.form.get('contact_email')
     phone = "+1" + request.form.get('contact_phone')
     user_id = session.get("user_id")
-    new_contact = Contact(name=name, email=email, phone=phone, user_id=user_id)
     db.session.add(new_contact)
     db.session.commit()
 
@@ -178,7 +177,7 @@ def handle_event_form():
     db.session.commit()
 
     # redirect to edit_event page
-    flash("You have successfully added a new event for {}!".format(name))
+    flash("You have successfully added a new event for {}!".format(contact.name))
     url = '/edit_event/{}'.format(new_event.id)
     return redirect(url)
 

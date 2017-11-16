@@ -22,12 +22,13 @@ Date to be sent:
 
 <br>original date: {{event.date}}<br>
 
-<input type="submit" value="Modify Event/Contact">
+<input type="submit" value="Save Changes">
 </form>
 
 
 <form action="/remove_event" method='POST'>
     <input type='hidden' name='event_id' value='{{ event.id }}'>
+    <br>
     <input type='submit' value="Remove Event">
 </form>
 

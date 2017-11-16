@@ -1,0 +1,45 @@
+<!-- render_template("event_for_contact.html", user=user, contact=contact, author=author, quote=quote) -->
+{% extends 'base.html' %}
+{% block content %}
+
+<h2><u>Create an Event for {{ contact.name }}</u></h2>
+<form id='neweventcontact' action='/handle_new_event_for_contact', method='POST'>
+
+Contact's name: {{ contact.name}}<br>
+Contact's email: {{ contact.email }}<br>
+Contact's phone: {{ contact.phone }}<br>
+
+<h3>New Message: </h3>
+1. Date to be sent: <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" required/>
+<br>
+2. What's the subject or purpose of this message? (Keep it short!)
+<input type='text' name='template_name' required>
+<br>
+
+3. How do you want to greet them? 
+        <select name='greet'>
+            <option value='Dear'>Dear</option>
+            <option value='Hey'>Hey</option>
+            <option value='Hello'>Hello</option>
+        </select> <br>
+    
+
+4. What do you want them to know? <br>
+<textarea name="body">
+Thank you for...
+</textarea>
+ 
+<br>
+
+    4. How do you want to sign off? 
+        <select name='sign_off'>
+            <option value='Sincerely'>Sincerely</option>
+            <option value='Yours'>Yours</option>
+            <option value='Best'>Best</option>
+        </select> <br><br>
+
+<input type='hidden' name='contact_id' value='{{ contact.id }}'>
+<input type='submit' value='Add Event for {{contact.name}} :)'>
+</form>
+
+{% endblock %}
