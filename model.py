@@ -23,6 +23,14 @@ class User(db.Model):
     phone = db.Column(db.String(15))
 
 
+    def __init__(self, email, password, fname, lname, phone=''):
+        self.email = email
+        self.password = generate_password_hash(password)
+        self.fname = fname
+        self.lname = lname
+        self.phone = phone
+        
+
     def __repr__(self):
         """Provide better representation."""
         return "<User id={} fname={} email={}>".format(self.id, self.fname, self.email)
