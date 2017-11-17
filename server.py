@@ -81,10 +81,9 @@ def register_process():
     email = request.form.get('email')
     password = request.form.get('password')
     hashed_value = generate_password_hash(password)
-    print "this is the pw: {}           this is hashed_value: {}".format(password, hashed_value)
-    fname = request.form.get('fname').title()
-    lname = request.form.get('lname').title()
-    phone = "+1"+request.form.get('phone')
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    phone = "+1"+str(request.form.get('phone'))
     # Fetch that user from DB as object
     db_user = User.query.filter(User.email == email).first()
 
@@ -117,7 +116,6 @@ def login_process():
     # If that user exists in DB:
     if db_user:
         # Verify password; redirect to their profile
-        print "this is the login_password:{}     this is the db pw:{}".format(login_password, db_user.password)
         password = db_user.password
         if check_password_hash(password, login_password):
             session['user_id'] = db_user.id # add user_id to the session
@@ -208,7 +206,6 @@ def handle_event_form():
     return redirect(url)
 
 
-
 @app.route('/edit_event/<event_id>')
 def show_event(event_id):
     """Show specific event to view or modify"""
@@ -221,6 +218,7 @@ def show_event(event_id):
     else:
         flash("You must log in or register to modify events")
         return redirect("/register_login")
+
 
 
 @app.route('/handle_edits', methods=['POST'])
@@ -387,7 +385,6 @@ def edit_profile():
 
 @app.route('/e_profile', methods=['POST'])
 def handle_profile_edits():
-    print "---------------------------------------------------------"
     user_id = session.get('user_id')
     fname = request.form.get('fname')
     lname = request.form.get('lname')

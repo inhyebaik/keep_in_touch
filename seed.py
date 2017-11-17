@@ -4,8 +4,8 @@ import datetime
 
 def example_data():
 # ADD USERS
-    jane = User(email='j@gmail.com', password='a', fname='Jane', lname='Hacks')
-    bob = User(email='h@gmail.com', password='a', fname='Bob', lname='Baller')
+    jane = User(email='j@gmail.com', password='a', fname='Jane', lname='Hacks', phone='+11234567890')
+    bob = User(email='h@gmail.com', password='a', fname='Bob', lname='Baller', phone='+10987654321')
     db.session.add_all([jane, bob])
     db.session.commit()
     # ADD CONTACTS
