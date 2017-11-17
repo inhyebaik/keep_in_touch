@@ -8,20 +8,29 @@ $(document).ready(function() {
 
 // when user clicks on a contact name:
 // display all of contact's events, add_event for this contact, delete contact
-function someF(results) {
-    for (thing of results) {
-         $('contact-options').html("<li>" + thing + "</li>");
-    }
+function showEvents(results) {
+    // console.dir(Object.keys(results));
+    console.log("in showEvents");
+    let contact_id = results['contact_id'];
+    let element = $("#contact-options-"+contact_id);
+    if (element.html() === '') {
+    for (let e_id in results['events']) {
+        console.log(element);
+         $(element).append("<li>" + results['events'][e_id]["template_name"] + "</li>");
+        }
+    } else {
+        element.html(''); }
 }
+
 
 function showOptions(evt) {
-    evt.preventDefault();
-    let url = "/events.json";
-    let formInputs = { "contact_id" : $('#contact').val()};
-    $.post("/contact.json", formInputs, someF);
-}
+    let contact_id = $(this).attr('id');
+    let url = "/contact.json";
+    let formInputs = { "contact_id" : contact_id};
+    $.post(url, formInputs, showEvents);
+}   
 
-$('#contact').click(showOptions);
+$('.contact-name').on("click", showOptions);
 
 
 // ensure event dates are today or in the future

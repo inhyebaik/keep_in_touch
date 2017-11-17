@@ -25,9 +25,6 @@ app = Flask(__name__)
 app.secret_key = "ABC"
 app.jinja_env.undefined = StrictUndefined # raise error if you use undefined variable in Jinja2
 
-q = random_quote(QUOTES)
-author = q[0]
-quote = q[1]
 
 # source secrets and create client
 account = os.environ.get('TWILIO_TEST_ACCOUNT')
@@ -47,22 +44,22 @@ def index():
 @app.route('/quote')
 def return_quote():
     """Returns random quote from QUOTES."""
-    q = random_quote(QUOTES)
-    author = q[0]
-    quote = q[1]
+    author, quote = random_quote(QUOTES)
     return quote+"<br>"+ "-"+author
 
-
+########### JSON ROUTES FOR AJAX REQUESTS ############
 @app.route('/contact.json', methods=['POST'])
 def contact_stuff(): 
     """Return contact events for given contact"""
-
+    print "hello it reached the route"
     contact_id = int(request.form.get('contact_id'))
+    print contact_id
     c_events = Contact.query.get(contact_id).events
     d = {}
-    for c in c_events:
-        d[c.date] = c.template.text
-    return jsonify(d)
+    for event in c_events:
+        d[event.id] = {"template_name": event.template.name}
+    print d
+    return jsonify({"events":d, "contact_id": contact_id})
 
 
 @app.route('/users')
@@ -137,7 +134,7 @@ def login_process():
         # Alert if email doesn't exist; prompt and redirect to register/login
         flash("Email does not exist in database: please register")
         return redirect('/register_login')
-        
+
 
 @app.route('/logout')
 def log_out():
@@ -222,7 +219,6 @@ def show_event(event_id):
     if user_id:
         user = User.query.get(user_id)
         event = Event.query.get(event_id)
-
         return render_template("edit_event.html", event=event, user=user)
     else:
         flash("You must log in or register to modify events")

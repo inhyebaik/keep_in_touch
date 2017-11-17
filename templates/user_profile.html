@@ -5,15 +5,15 @@
 Email: {{ user.email }}
 <br>
 Phone: {{ user.phone }}
-<br><br>
 
 <!-- Contacts list, with events -->
+<br><br>
 <p class='green'> People {{user.fname}} Will Keep in Touch With:</p>
 <ul> {% for contact in contacts %}
-    <li id="contact" value='{{contact.id}}'> 
-        <b>{{ contact.name }} </b>
+    <li > 
+        <span class="contact-name" id="{{contact.id}}">{{ contact.name }}</span>
         {% if contact.user_id == session.get('user_id') %}
-            <div id='contact-options'></div>
+            <div id='contact-options-{{contact.id}}'></div>
             <a href="/edit_contact/{{contact.id}}" style='font-size: 12px'><b>Edit contact info</b></a>
         {% endif %} 
     </li> 
