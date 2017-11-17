@@ -1,4 +1,6 @@
 <!doctype html>
+
+
 <html>
 <head>
     <link rel="stylesheet" href="/static/styles.css">
@@ -13,16 +15,11 @@
 
 
 <body>
-
-  <ul class='red'>
-    {% for message in get_flashed_messages() %}
-      <li> {{ message }} </li>
-    {% endfor %}
-  </ul>
-
+<div class="container">
 <h1>Keep in Touch</h1>
 Keep in Touch lets you automate keeping in touch. <br>
-
+  <div class="row">
+    <div class="col-sm-6">
 <!-- check if there's a session. If so, add link to log out, else log in -->
   {% if session.get('user_id') %}
         <a href="/logout">Log Out</a>
@@ -30,10 +27,30 @@ Keep in Touch lets you automate keeping in touch. <br>
         <a href="/register_login">Log In or Register</a>
   {% endif %}
   <hr>
+  <ul class='red'>
+    {% for message in get_flashed_messages() %}
+      <li> {{ message }} </li>
+    {% endfor %}
+  </ul>
 
   {% block content %} 
       put your content here 
   {% endblock %}
+    </div>
+    <div class="col-sm-6" >
+      <p>Sed ut perspiciatis...</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!--   {% block content1 %} 
+      put your content here 
+  {% endblock %} -->
 <br>
 <br>
 <br>
