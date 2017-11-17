@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>{{ user.fname}} {{user.lname}}'s profile</h2>
+<h2>{{ user.fname}} {{user.lname}}'s profile</h2> 
 Email: {{ user.email }}
 <br>
 Phone: {{ user.phone }}
+<br>
+{% if user.id == session.get('user_id') %}
+(<a href="/edit_profile">Edit my info</a>)
+{% endif %} 
 
 <!-- Contacts list, with events -->
 <br><br>
@@ -12,9 +16,12 @@ Phone: {{ user.phone }}
 <ul> {% for contact in contacts %}
     <li > 
         <span class="contact-name" id="{{contact.id}}">{{ contact.name }}</span>
+           {% if user.id == session.get('user_id') %} 
+                (<a href="/edit_contact/{{contact.id}}" style='font-size: 12px'><b>Edit contact info</b></a>)
+            {% endif %} 
+
         {% if contact.user_id == session.get('user_id') %}
             <div id='contact-options-{{contact.id}}'></div>
-            <a href="/edit_contact/{{contact.id}}" style='font-size: 12px'><b>Edit contact info</b></a>
         {% endif %} 
     </li> 
         <ul> {% for event in contact.events|sort(attribute='date') %}
@@ -26,6 +33,7 @@ Phone: {{ user.phone }}
         {% endfor %} 
 
         </ul>
+   
         {% if contact.user_id == session.get('user_id') %}
          <a href="/add_event/{{contact.id}}"style='font-size: 12px'><b>Add a new event for {{contact.name}}</b></a><br>
          <a href="/remove_contact/{{contact.id}}" style='font-size: 12px'><b>Delete {{contact.name}} and their events</b></a><br><br>
@@ -62,6 +70,7 @@ Phone: {{ user.phone }}
 -->
 <br>
 <br> 
-<a href="/add_event"> <b>Add a new contact/event</b></a>
-
+     {% if user.id == session.get('user_id') %}
+        <a href="/add_event"> <b>Add a new contact/event</b></a>
+    {%endif%}
 {% endblock %}

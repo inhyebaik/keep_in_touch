@@ -9,14 +9,11 @@ $(document).ready(function() {
 // when user clicks on a contact name:
 // display all of contact's events, add_event for this contact, delete contact
 function showEvents(results) {
-    // console.dir(Object.keys(results));
-    console.log("in showEvents");
     let contact_id = results['contact_id'];
     let element = $("#contact-options-"+contact_id);
     if (element.html() === '') {
     for (let e_id in results['events']) {
-        console.log(element);
-         $(element).append("<li>" + results['events'][e_id]["template_name"] + "</li>");
+         $(element).append("<li>" + results['events'][e_id]["date"] + ": " + results['events'][e_id]["template_name"] + "</li>");
         }
     } else {
         element.html(''); }

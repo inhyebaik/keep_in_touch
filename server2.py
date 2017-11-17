@@ -47,19 +47,17 @@ def return_quote():
     author, quote = random_quote(QUOTES)
     return quote+"<br>"+ "-"+author
 
+
 ########### JSON ROUTES FOR AJAX REQUESTS ############
 @app.route('/contact.json', methods=['POST'])
 def contact_stuff(): 
     """Return contact events for given contact"""
-    print "hello it reached the route"
     contact_id = int(request.form.get('contact_id'))
-    print contact_id
     c_events = Contact.query.get(contact_id).events
     d = {}
     for event in c_events:
-        d[event.id] = {"template_name": event.template.name}
-    print d
-    return jsonify({"events":d, "contact_id": contact_id})
+        d[event.id] = {"date": event.date, "template_name": event.template.name}
+    return jsonify({"events": d, "contact_id": contact_id})
 
 
 @app.route('/users')
@@ -374,6 +372,40 @@ def handle_new_event_for_contact():
     flash("You have successfully added a new event for {}!".format(contact.name))
     url = '/edit_event/{}'.format(new_event.id)
     return redirect(url)
+
+
+@app.route('/edit_profile')
+def edit_profile():
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.get(user_id)
+        return render_template('edit_profile.html', user=user)
+    else:
+        flash("You must log in or register to edit your profile")
+        return redirect("/register_login")
+
+
+@app.route('/e_profile', methods=['POST'])
+def handle_profile_edits():
+    print "---------------------------------------------------------"
+    user_id = session.get('user_id')
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    email = request.form.get('email')
+    phone = "+1"+request.form.get('phone')
+    if user_id:
+        user = User.query.get(user_id)
+        user.fname = fname
+        user.lname = lname
+        user.email = user.email
+        user.phone = phone
+        db.session.commit()
+        flash("Your information has been updated successfully.")
+        url = '/users/{}'.format(user_id)
+        return redirect(url)
+    else:
+        flash("You must log in or register to add events")
+        return redirect("/register_login")
 
 
 @app.route('/edit_contact/<contact_id>')
