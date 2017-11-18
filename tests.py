@@ -2,6 +2,7 @@ import unittest
 from model import User, Event, ContactEvent, Contact, Template, db, connect_to_db
 from server import app
 from seed import example_data
+import datetime
 
 # Method                Checks that
 # assertEqual(a, b)   a == b
@@ -20,7 +21,7 @@ from seed import example_data
 
 # basically try to have a test for each non-post route
 class NotLoggedInTests(unittest.TestCase):
-    """Tests for Keep in Touch for a non-user"""
+    """Tests for a non-user."""
 
     def setUp(self):
         """Stuff to do before every test."""
@@ -158,10 +159,79 @@ class NotLoggedInTests(unittest.TestCase):
         self.assertIn("You must log in or register to edit your profile", result.data)
 
 
-####### when logged in #######
+####### when user is newly registered ########
+class NewUserTests(unittest.TestCase):
+    """Tests for logged-in users."""
 
-class LoggedInTests(unittest.TestCase):
-    """Tests for Keep in Touch for logged in users."""
+    def setUp(self):
+        """Stuff to do before every test."""
+        # Get the Flask test client
+        self.client = app.test_client()
+        # Show Flask errors that happen during tests
+        app.config['TESTING'] = True
+        # Connect to test database
+        connect_to_db(app, "postgresql:///project")
+        # Create tables and add sample data
+        db.create_all()
+        example_data()
+        result = self.client.post("/register",
+                                  data={'email': "ada@gmail.com", 
+                                        'password': "a",
+                                        'fname': "Ada", 
+                                        'lname':"Hackbright",
+                                        'phone': "1234567890"}, 
+                                  follow_redirects=True)
+
+
+    def tearDown(self):
+        """Do at end of every test."""
+        db.session.close()
+        db.drop_all()
+
+
+    def test_profile_nu(self):
+        """Tests profile of new user."""
+        result = self.client.get('/users/3')
+        self.assertIn("Edit my info", result.data)
+        self.assertIn("Ada", result.data)
+        self.assertIn("Log Out", result.data)
+        self.assertIn("Add a new contact/event", result.data)
+        # should not have any events/contacts
+        self.assertNotIn("Edit contact info", result.data)
+        self.assertNotIn("Add a new event for", result.data)
+        self.assertNotIn("Delete", result.data)
+
+
+    def test_logout_nu(self):
+        result = self.client.get('/logout', follow_redirects=True)
+        self.assertIn("You have successfully logged out!", result.data)
+        self.assertIn("Log In", result.data)
+
+
+    def test_add_event_nu(self):
+        # Get tomorrow's date to fetch the events, formatted to match DB date fields
+        t = datetime.datetime.now()
+        today = datetime.datetime(t.year, t.month, t.day, 0, 0)
+        tmrw = datetime.datetime(t.year, t.month, t.day+1, 0, 0)
+        formatted_date = "{}/{}/{}".format(tmrw.month, tmrw.day, tmrw.year)
+
+        result = self.client.post('/add_event', data={'contact_name':'Grace', 
+                                                      'contact_email':'grace@gmail.com', 
+                                                      'contact_phone':'2223334444',
+                                                      'user_id':3,
+                                                      'greet':'Hello', 'sign_off':'Sincerely', 
+                                                      'template_name':'Happy birthday',
+                                                      'date': tmrw }, 
+                                                follow_redirects=True)
+        self.assertIn("You have successfully added a new event for Grace", result.data)
+        # should redirect to /edit_event and render edit_event.html
+        self.assertIn("Edit Event Details", result.data)
+
+
+####### when user is logged in ########
+
+class UserTests(unittest.TestCase):
+    """Tests for logged-in users."""
 
     def setUp(self):
         """Stuff to do before every test."""
@@ -184,10 +254,7 @@ class LoggedInTests(unittest.TestCase):
         db.drop_all()
 
 
-    def test_profile(self):
-        # result = self.client.post("/login",
-        #                           data={'login_email': 'j@gmail.com', 'login_password': 'a'},
-        #                           follow_redirects=True)
+    def test_profile_lu(self):
         result = self.client.get('/users/1')
         self.assertIn("Edit my info", result.data)
         self.assertIn("Jane Hacks", result.data)
@@ -195,10 +262,30 @@ class LoggedInTests(unittest.TestCase):
         self.assertIn("Add a new contact/event", result.data)
 
 
-    def test_logout(self):
+    def test_logout_lu(self):
         result = self.client.get('/logout', follow_redirects=True)
         self.assertIn("You have successfully logged out!", result.data)
         self.assertIn("Log In", result.data)
+
+
+    def test_event_for_contact(self):
+        result = self.client.get('/edit_event/1', follow_redirects=True)
+        # should have contact.name already there
+        self.assertIn("Ian Interviewer", result.data)
+        self.assertIn("Remove Event", result.data)
+        self.assertIn("Log Out", result.data)
+
+
+    # def test_handle_edits(self):
+    #     result = self.client.post('/hand_edits', data={'user_id':1, 'event_id':1, })
+
+
+
+    def test_logout_lu(self):
+        result = self.client.get('/logout', follow_redirects=True)
+        self.assertIn("You have successfully logged out!", result.data)
+        self.assertIn("Log In", result.data)
+
 
 
 
