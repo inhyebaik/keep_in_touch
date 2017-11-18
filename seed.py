@@ -9,10 +9,10 @@ def example_data():
     db.session.add_all([jane, bob])
     db.session.commit()
     # ADD CONTACTS
-    rec = Contact(name='John Recruitor', email='jr@gmail.com', user_id=jane.id)
-    sec = Contact(name='Sally Secretary', email='ss@gmail.com', user_id=bob.id)
-    ivw = Contact(name='Ian Interviewer', email='i@gmail.com', user_id=bob.id)
-    db.session.add_all([rec, sec, ivw])
+    john = Contact(name='John Recruitor', email='jr@gmail.com', user_id=jane.id)
+    sally = Contact(name='Sally Secretary', email='ss@gmail.com', user_id=bob.id)
+    ian = Contact(name='Ian Interviewer', email='i@gmail.com', user_id=bob.id)
+    db.session.add_all([john, sally, ian])
     db.session.commit()
     # ADD TEMPLATES
     fup = Template(name='follow up', text='hello there')
@@ -22,10 +22,10 @@ def example_data():
     db.session.add_all([ty, ty2, fup, fup2])
     db.session.commit()
     # ADD EVENTS
-    e1 = Event(contact_id=ivw.id, date=datetime.datetime(2017, 12, 30), template_id=fup.id)
-    e2 = Event(contact_id=rec.id, template_id=ty.id)
-    e3 = Event(contact_id=ivw.id, template_id=ty2.id)
-    e4 = Event(contact_id=sec.id, date=datetime.datetime(2018, 1, 1), template_id=fup2.id)
+    e1 = Event(contact_id=ian.id, date=datetime.datetime(2017, 12, 30), template_id=fup.id)
+    e2 = Event(contact_id=john.id, template_id=ty.id)
+    e3 = Event(contact_id=ian.id, template_id=ty2.id)
+    e4 = Event(contact_id=sally.id, date=datetime.datetime(2018, 1, 1), template_id=fup2.id)
     db.session.add_all([e1, e2, e3, e4])
     db.session.commit()
     # ADD CONTACTEVENT ASSOCIATIONS

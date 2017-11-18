@@ -233,6 +233,10 @@ class NewUserTests(unittest.TestCase):
 class UserTests(unittest.TestCase):
     """Tests for logged-in users."""
 
+### JANE: her profile shows John Recuitor as contact; 
+### when attempted to edit that event for that contact, it is prefilled with
+### Ian Interviewer's event (WHYYYYY)
+
     def setUp(self):
         """Stuff to do before every test."""
         # Get the Flask test client
@@ -256,10 +260,10 @@ class UserTests(unittest.TestCase):
 
     def test_profile_lu(self):
         result = self.client.get('/users/1')
-        self.assertIn("Edit my info", result.data)
-        self.assertIn("Jane Hacks", result.data)
         self.assertIn("Log Out", result.data)
-        self.assertIn("Add a new contact/event", result.data)
+        self.assertIn("Jane Hacks\'s profile", result.data)
+        self.assertIn("Edit my info", result.data)
+        self.assertNotIn("Add a new contact/event", result.data)
 
 
     def test_logout_lu(self):
@@ -270,14 +274,45 @@ class UserTests(unittest.TestCase):
 
     def test_event_for_contact(self):
         result = self.client.get('/edit_event/1', follow_redirects=True)
-        # should have contact.name already there
+        # should have contact.name and contact.template.text already there
         self.assertIn("Ian Interviewer", result.data)
+        self.assertIn("hello there", result.data)
         self.assertIn("Remove Event", result.data)
         self.assertIn("Log Out", result.data)
 
 
-    # def test_handle_edits(self):
-    #     result = self.client.post('/hand_edits', data={'user_id':1, 'event_id':1, })
+    def test_handle_edits(self):
+        """Test editing an existing event."""
+
+        t = datetime.datetime.now()
+        today = datetime.datetime(t.year, t.month, t.day, 0, 0)
+        tmrw = datetime.datetime(t.year, t.month, t.day+1, 0, 0)
+        formatted_date = "{}/{}/{}".format(tmrw.month, tmrw.day, tmrw.year)
+        day_before="{}/{}/{}".format(tmrw.month, tmrw.day-1, tmrw.year)
+
+        result = self.client.post('/handle_edits', data={'user_id':1, 'event_id':1, 
+                                                        'contact_name':'K Interviewer',
+                                                        'template_text': "Hi thanks", 
+                                                        'contact_email': "ii@gmail.com", 
+                                                        'contact_phone':"+10009998888",
+                                                        'date':tmrw}, 
+                                                 follow_redirects=True)
+        # test flash messages
+        self.assertIn("Your message for K Interviewer has been modified successfully", result.data)
+        self.assertIn("send it to K Interviewer on {}".format(tmrw), result.data)
+        self.assertIn("remind you the day before (on {})".format(day_before), result.data)
+        # should redirect to user's profile 
+        self.assertNotIn("Jane Hacks\'s profile", result.data)
+
+
+    def test_remove_event(self):
+        result = self.client.post('/remove_event', data={"user_id":1, 
+                                                         "event_id":1},
+                                                  follow_redirects=True)
+        self.assertIn("You have successfully deleted this event", result.data)
+        # should redirect to user's profile 
+        self.assertIn("Jane Hacks\'s profile", result.data)
+        # should not see the event anymore 
 
 
 
