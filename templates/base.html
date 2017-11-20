@@ -16,40 +16,47 @@
 
 <!-- NAVBAR -->
 <div class="container">
-<!-- check if there's a session. If so, add link to log out, else log in -->
+<!-- Navbar for logged in users -->
 {% if session.get('user_id') %}
       <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
+          
           <div class="navbar-header">
             <a class="navbar-brand" href="/">Keep in Touch</a>
           </div>
+
           <ul class="nav navbar-nav">
             <li class="active"><a href="/">Home</a></li>
             <li><a href="/users/{{session.get('user_id')}}">My Profile</a></li>
             <li><a href="/add_event">Create a New Event</a></li>
             <li><a href="/edit_profile">Settings</a></li>
           </ul>
-            <ul class="nav navbar-nav navbar-right">
+
+          <ul class="nav navbar-nav navbar-right">
             <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
           </ul>
+        
         </div>
       </nav>
       <br> <br> <br>
 {% else %}
+<!-- Navbar for users not logged in -->
       <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
+
           <div class="navbar-header">
             <a class="navbar-brand" href="/">Keep in Touch</a>
           </div>
+
           <ul class="nav navbar-nav">
             <li class="active"><a href="/">Home</a></li>
-
-            
           </ul>
+
             <ul class="nav navbar-nav navbar-right">
             <li><a href="/register_login"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
             <li><a href="/register_login"><span class="glyphicon glyphicon-log-in"></span> Log In</a></li>
           </ul>
+
         </div>
       </nav>
       <br> <br> <br>
@@ -61,40 +68,35 @@
 
 
 <div class="container">
-      <ul class='red'>
-        {% for message in get_flashed_messages() %}
-          <li> {{ message }} </li>
-        {% endfor %}
-      </ul>
-<h1>Keep in Touch</h1>
-Keep in Touch lets you automate keeping in touch <br>
+
+    <!-- Flash messages -->
+    <ul class='red'>
+      {% for message in get_flashed_messages() %}
+        <li> {{ message }} </li>
+      {% endfor %}
+    </ul>
+
+    <h1>Keep in Touch</h1>
+    Keep in Touch lets you automate keeping in touch 
+
+<br>
 <hr>
+
   <div class="row">
     <div class="col-sm-10">
-
-
-  {% block content %} 
-      put your content here 
-  {% endblock %}
+        {% block content %} 
+            put your content here 
+        {% endblock %}
     </div>
-    
   </div>
 </div>
 
-
-
-
-
-
-<!--   {% block content1 %} 
-      put your content here 
-  {% endblock %} -->
 <br>
 <br>
 <br>
   <hr>
 <footer>
-  
+
 <div class="container">
   <div class="col-sm-10" >
     <span id="quote-text"></span> 
@@ -105,5 +107,7 @@ Keep in Touch lets you automate keeping in touch <br>
 <script src="/static/project.js"></script>
 </div>
 </div>
+
+
 </body>
 </html>

@@ -4,12 +4,45 @@
 <h2>Edit {{contact.name}}'s information</h2>
 
 <form action='/edit_contact/{{contact.id}}', method='POST'>
-Name: <input type='text' name='name' value='{{contact.name}}' required> <br>
+<!-- Name: <input type='text' name='name' value='{{contact.name}}' required> <br>
 Email: <input type='text' name='email' value='{{contact.email}}' required> <br>
 Phone: <input type='text' name='phone' value='{{contact.phone}}'><br>
 
 <input type='hidden' name='contact_id' value='{{contact.id}}'><br>
 <input type='submit' value='Update info for {{contact.name}}'><br>
 </form>
+ -->
+
+  <div class="form-group row">
+<!--     <label for="inputPassword3" class="col-sm-2 col-form-label">First Name</label> -->
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name='name' placeholder="Contact's Name" value='{{contact.name}}'>
+    </div>
+  </div>
+
+
+ <div class="form-group row">
+    <!-- <label for="inputEmail3" name='email' class="col-sm-2 col-form-label">Email</label> -->
+    <div class="col-sm-10">
+      <input type="email" ame='password' class="form-control" name='email' placeholder="Contact's Email" value='{{contact.email}}'>
+    </div>
+  </div>
+
+
+    <div class="form-group row">
+    <!-- <label for="inputPassword3" class="col-sm-2 col-form-label">Phone</label> -->
+    <div class="col-sm-10">
+        <input type="text" class="form-control" name='phone' placeholder='+1' value="{{contact.phone}}">
+    </div>
+  </div>1
+
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </div>
+</form>
+
+
 
 {%endblock%}

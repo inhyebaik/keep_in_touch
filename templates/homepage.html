@@ -22,11 +22,9 @@
 
 <div id="status"></div>
 
-<!-- {% if session.get('user_id') == None %} -->
 <!-- FB OAuth -->
-<!-- Button: Continue with Facebook -->
-<!-- For new users registering with FB -->
-<div 
+<!-- Button: Continue with Facebook (new registration) -->
+<div
     class="fb-login-button" 
     data-max-rows="1" 
     data-size="medium" 
@@ -34,21 +32,15 @@
     data-show-faces="false" 
     data-auto-logout-link="false" 
     data-use-continue-as="true"
-    onlogin="RegisterWithFB();"
+    onlogin="RegisterWithFB();">
 </div>
-<!-- Button: log in with FB -->
-<!-- For existing users who want to log in with FB -->
+
+<!-- Button: log in with FB-->
 <fb:login-button 
       scope="public_profile,email,first_name,last_name,user_friends"
       onlogin="checkLoginState();">
 </fb:login-button> 
 
-<!-- {% endif %}
- -->
-
-<!-- check if logged in and show events -->
-<!-- <h2>Events</h2>
-<p><a href="/events">View your events</a></p> -->
 
 
 

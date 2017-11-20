@@ -58,7 +58,7 @@ function facebookLogin() {
             window.location.href = `/register_login`;
         } else {
             // the user isn't logged in to Facebook.
-            $.get('/register_login')
+            window.location.href = `/register_login
         }
     },
     {
@@ -138,6 +138,13 @@ function RegisterWithFB() {
       }
      });
 }
+
+
+
+
+
+
+
 
 
 
