@@ -1,4 +1,4 @@
-import unittest 
+import unittest
 from model import User, Event, ContactEvent, Contact, Template, db, connect_to_db
 from server import app
 from seed import example_data
@@ -107,7 +107,7 @@ class NotLoggedInTests(unittest.TestCase):
 
 
     def test_add_event_nl(self):
-        # should redirect to /register_login 
+        # should redirect to /register_login
         result = self.client.get('/add_event', follow_redirects=True)
         self.assertIn('Register', result.data)
         self.assertIn('Log in', result.data)
@@ -118,7 +118,7 @@ class NotLoggedInTests(unittest.TestCase):
 
 
     def test_edit_event_nl(self):
-        # should redirect to /register_login 
+        # should redirect to /register_login
         result = self.client.get('/edit_event/1', follow_redirects=True)
         self.assertIn('Register', result.data)
         self.assertIn('Log in', result.data)
@@ -129,7 +129,7 @@ class NotLoggedInTests(unittest.TestCase):
 
 
     def test_remove_contact_nl(self):
-        # should redirect to /register_login 
+        # should redirect to /register_login
         result = self.client.get('/remove_contact/1', follow_redirects=True)
         self.assertIn('Register', result.data)
         self.assertIn('Log in', result.data)
@@ -139,7 +139,7 @@ class NotLoggedInTests(unittest.TestCase):
         self.assertIn("You must log in or register to remove contacts", result.data)
 
     def test_add_event_nl(self):
-        # should redirect to /register_login 
+        # should redirect to /register_login
         result = self.client.get('/add_event/1', follow_redirects=True)
         self.assertIn('Register', result.data)
         self.assertIn('Log in', result.data)
@@ -161,7 +161,7 @@ class NotLoggedInTests(unittest.TestCase):
 
 ####### when user is newly registered ########
 class NewUserTests(unittest.TestCase):
-    """Tests for logged-in users."""
+    """Tests for new users who just registered."""
 
     def setUp(self):
         """Stuff to do before every test."""
@@ -209,7 +209,7 @@ class NewUserTests(unittest.TestCase):
 
 
     def test_add_event_nu(self):
-        # Get tomorrow's date to fetch the events, formatted to match DB date fields
+        # Get tomorrow's date to fetch events (format to match DB date fields)
         t = datetime.datetime.now()
         today = datetime.datetime(t.year, t.month, t.day, 0, 0)
         tmrw = datetime.datetime(t.year, t.month, t.day+1, 0, 0)
@@ -231,7 +231,7 @@ class NewUserTests(unittest.TestCase):
 ####### when user is logged in ########
 
 class UserTests(unittest.TestCase):
-    """Tests for logged-in users."""
+    """Tests for logged-in, existing users."""
 
 ### JANE: her profile shows John Recuitor as contact; 
 ### when attempted to edit that event for that contact, it is prefilled with
@@ -312,7 +312,7 @@ class UserTests(unittest.TestCase):
         self.assertIn("You have successfully deleted this event", result.data)
         # should redirect to user's profile 
         self.assertIn("Jane Hacks\'s profile", result.data)
-        # should not see the event anymore 
+        # should not see the event anymore
 
 
 

@@ -6,6 +6,20 @@
 <h2>Users</h2>
 <p><a href="/users">View all users</a></p>
 
+<div 
+    class="fb-login-button" 
+    data-max-rows="1" 
+    data-size="large" 
+    data-button-type="continue_with" 
+    data-show-faces="false" 
+    data-auto-logout-link="false" 
+    data-use-continue-as="false"
+    onlogin="showLoginStatus();">
+</div>
+<!-- <fb:login-button 
+  scope="public_profile,email"
+  onlogin="checkLoginState();">
+</fb:login-button> -->
 <!-- check if logged in and show events -->
 <!-- <h2>Events</h2>
 <p><a href="/events">View your events</a></p>

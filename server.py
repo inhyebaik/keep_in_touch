@@ -522,6 +522,7 @@ def send_all_emails(events):
         return "No events today"
     for event in events:
         send_email(event)
+        text_contact(event)
 
 
 def remind_all_users(events):
@@ -546,6 +547,19 @@ currently is:\n'{}'\n\n--------\n\nIf you'd like to update this message, please 
 reply with your new message (in one SMS response. Please add 'event_id={}' in your response)".format(user_fname, contact_name, event.template.text, event.id)
     message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
     print "MESSAGE SENT to {}".format(user_phone)
+
+
+
+def text_contact(event):
+    """Text reminder to user of an event; asks if they want to update msg"""
+    contact_phone = event.contacts[0].phone
+    contact_name = event.contacts[0].name
+    template_text = event.template.text
+    # Send an SMS
+    my_msg = template_text
+    message = client.messages.create(to=contact_phone, from_=twilio_num, body=my_msg)
+    print "MESSAGE SENT to {}".format(contact_phone)
+
 
 
 def send_email(event):
@@ -575,7 +589,7 @@ def send_email(event):
 def remind_user(event):
     """Email user of event coming up."""
     message = Mail()
-    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY')) 
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     # Create from_email object from event object arg
     from_email = Email(my_email, "Keep in Touch Team")
     # Create to email property from event object arg (the user)
@@ -602,9 +616,9 @@ def job():
     remind_all_users(tmrw_events)
 
 schedule.every().day.at("00:00").do(job) # Check every day at midnight (for real app)
-# schedule.every(2).seconds.do(job  # Testing/demo purposes
+# schedule.every(2).seconds.do(job)  # Testing/demo purposes
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     app.debug = True
     app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
     connect_to_db(app)
@@ -612,7 +626,6 @@ if __name__ == "__main__":
     DebugToolbarExtension(app)
     app.run(port=5000, host='0.0.0.0')
     print datetime.datetime.now() # check what time it is in vagrant
-    # for scheduling emails 
+    # for scheduling emails
     while True:
         schedule.run_pending()
-

@@ -1,5 +1,43 @@
 "use strict";
 
+window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1683033888393903',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v2.11'
+    });
+      
+    FB.AppEvents.logPageView(); 
+
+
+    // function checkLoginState() {
+    //     FB.getLoginStatus(function(response) {
+    //         statusChangeCallback(response);
+    //     });
+    // }
+
+    // function statusChangeCallback(response) {
+    //     console.log(response);
+    // }
+      
+};
+
+(function(d, s, id){
+ var js, fjs = d.getElementsByTagName(s)[0];
+ if (d.getElementById(id)) {return;}
+ js = d.createElement(s); js.id = id;
+ js.src = "https://connect.facebook.net/en_US/sdk.js";
+ fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+function showLoginStatus() {
+    FB.getLoginStatus(function(response) {
+    // statusChangeCallback(response);
+    console.log(response);
+  });
+}
+
 
 // get new quote for each refresh (base.html)
 $(document).ready(function() {
