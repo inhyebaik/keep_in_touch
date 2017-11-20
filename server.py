@@ -72,6 +72,26 @@ def fb_login():
         return jsonify({"user_id":user.id})
 
 
+@app.route('/fb_register', methods=['POST'])
+def fb_register():
+    """Registers user via FB."""
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    email = request.form.get('email')
+    fb_uid = request.form.get('fb_uid')
+    # phone = request.form.get('phone')
+    password = request.form.get('fb_uid')
+    hashed_value = generate_password_hash(password)
+    new_user = User(email=email, password=hashed_value, fname=fname, lname=lname, fb_uid=fb_uid)
+    db.session.add(new_user)
+    db.session.commit()
+
+    print "new user added...adding to session"
+    session['user_id'] = new_user.id
+    
+    return jsonify({'user_id':new_user.id})
+
+
 @app.route('/users')
 def user_list():
     """Show list of users."""

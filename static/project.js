@@ -9,7 +9,7 @@ window.fbAsyncInit = function() {
       cookie     : true,
       xfbml      : true,
       version    : 'v2.11',
-      outh       : true,
+      oauth      : true,
     });
       
     FB.AppEvents.logPageView(); 
@@ -17,25 +17,29 @@ window.fbAsyncInit = function() {
 
 
 // Load the SDK asynchronously
-// (function(d, s, id){
-//  var js, fjs = d.getElementsByTagName(s)[0];
-//  if (d.getElementById(id)) {return;}
-//  js = d.createElement(s); js.id = id;
-//  js.src = "https://connect.facebook.net/en_US/sdk.js";
-//  fjs.parentNode.insertBefore(js, fjs);
-// }(document, 'script', 'facebook-jssdk'));
+(function(d, s, id){
+ var js, fjs = d.getElementsByTagName(s)[0];
+ if (d.getElementById(id)) {return;}
+ js = d.createElement(s); js.id = id;
+ js.src = "https://connect.facebook.net/en_US/sdk.js";
+ fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
 
-(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11&appId=385706508528517';
-  fjs.parentNode.insertBefore(js, fjs);
-} 
-(document, 'script', 'facebook-jssdk'));
+// (function(d, s, id) {
+//   var js, fjs = d.getElementsByTagName(s)[0];
+//   if (d.getElementById(id)) return;
+//   js = d.createElement(s); js.id = id;
+//   js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11&appId=385706508528517';
+//   fjs.parentNode.insertBefore(js, fjs);
+// } 
+// (document, 'script', 'facebook-jssdk'));
+
+
 
 function facebookLogin() {
+
     FB.login(function(response) {
+        console.log(response)
         if (response.authResponse) {
             console.log('Authenticated!');
             console.log(response.authResponse.userID);
@@ -45,11 +49,11 @@ function facebookLogin() {
            // try to add them to session 
             $.post('/fb_login', loginInputs, function(data) { 
                 console.log(data);
-                if (data['user_id']) {
-                    // redirect to their profile 
-                    window.location.href = `/users/${data['user_id']}`;
-                }
-            })
+                // if (data['user_id']) {
+                //     // redirect to their profile 
+                //     window.location.href = `/users/${data['user_id']}`;
+                // }
+            });
 
         } else if (response.status === 'not_authorized'){
             // the user is logged in to Facebook, 
@@ -58,33 +62,13 @@ function facebookLogin() {
             window.location.href = `/register_login`;
         } else {
             // the user isn't logged in to Facebook.
-            window.location.href = `/register_login
+            window.location.href = `/register_login`
         }
     },
-    {
-        scope: 'email,user_friends,first_name,last_name'
-    });
+    {scope: 'public_profile,email,user_friends'});
 }
 
 
-function testAPI() {
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
-      console.log('Successful login for: ' + response.name);
-      document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.name + '!';
-        // var loginInputs = { 'fb_uid':response.authResponse.userID, 
-        //                         'fb_at':response.authResponse.accessToken };
-        //    // try to add them to session 
-        //     $.post('/fb_login', loginInputs, function(data) { 
-        //         console.log('making request to log in');
-        //         if (data['user_id']) {
-        //             // redirect to their profile 
-        //             window.location.href = `/users/${data['user_id']}`;
-        //         }
-        //     })
-    });
-
-}
 
 
 function statusChangeCallback(response) {
@@ -96,7 +80,7 @@ function statusChangeCallback(response) {
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      testAPI();
+      fbLogin(response)
     } else {
       // The person is not logged into your app or we are unable to tell.
       document.getElementById('status').innerHTML = 'Please log ' +
@@ -108,43 +92,66 @@ function statusChangeCallback(response) {
 // This function is called when someone finishes with the Login
 // Button.  See the onlogin handler attached to it in the sample
 // code below.
+// function checkLoginState() {
+//     FB.getLoginStatus(function(response) {
+//         statusChangeCallback(response);
+//     });
+// }
+
+
 function checkLoginState() {
     FB.getLoginStatus(function(response) {
         statusChangeCallback(response);
+        console.log('Welcome!  Fetching your information.... ');
+        var url = '/me?fields=id,name,email';
+        FB.api(url, function(response) {
+             console.log(response.name + " " + response.id + " " +response.email);
+                 let formInputs = { 'fname': response.name.split(" ")[0], 
+                        'lname':response.name.split(" ")[1], 
+                        'email':response.email, 
+                        'fb_uid':response.id };
+            console.log(formInputs);
+
+        }, {scope: 'email'});
     });
 }
 
 
-
 function RegisterWithFB() {
     FB.getLoginStatus(function(response) {
-        if (response.status === 'connected') {
-        // the user is logged in and has authenticated your
-        // app, and response.authResponse supplies
-        // the user's ID, a valid access token, a signed
-        // request, and the time the access token 
-        // and signed request each expire
-        var uid = response.authResponse.userID;
-        var accessToken = response.authResponse.accessToken;
+        // statusChangeCallback(response);
+        console.log('Welcome!  Fetching your information.... ');
         console.log(response)
-        testAPI()
-      } else if (response.status === 'not_authorized') {
-        // the user is logged in to Facebook, 
-        // but has not authenticated your app
-        $.get('/register_login')
-      } else {
-        // the user isn't logged in to Facebook.
-        $.get('/register_login')
-      }
-     });
+        var url = '/me?fields=id,name,email';
+        FB.api(url, function(response) {
+             console.log(response.name + " " + response.id + " " +response.email);
+                 let formInputs = { 'fname': response.name.split(" ")[0], 
+                        'lname':response.name.split(" ")[1], 
+                        'email':response.email, 
+                        'fb_uid':response.id };
+            console.log(formInputs);
+             $.post('/fb_register', formInputs, function(data) {
+        console.log(data);
+        console.log('welcome new user! redirecting to profile');
+        
+        if (data['user_id']) {
+            window.location.href = `/users/${data['user_id']}` }; 
+    });
+        }, {scope: 'email'});
+    });
 }
 
 
-
-
-
-
-
+// function RegisterWithFB(formInputs) {
+//     console.log(formInputs);
+//     $.post('/fb_register', formInputs, function(data) {
+//         console.log(data);
+//         console.log('welcome new user! redirecting to profile');
+        
+//         if (data['user_id']) {
+//             window.location.href = `/users/${data['user_id']}` }; 
+//     });
+// }
 
 
 
