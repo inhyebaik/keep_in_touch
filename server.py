@@ -95,7 +95,7 @@ def register_process():
     hashed_value = generate_password_hash(password)
     fname = request.form.get('fname')
     lname = request.form.get('lname')
-    phone = "+1"+str(request.form.get('phone'))
+    phone = request.form.get('phone')
     # Fetch that user from DB as object
     db_user = User.query.filter(User.email == email).first()
 

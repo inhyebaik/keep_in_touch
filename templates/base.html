@@ -1,25 +1,11 @@
 <!doctype html>
 
-<!-- FB OAuth -->
-<div id="fb-root"></div>
-<script>
-(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11&appId=385706508528517';
-  fjs.parentNode.insertBefore(js, fjs);
-} 
-(document, 'script', 'facebook-jssdk'));
-</script>
-
-
 <html>
+
+
 <head>
     <link rel="stylesheet" href="/static/styles.css">
-    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>Keep in Touch</title>
@@ -27,31 +13,71 @@
 
 
 <body>
+
+<!-- NAVBAR -->
 <div class="container">
-<h1>Keep in Touch</h1>
-Keep in Touch lets you automate keeping in touch. <br>
-  <div class="row">
-    <div class="col-sm-6">
 <!-- check if there's a session. If so, add link to log out, else log in -->
-  {% if session.get('user_id') %}
-        <a href="/logout">Log Out</a>
-  {% else %}
-        <a href="/register_login">Log In or Register</a>
-  {% endif %}
-  <hr>
-  <ul class='red'>
-    {% for message in get_flashed_messages() %}
-      <li> {{ message }} </li>
-    {% endfor %}
-  </ul>
+{% if session.get('user_id') %}
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/">Keep in Touch</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/users/{{session.get('user_id')}}">My Profile</a></li>
+            <li><a href="/add_event">Create a New Event</a></li>
+            <li><a href="/edit_profile">Settings</a></li>
+          </ul>
+            <ul class="nav navbar-nav navbar-right">
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
+          </ul>
+        </div>
+      </nav>
+      <br> <br> <br>
+{% else %}
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/">Keep in Touch</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+
+            
+          </ul>
+            <ul class="nav navbar-nav navbar-right">
+            <li><a href="/register_login"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="/register_login"><span class="glyphicon glyphicon-log-in"></span> Log In</a></li>
+          </ul>
+        </div>
+      </nav>
+      <br> <br> <br>
+{% endif %}
+</div>
+
+
+
+
+
+<div class="container">
+      <ul class='red'>
+        {% for message in get_flashed_messages() %}
+          <li> {{ message }} </li>
+        {% endfor %}
+      </ul>
+<h1>Keep in Touch</h1>
+Keep in Touch lets you automate keeping in touch <br>
+<hr>
+  <div class="row">
+    <div class="col-sm-10">
+
 
   {% block content %} 
       put your content here 
   {% endblock %}
     </div>
-    <div class="col-sm-6" >
-      <p>Sed ut perspiciatis...</p>
-    </div>
+    
   </div>
 </div>
 
@@ -66,15 +92,18 @@ Keep in Touch lets you automate keeping in touch. <br>
 <br>
 <br>
 <br>
-  
-<footer>
   <hr>
-
+<footer>
+  
+<div class="container">
+  <div class="col-sm-10" >
     <span id="quote-text"></span> 
     <br><br>
   <span> <b>Relationships are important -- </b>Keep in Touch helps you automate keeping in touch with people, meaningfully or at all.</span>
   <br>
 </footer>
 <script src="/static/project.js"></script>
+</div>
+</div>
 </body>
 </html>

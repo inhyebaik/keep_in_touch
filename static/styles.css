@@ -1,16 +1,16 @@
 body {
     font-family: sans-serif;
     background: url('https://pbs.twimg.com/profile_background_images/485886649104998401/hyuYt7Jf.jpeg') no-repeat;
-
+    font-size: 20px;
 }
 
 footer {
     font-size: 12px;
     font-family: monospace;
    position: relative;
-   padding: 2px;
+   /*padding: 2px;*/
    bottom:0;
-   width:80%;
+   /*width:80%;*/
    /*background: lightGray;*/
 }
 
@@ -50,17 +50,7 @@ textarea {
     font-size: 30px;
 }
 
-input {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid lightGray;
-}
 
-input[type="submit"]
-{
-    border:2px solid black;
-    text-decoration:none2
-    font-family:helvetica;
-    color:black;
-    /*background:url(../images/btn_hover.png) repeat-x;*/
-}
+
+
+
