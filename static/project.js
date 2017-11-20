@@ -134,24 +134,17 @@ function RegisterWithFB() {
         console.log(data);
         console.log('welcome new user! redirecting to profile');
         
-        if (data['user_id']) {
-            window.location.href = `/users/${data['user_id']}` }; 
+        if (data['result']) {
+            console.log('existing user!!!')
+            alert(data['result']);
+            window.location.href = '/register_login'; 
+        }
+        else {
+            window.location.href = `/users/${data['user_id']}`; } 
     });
         }, {scope: 'email'});
     });
 }
-
-
-// function RegisterWithFB(formInputs) {
-//     console.log(formInputs);
-//     $.post('/fb_register', formInputs, function(data) {
-//         console.log(data);
-//         console.log('welcome new user! redirecting to profile');
-        
-//         if (data['user_id']) {
-//             window.location.href = `/users/${data['user_id']}` }; 
-//     });
-// }
 
 
 

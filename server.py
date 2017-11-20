@@ -75,21 +75,31 @@ def fb_login():
 @app.route('/fb_register', methods=['POST'])
 def fb_register():
     """Registers user via FB."""
-    fname = request.form.get('fname')
-    lname = request.form.get('lname')
-    email = request.form.get('email')
-    fb_uid = request.form.get('fb_uid')
-    # phone = request.form.get('phone')
-    password = request.form.get('fb_uid')
-    hashed_value = generate_password_hash(password)
-    new_user = User(email=email, password=hashed_value, fname=fname, lname=lname, fb_uid=fb_uid)
-    db.session.add(new_user)
-    db.session.commit()
 
-    print "new user added...adding to session"
-    session['user_id'] = new_user.id
-    
-    return jsonify({'user_id':new_user.id})
+    email = request.form.get('email')
+    print email
+    db_user = User.query.filter(User.email == email).first()
+    print db_user
+    # If that user exists in DB:
+    if db_user:
+        print "Existing user!!!!"
+        print db_user
+        # Alert the email is already in use; return message that email exists
+        return jsonify({'result':"Email already exists in database -- Please try logging in"})
+    else:
+        # Add new_user to database; return new_user.id
+        print "email doesn't exist new user...adding to session"
+        fname = request.form.get('fname')
+        lname = request.form.get('lname')
+        fb_uid = request.form.get('fb_uid')
+        # phone = request.form.get('phone')
+        password = request.form.get('fb_uid')
+        hashed_value = generate_password_hash(password)
+        new_user = User(email=email, password=hashed_value, fname=fname, lname=lname, fb_uid=fb_uid)
+        db.session.add(new_user)
+        db.session.commit()
+        session['user_id'] = new_user.id
+        return jsonify({'user_id':new_user.id})
 
 
 @app.route('/users')
