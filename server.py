@@ -60,6 +60,18 @@ def contact_stuff():
     return jsonify({"events": d, "contact_id": contact_id})
 
 
+@app.route('/fb_login', methods=['POST'])
+def fb_login():
+    """Logs user in via FB."""
+    fb_uid = request.form.get('fb_uid')
+    fb_at = request.form.get('fb_at')
+    user = User.query.filter(User.fb_uid == fb_uid).one()
+    if user:
+        print "user found with FB credentials; adding them to session"
+        session['user_id'] = user.id # add user_id to the session
+        return jsonify({"user_id":user.id})
+
+
 @app.route('/users')
 def user_list():
     """Show list of users."""

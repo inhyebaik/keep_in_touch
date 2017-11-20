@@ -36,5 +36,3 @@ def random_quote(QUOTES):
     return q
 
 
-
-print random_quote(QUOTES)

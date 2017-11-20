@@ -21,14 +21,18 @@ class User(db.Model):
     fname = db.Column(db.String(20)) # make nullable=False after testing, for more refined log in/register page
     lname = db.Column(db.String(20)) # make nullable=False after testing, for more refined log in/register page
     phone = db.Column(db.String(15))
+    fb_uid = db.Column(db.Text)
+    fb_at = db.Column(db.Text)
 
 
-    def __init__(self, email, password, fname, lname, phone=''):
+    def __init__(self, email, password, fname, lname, phone='', fb_uid='', fb_at=''):
         self.email = email
         self.password = generate_password_hash(password)
         self.fname = fname
         self.lname = lname
         self.phone = phone
+        self.fb_uid = fb_uid
+        self.fb_at = fb_at
         
 
     def __repr__(self):

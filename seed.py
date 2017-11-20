@@ -1,12 +1,20 @@
 from sqlalchemy import func
 from model import User, Event, ContactEvent, Contact, Template, db, connect_to_db
 import datetime
+import os
+
 
 def example_data():
+    phone = os.environ.get('MY_NUMBER')
+    email = os.environ.get('MY_EMAIL')
+    fb_at = os.environ.get('FB_AT')
+    fb_uid = os.environ.get('FB_UID')
+
 # ADD USERS
     jane = User(email='j@gmail.com', password='a', fname='Jane', lname='Hacks', phone='+11234567890')
     bob = User(email='h@gmail.com', password='a', fname='Bob', lname='Baller', phone='+10987654321')
-    db.session.add_all([jane, bob])
+    inny = User(email=email, password='a', fname='Inny', lname='HB', phone=phone, fb_uid=fb_uid, fb_at=fb_at)
+    db.session.add_all([jane, bob, inny])
     db.session.commit()
     # ADD CONTACTS
     john = Contact(name='John Recruitor', email='jr@gmail.com', user_id=jane.id)
