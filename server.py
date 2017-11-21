@@ -200,7 +200,9 @@ def login_process():
     email = request.form.get('login_email')
     login_password = request.form.get('login_password')
     # Fetch that user from DB as object
+    print email, login_password
     db_user = User.query.filter(User.email == email).first()
+    print db_user
     # If that user exists in DB:
     if db_user:
         # Verify password; redirect to their profile
