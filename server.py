@@ -60,46 +60,63 @@ def contact_stuff():
     return jsonify({"events": d, "contact_id": contact_id})
 
 
-@app.route('/fb_login', methods=['POST'])
-def fb_login():
-    """Logs user in via FB."""
-    fb_uid = request.form.get('fb_uid')
-    fb_at = request.form.get('fb_at')
-    user = User.query.filter(User.fb_uid == fb_uid).one()
-    if user:
-        print "user found with FB credentials; adding them to session"
-        session['user_id'] = user.id # add user_id to the session
-        return jsonify({"user_id":user.id})
-
-
 @app.route('/fb_register', methods=['POST'])
 def fb_register():
     """Registers user via FB."""
 
+    # things from FB API request 
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    fb_uid = request.form.get('fb_uid')
+    # phone = request.form.get('phone')
+    password = request.form.get('fb_uid')
+    hashed_value = generate_password_hash(password)
     email = request.form.get('email')
-    print email
+
+
     db_user = User.query.filter(User.email == email).first()
-    print db_user
-    # If that user exists in DB:
+
+    # If user exists in DB, add them to session (log in), return db_user.id:
     if db_user:
         print "Existing user!!!!"
         print db_user
+        session['user_id'] = db_user.id
+        return jsonify({'user_id':db_user.id, 'result': 'Existing user!'})
         # Alert the email is already in use; return message that email exists
-        return jsonify({'result':"Email already exists in database -- Please try logging in"})
+        # return jsonify({'result':"Email already exists in database -- Please try logging in"})
     else:
         # Add new_user to database; return new_user.id
-        print "email doesn't exist new user...adding to session"
-        fname = request.form.get('fname')
-        lname = request.form.get('lname')
-        fb_uid = request.form.get('fb_uid')
-        # phone = request.form.get('phone')
-        password = request.form.get('fb_uid')
-        hashed_value = generate_password_hash(password)
+        print "email doesn't exist. New user...adding to DB and logging in"
         new_user = User(email=email, password=hashed_value, fname=fname, lname=lname, fb_uid=fb_uid)
         db.session.add(new_user)
         db.session.commit()
         session['user_id'] = new_user.id
-        return jsonify({'user_id':new_user.id})
+        return jsonify({'user_id':new_user.id, 'result': 'Newly registered user!'})
+
+
+# @app.route('/fb_login', methods=['POST'])
+# def fb_login():
+#     """Logs user in via FB."""
+#     fb_uid = request.form.get('fb_uid')
+#     fb_at = request.form.get('fb_at')
+#     user = User.query.filter(User.fb_uid == fb_uid).first()
+#     if user:
+#         print "user found with FB credentials; adding them to session"
+#         session['user_id'] = user.id # add user_id to the session
+#         print session['user_id']
+#         return jsonify({"user_id":user.id})
+#     else:
+#         print "user not found based on FB credentials; registering them as new user"
+
+
+
+@app.route('/logout')
+def log_out():
+    """Log user out; clear out session; confirm log out; redirect to homepage"""
+    del session['user_id']
+    flash("You have successfully logged out!")
+    return redirect("/")
+
 
 
 @app.route('/users')
@@ -174,12 +191,12 @@ def login_process():
         return redirect('/register_login')
 
 
-@app.route('/logout')
-def log_out():
-    """Log user out; clear out session; confirm log out; redirect to homepage"""
-    del session['user_id']
-    flash("You have successfully logged out!")
-    return redirect("/")
+# @app.route('/logout')
+# def log_out():
+#     """Log user out; clear out session; confirm log out; redirect to homepage"""
+#     del session['user_id']
+#     flash("You have successfully logged out!")
+#     return redirect("/")
 
 
 @app.route('/users/<user_id>')

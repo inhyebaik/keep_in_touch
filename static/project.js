@@ -15,7 +15,6 @@ window.fbAsyncInit = function() {
     FB.AppEvents.logPageView(); 
 };
 
-
 // Load the SDK asynchronously
 (function(d, s, id){
  var js, fjs = d.getElementsByTagName(s)[0];
@@ -24,16 +23,6 @@ window.fbAsyncInit = function() {
  js.src = "https://connect.facebook.net/en_US/sdk.js";
  fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
-
-// (function(d, s, id) {
-//   var js, fjs = d.getElementsByTagName(s)[0];
-//   if (d.getElementById(id)) return;
-//   js = d.createElement(s); js.id = id;
-//   js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11&appId=385706508528517';
-//   fjs.parentNode.insertBefore(js, fjs);
-// } 
-// (document, 'script', 'facebook-jssdk'));
-
 
 
 function facebookLogin() {
@@ -46,23 +35,26 @@ function facebookLogin() {
             console.log(response.authResponse.accessToken);
             var loginInputs = { 'fb_uid':response.authResponse.userID, 
                                 'fb_at':response.authResponse.accessToken };
+           
            // try to add them to session 
             $.post('/fb_login', loginInputs, function(data) { 
                 console.log(data);
-                // if (data['user_id']) {
-                //     // redirect to their profile 
-                //     window.location.href = `/users/${data['user_id']}`;
-                // }
+                if (data['user_id']) {
+                    // redirect to their profile 
+                    window.location.href = `/users/${data['user_id']}`;
+                }
             });
 
         } else if (response.status === 'not_authorized'){
             // the user is logged in to Facebook, 
             // but has not authenticated your app
             console.log('User cancelled login or did not fully authorize.');
+            alert('Please authenticate Keep in Touch')
             window.location.href = `/register_login`;
         } else {
             // the user isn't logged in to Facebook.
-            window.location.href = `/register_login`
+            alert('Please log into FB AND authenticate Keep in Touch')
+            window.location.href = `/register_login`;
         }
     },
     {scope: 'public_profile,email,user_friends'});
@@ -80,7 +72,7 @@ function statusChangeCallback(response) {
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      fbLogin(response)
+      facebookLogin(response)
     } else {
       // The person is not logged into your app or we are unable to tell.
       document.getElementById('status').innerHTML = 'Please log ' +
@@ -88,15 +80,6 @@ function statusChangeCallback(response) {
     }
 }
 
-
-// This function is called when someone finishes with the Login
-// Button.  See the onlogin handler attached to it in the sample
-// code below.
-// function checkLoginState() {
-//     FB.getLoginStatus(function(response) {
-//         statusChangeCallback(response);
-//     });
-// }
 
 
 function checkLoginState() {
@@ -122,30 +105,35 @@ function RegisterWithFB() {
         // statusChangeCallback(response);
         console.log('Welcome!  Fetching your information.... ');
         console.log(response)
+
         var url = '/me?fields=id,name,email';
         FB.api(url, function(response) {
-             console.log(response.name + " " + response.id + " " +response.email);
-                 let formInputs = { 'fname': response.name.split(" ")[0], 
-                        'lname':response.name.split(" ")[1], 
-                        'email':response.email, 
-                        'fb_uid':response.id };
+            console.log(response.name + " " + response.id + " " +response.email);
+
+            let formInputs = {  'fname': response.name.split(" ")[0], 
+                                'lname':response.name.split(" ")[1], 
+                                'email':response.email, 
+                                'fb_uid':response.id    };
             console.log(formInputs);
-             $.post('/fb_register', formInputs, function(data) {
-        console.log(data);
-        console.log('welcome new user! redirecting to profile');
+            $.post('/fb_register', formInputs, function(data) {
         
-        if (data['result']) {
-            console.log('existing user!!!')
-            alert(data['result']);
-            window.location.href = '/register_login'; 
-        }
-        else {
-            window.location.href = `/users/${data['user_id']}`; } 
-    });
-        }, {scope: 'email'});
+                console.log(data);
+                // console.log('welcome new user! redirecting to profile');
+                alert(data['result']);
+                window.location.href = `/users/${data['user_id']}`; 
+                // if (data['result']) {
+                //     console.log('existing user!!!');
+                //     alert(data['result']);
+                //     window.location.href = '/register_login'; 
+                // } else {  window.location.href = `/users/${data['user_id']}`; } 
+                        
+            });
+
+        }, 
+
+        {scope: 'email'});
     });
 }
-
 
 
 
