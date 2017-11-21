@@ -1,0 +1,56 @@
+
+
+
+window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1683033888393903',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v2.11',
+      oauth      : true,
+    });
+      
+    FB.AppEvents.logPageView(); 
+
+    FB.getLogInStatus(function(response) {
+        if (response.status === 'connected') {
+            document.getElementById('status').innerHTML = 'we are connected';
+            document.getElementById('login').style.visibility = 'hidden';
+        } else if (response.status === 'not_authorized') {
+            document.getElementById('status').innerHTML = 'we are not logged in';
+        } else {
+            document.getElementById('status').innerHTML = 'You are not logged into FB';
+        }
+    });
+};
+
+// Load the SDK asynchronously
+(function(d, s, id){
+ var js, fjs = d.getElementsByTagName(s)[0];
+ if (d.getElementById(id)) {return;}
+ js = d.createElement(s); js.id = id;
+ js.src = "https://connect.facebook.net/en_US/sdk.js";
+ fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+
+// login with FB with extra persmissions
+function login() {
+    FB.login(function(response) {
+        if (response.status === 'connected') {
+            document.getElementById('status').innerHTML = 'we are connected';
+            document.getElementById('login').style.visibility = 'hidden';
+        } else if (response.status === 'not_authorized') {
+            document.getElementById('status').innerHTML = 'we are not logged in';
+        } else {
+            document.getElementById('status').innerHTML = 'You are not logged into FB';
+        }
+
+    }, {scope: 'email,user_friends,user_likes'});
+}
+
+function getInfo() {
+    FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id'}, function(response) {
+        document.getElementById('status').innerHTML = response;
+    });
+}

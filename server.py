@@ -34,6 +34,9 @@ my_num = os.environ.get('MY_NUMBER')
 client = Client(account, token)
 app.config.from_object(__name__)
 
+@app.route('/fb_test')
+def fb():
+    return render_template('fb_test.html')
 
 @app.route('/')
 def index():
@@ -68,10 +71,10 @@ def fb_register():
     fname = request.form.get('fname')
     lname = request.form.get('lname')
     fb_uid = request.form.get('fb_uid')
+    email = request.form.get('email')
     # phone = request.form.get('phone')
     password = request.form.get('fb_uid')
     hashed_value = generate_password_hash(password)
-    email = request.form.get('email')
 
 
     db_user = User.query.filter(User.email == email).first()
@@ -138,6 +141,7 @@ def mydata():
                 } 
     
     return jsonify({"data":mydata})
+
 
 @app.route('/logout')
 def log_out():
@@ -221,13 +225,6 @@ def login_process():
         flash("Email does not exist in database: please register")
         return redirect('/register_login')
 
-
-# @app.route('/logout')
-# def log_out():
-#     """Log user out; clear out session; confirm log out; redirect to homepage"""
-#     del session['user_id']
-#     flash("You have successfully logged out!")
-#     return redirect("/")
 
 
 @app.route('/users/<user_id>')

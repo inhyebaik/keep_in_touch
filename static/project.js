@@ -1,8 +1,8 @@
 "use strict";
 
-// Facebook OAuth 
 
-// Initialize FB 
+// Facebook stuff ////////////////////////////////////////////////////////////
+
 window.fbAsyncInit = function() {
     FB.init({
       appId      : '1683033888393903',
@@ -13,6 +13,17 @@ window.fbAsyncInit = function() {
     });
       
     FB.AppEvents.logPageView(); 
+
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+            document.getElementById('status1').innerHTML = 'we are connected';
+            document.getElementById('login').style.visibility = 'hidden';
+        } else if (response.status === 'not_authorized') {
+            document.getElementById('status1').innerHTML = 'we are not logged in';
+        } else {
+            document.getElementById('status1').innerHTML = 'You are not logged into FB';
+        }
+    });
 };
 
 // Load the SDK asynchronously
@@ -25,116 +36,66 @@ window.fbAsyncInit = function() {
 }(document, 'script', 'facebook-jssdk'));
 
 
-function facebookLogin() {
 
+
+
+// login with FB with extra persmissions
+function login() {
     FB.login(function(response) {
-        console.log(response)
-        if (response.authResponse) {
-            console.log('Authenticated!');
-            console.log(response.authResponse.userID);
-            console.log(response.authResponse.accessToken);
-            var loginInputs = { 'fb_uid':response.authResponse.userID, 
-                                'fb_at':response.authResponse.accessToken };
-           
-           // try to add them to session 
-            $.post('/fb_login', loginInputs, function(data) { 
-                console.log(data);
-                if (data['user_id']) {
-                    // redirect to their profile 
-                    window.location.href = `/users/${data['user_id']}`;
-                }
-            });
-
-        } else if (response.status === 'not_authorized'){
-            // the user is logged in to Facebook, 
-            // but has not authenticated your app
-            console.log('User cancelled login or did not fully authorize.');
-            alert('Please authenticate Keep in Touch')
-            window.location.href = `/register_login`;
+        if (response.status === 'connected') {
+            document.getElementById('status1').innerHTML = 'we are connected';
+            document.getElementById('login').style.visibility = 'hidden';
+        } else if (response.status === 'not_authorized') {
+            document.getElementById('status1').innerHTML = 'we are not logged in';
         } else {
-            // the user isn't logged in to Facebook.
-            alert('Please log into FB AND authenticate Keep in Touch')
-            window.location.href = `/register_login`;
+            document.getElementById('status1').innerHTML = 'You are not logged into FB';
         }
-    },
-    {scope: 'public_profile,email,user_friends'});
+
+    }, {scope: 'email,user_friends,user_relationships,read_custom_friendlists'});
 }
 
-
-
-
-function statusChangeCallback(response) {
-    console.log('statusChangeCallback');
-    console.log(response);
-    // The response object is returned with a status field that lets the
-    // app know the current login status of the person.
-    // Full docs on the response object can be found in the documentation
-    // for FB.getLoginStatus().
-    if (response.status === 'connected') {
-      // Logged into your app and Facebook.
-      facebookLogin(response)
-    } else {
-      // The person is not logged into your app or we are unable to tell.
-      document.getElementById('status').innerHTML = 'Please log ' +
-        'into this app.'; 
-    }
-}
-
-
-
-function checkLoginState() {
-    FB.getLoginStatus(function(response) {
-        statusChangeCallback(response);
-        console.log('Welcome!  Fetching your information.... ');
-        var url = '/me?fields=id,name,email';
-        FB.api(url, function(response) {
-             console.log(response.name + " " + response.id + " " +response.email);
-                 let formInputs = { 'fname': response.name.split(" ")[0], 
-                        'lname':response.name.split(" ")[1], 
-                        'email':response.email, 
-                        'fb_uid':response.id };
-            console.log(formInputs);
-
-        }, {scope: 'email'});
+// get information on friends
+function getInfo() {
+    FB.api('/me', 'GET', {fields: 'id,first_name,last_name,taggable_friends{name,id},friends.limit(10){birthday}'}, function(response) {
+        var friends = response['taggable_friends']['data'];
+        var friendsNamesID = getNamesID(friends);
+        console.log(friendsNamesID);
+        var fname = response['first_name'];
+        var lname = response['last_name'];
+        var fb_uid = response['id'];
+        document.getElementById('status1').innerHTML = response;
     });
 }
 
+function getNamesID(friends) {
+    var friends_names = {};
+    for (friend of friends) { friends_names[friend['id']] = friend['name']; }
+    return friends_names;
+}
 
 
-function RegisterWithFB() {
-    FB.getLoginStatus(function(response) {
-        // statusChangeCallback(response);
-        console.log('Welcome!  Fetching your information.... ');
-        console.log(response)
-
-        var url = '/me?fields=id,name,email';
-        FB.api(url, function(response) {
-            console.log(response.name + " " + response.id + " " +response.email);
-
-            let formInputs = {  'fname': response.name.split(" ")[0], 
-                                'lname':response.name.split(" ")[1], 
-                                'email':response.email, 
-                                'fb_uid':response.id    };
-            console.log(formInputs);
-            $.post('/fb_register', formInputs, function(data) {
+// log in and get info
+function loginGetInfo() {
+    FB.login(function(response) {
+        if (response.status === 'connected') {
+            document.getElementById('status1').innerHTML = 'we are connected';
+            document.getElementById('fb-login-button').style.visibility = 'hidden';
+            getInfo();
+        } else if (response.status === 'not_authorized') {
+            document.getElementById('status1').innerHTML = 'we are not logged in';
+        } else {
+            document.getElementById('status1').innerHTML = 'You are not logged into FB';
+        } 
         
-                console.log(data);
-                // console.log('welcome new user! redirecting to profile');
-                alert(data['result']);
-                window.location.href = `/users/${data['user_id']}`; 
-                // if (data['result']) {
-                //     console.log('existing user!!!');
-                //     alert(data['result']);
-                //     window.location.href = '/register_login'; 
-                // } else {  window.location.href = `/users/${data['user_id']}`; } 
-                        
-            });
 
-        }, 
-
-        {scope: "email"});
-    });
+    }, {scope: 'email,user_friends,user_relationships,read_custom_friendlists'});
 }
+
+
+// end Facebook stuff  ////////////////////////////////////////////////////////////
+
+
+
 
 
 
