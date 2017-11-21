@@ -109,6 +109,35 @@ def fb_register():
 #         print "user not found based on FB credentials; registering them as new user"
 
 
+@app.route('/d3')
+def d3():
+    return render_template('d3_practice.html')
+
+@app.route('/mydata.json')
+def mydata():
+    mydata = {
+                "name": "max", 
+                "children": [ 
+                    { 
+                        "name":"Sylvia", 
+                        "children": [
+                                        {"name": "Craig"}, 
+                                        {"name":"Robin"}, 
+                                        {"name": "Anna"} 
+                        ]
+                    },
+
+                {
+                    "name": "David", 
+                    "children": [
+                                    {"name": "Jeff", "size": 3534}, 
+                                    {"name": "Buggy", "size": 5731}
+                    ]
+                }
+                 ]
+                } 
+    
+    return jsonify({"data":mydata})
 
 @app.route('/logout')
 def log_out():

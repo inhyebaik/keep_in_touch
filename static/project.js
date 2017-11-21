@@ -100,6 +100,7 @@ function checkLoginState() {
 }
 
 
+
 function RegisterWithFB() {
     FB.getLoginStatus(function(response) {
         // statusChangeCallback(response);
@@ -131,7 +132,7 @@ function RegisterWithFB() {
 
         }, 
 
-        {scope: 'email'});
+        {scope: "email"});
     });
 }
 
