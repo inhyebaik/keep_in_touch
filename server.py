@@ -31,6 +31,7 @@ account = os.environ.get('TWILIO_TEST_ACCOUNT')
 token = os.environ.get('TWILIO_TEST_TOKEN')
 twilio_num = os.environ.get('TWILIO_NUMBER')
 my_num = os.environ.get('MY_NUMBER')
+my_email = os.environ.get('MY_EMAIL')
 client = Client(account, token)
 app.config.from_object(__name__)
 
@@ -476,7 +477,7 @@ def handle_profile_edits():
     fname = request.form.get('fname')
     lname = request.form.get('lname')
     email = request.form.get('email')
-    phone = "+1"+request.form.get('phone')
+    phone = request.form.get('phone')
     if user_id:
         user = User.query.get(user_id)
         user.fname = fname
@@ -702,8 +703,8 @@ def job():
     tmrw_events = return_tmrws_events()
     remind_all_users(tmrw_events)
 
-schedule.every().day.at("00:00").do(job) # Check every day at midnight (for real app)
-# schedule.every(2).seconds.do(job)  # Testing/demo purposes
+# schedule.every().day.at("00:00").do(job) # Check every day at midnight (for real app)
+schedule.every(2).seconds.do(job)  # Testing/demo purposes
 
 
 
