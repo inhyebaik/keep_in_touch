@@ -8,21 +8,12 @@
 <p><a href="/users">View all users</a></p>
 
 
+<div id="status1"></div>
+
 <div id="status"></div>
 
 <!-- FB OAuth -->
-<!-- Button: Continue with Facebook (new registration) -->
-<!-- <div
-    class="fb-login-button" 
-    data-max-rows="1" 
-    data-size="medium" 
-    data-button-type="continue_with" 
-    data-show-faces="false" 
-    data-auto-logout-link="false" 
-    data-use-continue-as="true"
-    onlogin="RegisterWithFB();">
-</div>
- -->
+
 
 <!-- Button: log in with FB-->
 
@@ -34,8 +25,7 @@
   data-auto-logout-link="false" 
   data-use-continue-as="true"
   data-button-type="continue_with" 
-  scope="public_profile,email,user_friends,user_likes"
-  onlogin="RegisterWithFB();">
+  onlogin="loginGetInfo2();">
 </fb:login-button>
 
 
