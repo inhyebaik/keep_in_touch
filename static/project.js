@@ -16,12 +16,12 @@ window.fbAsyncInit = function() {
 
     FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
-            document.getElementById('status1').innerHTML = 'we are connected';
-            document.getElementById('login').style.visibility = 'hidden';
+            // document.getElementById('status1 ').innerHTML = 'we are connected';
+            // document.getElementById('login').style.visibility = 'hidden';
         } else if (response.status === 'not_authorized') {
-            document.getElementById('status1').innerHTML = 'we are not logged in';
+            // document.getElementById('status1').innerHTML = 'we are not logged in';
         } else {
-            document.getElementById('status1').innerHTML = 'You are not logged into FB';
+            // document.getElementById('status1').innerHTML = 'You are not logged into FB';
         }
     });
 };

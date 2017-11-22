@@ -705,6 +705,16 @@ def job():
 schedule.every().day.at("00:00").do(job) # Check every day at midnight (for real app)
 # schedule.every(2).seconds.do(job)  # Testing/demo purposes
 
+
+
+# D3 stuff #####################################
+
+
+
+
+
+
+###############################################################
 if __name__ == "__main__": 
     app.debug = True
     app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
