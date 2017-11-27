@@ -90,8 +90,8 @@
          <button data-dismiss="modal" class="close" type="button">
           <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
         </button>
-          <h1>Login to Your Account</h1><br>
 
+          <h1>Login to Your Account</h1><br>
           <form action='/login', method='POST'>
           <input type="text" name="login_email" placeholder="Email">
           <input type="password" name="login_password" placeholder="Password">
@@ -108,12 +108,12 @@
                       data-button-type="continue_with" 
                       onlogin="loginGetInfo2();">
           </fb:login-button>
-
-
+          <br>
+          <a data-dismiss="modal" data-toggle="modal" href="#lost" data-target="#register-modal">Already a user?</a>
 
           </div>
-        </div>
       </div>
+  </div>
 
 <!-- REGISTRATION MODAL  -->
 
@@ -133,7 +133,6 @@
           <input type="text" name="lname" placeholder="Last Name">
           <input type="phone" name="phone" placeholder="Phone">
           <input type="submit" class="login loginmodal-submit" value="Register">
-          <!-- <a href="">Already have an account?</a> -->
 
 
           <fb:login-button 
@@ -147,8 +146,7 @@
                       onlogin="loginGetInfo2();">
           </fb:login-button>
 
-          <a data-toggle="modal" data-target="#login-modal">Already have an account?</a>
-          
+        <a data-dismiss="modal" data-toggle="modal" href="#lost" data-target="#login-modal">Already have an account?</a>
 
         </form>
 

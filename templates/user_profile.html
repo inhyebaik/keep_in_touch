@@ -8,7 +8,6 @@
     <br>
     Phone: {{ user.phone }}
     <br>
-<!--     (<a href="/edit_profile">Edit My info</a>) -->
 
     <a data-toggle="modal" data-target="#editprofile-modal">Edit My Info</a>
 
@@ -45,7 +44,6 @@
 
 <!-- END EDIT PROFILE MODAL -->
 
-
 {%endif%}
 
 <!-- Contacts list, with events -->
@@ -72,23 +70,24 @@
           <h1>Edit {{ contact.name}}'s Info</h1><br>
           <form action='/edit_contact/{{ contact.id }}', method='POST'>
 
-              <label for="email">Email</label>
-              <input type="email" name="email" placeholder="Email" value='{{ contact.email }}'>
-             
               <label for="fname">Name</label>
               <input type="text" name="name" placeholder="Name" value='{{ contact.name }}'>
               
+              <label for="email">Email</label>
+              <input type="email" name="email" placeholder="Email" value='{{ contact.email }}'>
+              
+              <label for="address">Address</label>
+              <input type="text" name="address" placeholder="Address" value='{{ contact.address }}'>
+            
               <label for="phone">Phone</label>
               <input type="phone" name="phone" placeholder="Phone" value='{{ contact.phone }}'>
             
-          
           <input type="submit" class="login loginmodal-submit" value="Save">
           </form>
 
           </div>
         </div>
       </div>
-
 <!-- END EDIT CONTACT INFO MODAL -->
 {% endif %} 
 
@@ -107,16 +106,191 @@
         </ul>
    
         {% if contact.user_id == session.get('user_id') %}
-         <a href="/add_event/{{contact.id}}"style='font-size: 12px'><b>Add a new event for {{contact.name}}</b></a><br>
-         <a href="/remove_contact/{{contact.id}}" style='font-size: 12px'><b>Delete {{contact.name}} and their events</b></a><br><br>
+        <!-- link to modal to add event for contact -->
+          <a data-toggle="modal" data-target="#addeventcontact-modal">Add a new event for {{contact.name}}</a><br>
+        
+        <!-- link to add event for contact page -->
+
+          <!-- <a href="/add_event/{{contact.id}}"style='font-size: 12px'><b>Add a new event for {{contact.name}}</b></a><br> -->
+
+
+<!-- ADD EVENT FOR CONTACT MODAL -->
+        <div class="modal fade" id="addeventcontact-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+        <div class="loginmodal-container">
+         <button data-dismiss="modal" class="close" type="button">
+          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+        </button>
+
+          <h1>Add Event for {{ contact.name}}</h1><br>
+          <form id='neweventcontact' action='/handle_new_event_for_contact', method='POST'>
+              Contact's name: {{ contact.name}}<br>
+              Contact's email: {{ contact.email }}<br>
+              Contact's phone: {{ contact.phone }}<br>
+              Contact's address: {{ contact.address }}<br>
+          <label for="date">Date to be sent</label> 
+              <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" required/><br>
+          
+          <label for="subject">Message subject</label> <input type='text' name='template_name' required> <br>
+              
+          How do you want to greet them? 
+            <select name='greet'>
+                <option value='Dear'>Dear</option>
+                <option value='Hey'>Hey</option>
+                <option value='Hello'>Hello</option>
+            </select> <br>
+    
+
+        What do you want them to know? <br> ...or choose a prefilled message if you'd like!         
+            <select class='template_type' name='template_type'>
+                <option disabled selected value>Select prefilled</option>
+                <option value='ty'>Thank you</option>
+                <option value='hb'>Happy birthday</option>
+                <option value='fup'>Follow Up</option>
+            </select> 
+            <br>
+                <textarea class='template_textarea' name="body">
+                You're awesome!
+                </textarea>
+                <br>
+
+        How do you want to sign off? 
+            <select name='sign_off'>
+                <option value='Sincerely'>Sincerely</option>
+                <option value='Yours'>Yours</option>
+                <option value='Best'>Best</option>
+              </select> <br><br>
+            
+            <input type='hidden' name='contact_id' value='{{ contact.id }}'>
+          <input type="submit" class="login loginmodal-submit" value="Add Event">
+          </form>
+
+          </div>
+        </div>
+      </div>
+<!-- END ADD EVENT FOR CONTACT MODAL -->
+
+         <!-- link to modal to delete contact -->
+         <a data-toggle="modal" data-target="#removecontact-modal">Delete {{contact.name}} and their events modal</a><br>
+         
+         <!-- link to page to delete contact -->
+         <!-- <a href="/remove_contact/{{contact.id}}" style='font-size: 12px'><b>Delete {{contact.name}} and their events</b></a><br><br> -->
+
+<!-- REMOVE CONTACT MODAL -->
+    <div class="modal fade" id="removecontact-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+      <div class="loginmodal-container">
+      <button data-dismiss="modal" class="close" type="button">
+          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+      </button>
+
+      <h3>Are you sure you want to delete <u>{{ contact.name }}</u> as a contact?</h3>
+      and all of the nice messages you had in mind? <br> <br>
+        <ol>
+          {% for event in contact.events %}
+            <li> {{ event.template.name }}</li>
+          {% endfor %}
+        </ol> 
+        <br><br>
+            <form action='/remove_contact', method='POST'>
+                  <input type='hidden' name='contact_id' value='{{contact.id}}'>
+                <input type="submit" class="login loginmodal-submit" value='Yes, remove them out of my life'>
+          </form>
+
+          </div>
+        </div>
+      </div>
+<!-- END REMOVE CONTACT MODAL -->
+
+
+
+
+
+
          {% endif %} 
     {% endfor %}
 </ul>
 
 
+
+
 <br>
 <br> 
      {% if user.id == session.get('user_id') %}
-        <a href="/add_event"> <b>Add a new contact/event</b></a>
+     
+     <!-- link to add contact/event modal -->
+        <a data-toggle="modal" data-target="#eventform-modal">Add a new event/contact</a><br>
+        
+        <!-- link to add contact/event page -->
+        <!-- <a href="/add_event"> <b>Add a new contact/event</b></a> -->
+
+
+
+<!-- ADD TOTALLY NEW EVENT/CONTACT MODAL :: event_form.html -->
+        <div class="modal fade" id="eventform-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+        <div class="loginmodal-container">
+         <button data-dismiss="modal" class="close" type="button">
+          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+        </button>
+
+          <h1>Add New Event/Contact</h1><br>
+          <form id='newevent' action='/add_event', method='POST'>
+              <label for="fname">Contact's Name</label>
+              <input type="text" name="contact_name" placeholder="Name" required>
+              
+              <label for="email">Contact's Email</label>
+              <input type="email" name="contact_email" placeholder="Email" required>
+              
+              <label for="address">Contact's Address</label>
+              <input type="text" name="contact_address" placeholder="Address">
+            
+              <label for="phone">Contact's Phone</label>
+              <input type="phone" name="contact_phone" placeholder="+1">
+
+          <label for="date">Date to be sent</label> 
+              <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" required/><br>
+          
+          <label for="subject">Message subject</label> <input type='text' name='template_name' required> <br>
+              
+          How do you want to greet them? 
+            <select name='greet'>
+                <option value='Dear'>Dear</option>
+                <option value='Hey'>Hey</option>
+                <option value='Hello'>Hello</option>
+            </select> <br>
+    
+
+        What do you want them to know? <br> ...or choose a prefilled message if you'd like!         
+            <select class='template_type' name='template_type'>
+                <option disabled selected value>Select prefilled</option>
+                <option value='ty'>Thank you</option>
+                <option value='hb'>Happy birthday</option>
+                <option value='fup'>Follow Up</option>
+            </select> 
+            <br>
+                <textarea class='template_textarea' name="body">
+                You're awesome!
+                </textarea>
+                <br>
+
+        How do you want to sign off? 
+            <select name='sign_off'>
+                <option value='Sincerely'>Sincerely</option>
+                <option value='Yours'>Yours</option>
+                <option value='Best'>Best</option>
+              </select> <br><br>
+            
+          <input type="submit" class="login loginmodal-submit" value="Add New Contact/Event">
+          </form>
+
+          </div>
+        </div>
+      </div>
+<!-- END ADD TOTALLY NEW EVENT/CONTACT MODAL -->    
+
+
+
+
     {%endif%}
 {% endblock %}

@@ -50,9 +50,12 @@ class Contact(db.Model):
     name = db.Column(db.String(64), nullable=False)  # not fname/lname in case it's "Mom"
     email = db.Column(db.String(64), nullable=False)
     phone = db.Column(db.String(15))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    # address information
+    address = db.Column(db.Text)
     # A contact belongs to a user
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship("User", backref=db.backref("contacts", order_by=id))
+
 
     def __repr__(self):
         """Provide better representation."""
@@ -70,9 +73,12 @@ class Event(db.Model):
     template_id = db.Column(db.Integer, db.ForeignKey('templates.id'), nullable=False)
     #default date is tomorrow
     date = db.Column(db.DateTime, default=(datetime.datetime.today() + datetime.timedelta(days=1)), nullable=False)
+    # if reminder is sent
+    reminder_sent = db.Column(db.Boolean, default=False)
     # an event has one contact, and a contact can have multiple events
     contacts = db.relationship("Contact", secondary="contactsevents", backref="events")
     template = db.relationship("Template", backref=db.backref("event"))
+
 
 
 
@@ -105,46 +111,6 @@ class Template(db.Model):
         return "<Template id={} name={} text={}>".format(self.id, self.name, self.text)
 
 
-# class Input(db.Model):
-#     """A template can have many inputs (will go into the text field of template).
-#     An input can belong to many templates.
-
-#     name = 'memory', 
-#            'how_you_met', 
-#            'greeting', 
-#            'body', 
-#            'sign_off'
-
-#     text = 'how did you meet?', 
-#              'how do you want to greet?', 
-#              'how do you want to sign off?', 
-#              'what do you want to follow up on?'
-
-#     """
-
-#     __tablename__ = "inputs"
-
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#         # greet, body, sign_off
-#     name = db.Column(db.String(64), nullable=False)
-#     text = db.Column(db.String(500), nullable=False)
-
-#     templates = db.relationship("Template", secondary="templatesinputs", backref="inputs")
-
-#     def __repr__(self):
-#         """Provide better representation."""
-#         return "<Input id={} name={} text={}>".format(self.id, self.name, self.text)
-
-
-
-# class TemplateInput(db.Model):
-#     """Association table between Templates and Inputs tables"""
-
-#     __tablename__ = "templatesinputs"
-
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     template_id = db.Column(db.Integer, db.ForeignKey('templates.id'), nullable=False)
-#     input_id = db.Column(db.Integer, db.ForeignKey('inputs.id'), nullable=False)
 
 def connect_to_db(app, uri='postgresql:///project'):
     """Connect the database to our Flask app."""
