@@ -15,20 +15,24 @@
 <!-- FB OAuth -->
 
 
-<!-- Button: log in with FB-->
+<!-- if logged in -->
+{% if session.get('user_id') %}
 
-<fb:login-button 
-  class="fb-login-button" 
-  data-max-rows="1" 
-  data-size="medium" 
-  data-show-faces="false" 
-  data-auto-logout-link="false" 
-  data-use-continue-as="true"
-  data-button-type="continue_with" 
-  onlogin="loginGetInfo2();">
-</fb:login-button>
+{% else %}
 
+    <!-- Button: log in with FB-->
+    <fb:login-button 
+      class="fb-login-button" 
+      data-max-rows="1" 
+      data-size="medium" 
+      data-show-faces="false" 
+      data-auto-logout-link="false" 
+      data-use-continue-as="true"
+      data-button-type="continue_with" 
+      onlogin="loginGetInfo2();">
+    </fb:login-button>
 
+{% endif %}
 
 {% endblock %}
 
