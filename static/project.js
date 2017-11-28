@@ -291,11 +291,10 @@ function loginGetInfo2() {
     }, {scope: 'email,user_friends,user_relationships,read_custom_friendlists'});
 }
 
-// end Facebook stuff attempt 2 ////////////////////////////////////////////////////////////
+// end Facebook stuff attempt 2 /////////////////////////////////////////////////
 
 
-
-// Get new quote for each refresh (base.html)
+// Get new quote for each refresh (base.html) //////////////////////////////////
 $(document).ready(function() {
     $('#quote-text').load('/quote');
 });
@@ -314,7 +313,7 @@ function showEvents(results) {
         element.html(''); }
 }
 
-// On user profile, click on a contact and show events
+// On user profile, click on a contact and show events /////////////////////////
 function showOptions(evt) {
     let contact_id = $(this).attr('id');
     let url = "/contact.json";
@@ -324,7 +323,7 @@ function showOptions(evt) {
 $('.contact-name').on("click", showOptions);
 
 
-// When creating an event, ensure dates are today or in the future
+// When creating an event, ensure dates are today or in the future /////////////
 var today1 = new Date();
 var dd = today1.getDate();
 var mm = today1.getMonth()+1; //January is 0!
@@ -338,25 +337,7 @@ $('.datefield').attr('min', today1);
 $('.datefield').attr('max', maxDate);
 
 
-// Prefilled textarea for event_for_contact.html, event_form.html
-// $('.template_type').on('change', function() {
-//     let templateType = $(".template_type").val(); console.log(templateType);
-//         let msg = "";
-//         if (templateType === "ty") {
-//             msg = "Thank you so much for this";
-//         } 
-//         else if (templateType === "hb") {
-//             msg = "Happy birthday! You're awesome!";
-//         } 
-//         else if (templateType === "fup") {
-//             msg = "I'm just following up on our last meeting :)";
-//         }
-//         else if (templateType == 'markov') {
-//             msg = msg;
-//         }
-//     $('.template_textarea').text(msg);
-// })
-
+// show random message templates in textbox when adding new event ////////////// 
 function showMessage(results) {
     let msg = results['message']; 
     $('.template_textarea').text(msg);
@@ -371,4 +352,20 @@ function randomMessage(evt) {
 }
 
 $('.template_type').on('change', randomMessage);
+
+
+
+// reset form after closing/submitting /////////////////////////////////////////
+function returnDefault(evt) {
+    $('form').trigger('reset');
+    $('.template_textarea').empty(); 
+}
+// add event listener on close and submit of forms
+$('button.close').on('click', returnDefault);
+$('.newevent').on('submit', returnDefault);
+
+
+
+
+
 

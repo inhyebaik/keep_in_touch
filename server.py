@@ -57,6 +57,7 @@ def return_quote():
 @app.route('/msg.json', methods=['POST'])
 def return_msg():
     """Return random message for preselected template type"""
+    # import pdb; pdb.set_trace()
     template_type = request.form.get('template_type')
     msg = random_message(template_type)
     return jsonify({"message": msg})

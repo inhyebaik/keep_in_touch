@@ -99,6 +99,47 @@
             {% if contact.user_id == session.get('user_id') %}
             <li>[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]  
                     <a href="/edit_event/{{event.id}}">{{ event.template.name }}</a>
+                    <br>
+                    <a data-toggle="modal" data-target="#editevent-modal">{{ event.template.name }} modal</a>
+
+<!-- EDIT EVENT MODAL :: edit_event.html -->
+        <div class="modal fade" id="editevent-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+        <div class="loginmodal-container">
+
+         <button data-dismiss="modal" class="close" type="button">
+          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+        </button>
+       
+          <h2><u>Edit Event Details</u></h2>
+          <form action='/handle_edits', method='POST'>
+          <input type='hidden' name='event_id' value='{{ event.id }}'>
+          <input type='hidden' name='contact_id' value='{{ event.contacts[0].id }}'>
+
+Contact name: <input type='text' name='contact_name' value='{{event.contacts[0].name}}' required> <br>
+Contact's email: <input type='email' name='contact_email' value='{{event.contacts[0].email}}' required><br>
+Contact's phone: <input type='phone' name='contact_phone' value='{{event.contacts[0].phone}}'> <br>
+Contact's address: <input type='text' name='contact_address' value='{{event.contacts[0].address}}'> <br>
+Date to be sent: 
+<input type="date" name='date' class="datefield" min="" max="" value="{{event.date.year}}-{{ event.date.month}}-{{ event.date.day}}" data-date-split-input="true" required/><br>
+Subject: <input type='text' name='template_name' value='{{event.template.name}}'> <br>
+Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
+
+          <input type="submit" class="login loginmodal-submit" value="Save">
+          </form>
+
+          <form action="/remove_event" method='POST'>
+              <input type='hidden' name='event_id' value='{{ event.id }}'>
+              <input type='submit' value="Remove Event">
+          </form>
+
+          </div>
+        </div>
+      </div>
+<!-- END EDIT EVENT MODAL :: edit_event.html -->
+
+
+
                 {% endif %} 
             </li>
         {% endfor %} 
@@ -118,12 +159,12 @@
         <div class="modal fade" id="addeventcontact-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
         <div class="loginmodal-container">
-         <button data-dismiss="modal" class="close" type="button">
+         <button data-dismiss="modal" class="close" id='user-new-close' type="button">
           <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
         </button>
 
           <h1>Add Event for {{ contact.name}}</h1><br>
-          <form id='neweventcontact' action='/handle_new_event_for_contact', method='POST'>
+          <form id='neweventcontact' class='newevent' action='/handle_new_event_for_contact', method='POST'>
               Contact's name: {{ contact.name}}<br>
               Contact's email: {{ contact.email }}<br>
               Contact's phone: {{ contact.phone }}<br>
@@ -163,7 +204,7 @@ You're awesome!
               </select> <br><br>
             
             <input type='hidden' name='contact_id' value='{{ contact.id }}'>
-          <input type="submit" class="login loginmodal-submit" value="Add Event">
+          <input type="submit" class="login loginmodal-submit" id='user-new-submit' value="Add Event">
           </form>
 
           </div>
@@ -236,7 +277,7 @@ You're awesome!
         </button>
 
           <h1>Add New Event/Contact</h1><br>
-          <form id='newevent' action='/add_event', method='POST'>
+          <form class='newevent' action='/add_event', method='POST'>
               <label for="fname">Contact's Name</label>
               <input type="text" name="contact_name" placeholder="Name" required>
               

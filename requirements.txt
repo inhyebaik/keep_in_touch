@@ -4,6 +4,7 @@ attrs==17.2.0
 Automat==0.6.0
 backports-abc==0.5
 backports.shutil-get-terminal-size==1.0.0
+beautifulsoup4==4.6.0
 bleach==2.1.1
 blinker==1.4
 bs4==0.0.1
@@ -41,6 +42,7 @@ jupyter-client==5.1.0
 jupyter-console==5.2.0
 jupyter-core==4.3.0
 lxml==4.0.0
+markovify==0.6.4
 MarkupSafe==0.23
 mistune==0.7.4
 nbconvert==5.3.1
@@ -83,6 +85,7 @@ testpath==0.3.1
 tornado==4.5.2
 traitlets==4.3.2
 Twisted==17.9.0
+Unidecode==0.4.21
 urllib3==1.22
 virtualenv==15.1.0
 w3lib==1.18.0

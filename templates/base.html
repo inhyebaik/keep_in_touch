@@ -42,10 +42,10 @@
           </div>
 
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Home</a></li>
-            <li><a href="/users/{{session.get('user_id')}}">My Profile</a></li>
+            <li class=""><a href="/">Home</a></li>
+            <li class=""><a href="/users/{{session.get('user_id')}}">My Profile</a></li>
             <!-- <li><a href="/add_event">Create a New Event</a></li> -->
-            <li><a data-toggle="modal" data-target="#eventform-modal">Create New Event</a></li>
+            <li class=""><a data-toggle="modal" data-target="#eventform-modal">Create New Event</a></li>
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
@@ -60,12 +60,12 @@
         <div class="modal fade" id="eventform-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
         <div class="loginmodal-container">
-         <button data-dismiss="modal" class="close" type="button">
+         <button data-dismiss="modal" class="close" id='base-new-close' type="button">
           <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
         </button>
 
           <h1>Add New Event/Contact</h1><br>
-          <form id='newevent' action='/add_event', method='POST'>
+          <form id='basenewevent' class='newevent' action='/add_event', method='POST'>
               <label for="fname">Contact's Name</label>
               <input type="text" name="contact_name" placeholder="Name" required>
               
@@ -112,7 +112,7 @@ You're awesome!
                 <option value='Best'>Best</option>
               </select> <br><br>
             
-          <input type="submit" class="login loginmodal-submit" value="Add New Contact/Event">
+          <input type="submit" class="login loginmodal-submit" id='base-new-submit' value="Add New Contact/Event">
           </form>
 
           </div>
