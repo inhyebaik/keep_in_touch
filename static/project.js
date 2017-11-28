@@ -339,17 +339,36 @@ $('.datefield').attr('max', maxDate);
 
 
 // Prefilled textarea for event_for_contact.html, event_form.html
-$('.template_type').on('change', function() {
-    let templateType = $(".template_type").val();
-        let msg = "";
-        if (templateType === "ty") {
-            msg = "Thank you so much for this";
-        } 
-        else if (templateType === "hb") {
-            msg = "Happy birthday! You're awesome!";
-        } 
-        else if (templateType === "fup") {
-            msg = "I'm just following up on our last meeting :)";
-        }
+// $('.template_type').on('change', function() {
+//     let templateType = $(".template_type").val(); console.log(templateType);
+//         let msg = "";
+//         if (templateType === "ty") {
+//             msg = "Thank you so much for this";
+//         } 
+//         else if (templateType === "hb") {
+//             msg = "Happy birthday! You're awesome!";
+//         } 
+//         else if (templateType === "fup") {
+//             msg = "I'm just following up on our last meeting :)";
+//         }
+//         else if (templateType == 'markov') {
+//             msg = msg;
+//         }
+//     $('.template_textarea').text(msg);
+// })
+
+function showMessage(results) {
+    let msg = results['message']; 
     $('.template_textarea').text(msg);
-})
+}
+
+function randomMessage(evt) {
+    let templateType = $(".template_type").val();
+    console.log(templateType);
+    let url = "/msg.json";
+    let formInputs = {"template_type" : templateType};
+    $.post(url, formInputs, showMessage);
+}
+
+$('.template_type').on('change', randomMessage);
+

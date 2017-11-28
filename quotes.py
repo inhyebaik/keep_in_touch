@@ -2,8 +2,8 @@
 import sys
 reload(sys)  
 sys.setdefaultencoding('Cp1252')
-
 import random
+
 QUOTES = {
 "Christopher Moore (The Stupidest Angel, A Heartwarming Tale of Christmas Terror": "Christmas Amnesty. You can fall out of contact with a friend, fail to return calls, ignore e-mails, avoid eye contact at the Thrifty-Mart, forget birthdays, anniversaries, and reunions, and if you show up at their house during the holidays (with a gift) they are socially bound to forgive you -- act like nothing happened. Decorum dictates that the friendship move forward from that point, without guilt or recrimination. If you started a chess game ten years ago in October, you need only remember whose move it is -- or why you sold the chessboard and bought an Xbox in the interim. (Look, Christmas Amnesty is a wonderful thing, but it's not a dimensional shift. The laws of time and space continue to apply, even if you have been avoiding your friends. But don't try using the expansion of the universe an as excuse -- like you kept meaning to stop by, but their house kept getting farther away. That crap won't wash. Just say, 'Sorry I haven't called. Merry Christmas' Then show the present. Christmas Amnesty protocol dictates that your friend say, 'That's okay,' and let you in without further comment. This is the way it has always been done.",    
 "J.K. Rowling (Harry Potter and the Prisoner of Azkaban)": "He was my mum and dad's best friend. He's a convicted murderer, but he's broken out of wizard prison and he's on the run. He likes to keep in touch with me, though...keep up with my news...check if I'm happy...", 
@@ -34,5 +34,75 @@ def random_quote(QUOTES):
     q = random.choice(QUOTES.items())
     author, quote = q
     return q
+
+
+
+hb = [
+{"message": "May this day bring to you all things that make you smile."},
+{"message": "Age is just a value; the higher the age the higher its value."},
+{"message": "Your birthday only comes around once a year so let's make today a day to remember."},
+{"message": "May every glowing candle on your cake transorm into a wish that will turn into reality."},
+{"message": "Because you're you, I'm celebrating today! Happy Birthday."},
+{"message": "May this year be your best ever."},
+{"message": "A birthday is just the first day of another 365-day journey around the sun. Enjoy the trip."},
+{"message": "Smile! It's your birthday."},
+{"message": "Here's to another year of experience."},
+{"message": "Have a wonderful day and fabulous year."},
+{"message": "You may grow a year old every year, but I hope your spirit remains fresh and youthful. Happy Birthday!"},
+{"message": "You're aged to perfection."},
+{"message": "If I wish on your Birthday that God should give you whatever you ask for, then I wouldn't be a real friend. As a genuine friend, I wish that God should give you all the things that you have worked for and truly deserve. Have a great Birthday."},
+{"message": "My biggest Birthday wish for you is that you should stay the way you are. Don't ever change. Many happy returns of the day!"},
+{"message": "If there was a book called 101 ways to be a great person, I would dedicate it to you! May all your Birthdays make you a better than what you already are!"},
+{"message": "Happy birthday, may this day always be a special one to remember."},
+{"message": "You've got everything it takes to be successful. This Birthday, make yourself a promise that you will achieve your goals and dreams in life, no matter what. Wishing you a very Happy Birthday."},
+{"message": "Hope your birthday is just the beginning of a year full of happiness."},
+{"message": "I sealed my Birthday wishes for you in an envelope full of love and respect so that it reaches you and goes straight to your heart. Have a wonderful year ahead."},
+{"message": "Happy Birthday and many happy returns of the day."},
+{"message": "You'll never again be as young as you are today, so have fun and enjoy your day."},
+{"message": "Have you been moonlighting in my life as my pillar of strength and support while you're actually an angel sent from the heavens? You're too good to be true! I wish you a very Happy Birthday."},
+{"message": "Happy birthday, may this day always be a special one to remember."},
+{"message": "On your Birthday today, why don't you light one candle instead of blowing it out? May that candle bring you the light of good fortune in your life. Wishing you a Happy Birthday."},
+{"message": "May Time, Lady Luck and Mistress Fortune always be on your side. Once they are, nothing in the world will be able to stop you. Have a great Birthday!"},
+{"message": "Instead of saying that I hope you will have many great things in life to come, I'd like to say that I KNOW you have many great things to come in life. Have a smashing Birthday."},
+{"message": "Birthdays Mean: cake, presents, wrapping paper, money, clothes, friends, partys etc. What more could you want on your birthday?"}
+]
+
+ty = [
+{"message": "You’re the best."},
+{"message": "I’m humbled and grateful."},
+{"message": "You knocked me off my feet!"},
+{"message": "My heart is still smiling."},
+{"message": "Your thoughtfulness is a gift I will always treasure."},
+{"message": "Sometimes the simplest things mean the most."},
+{"message": "The banana bread was fabulous. You made my day."},
+{"message": "I’m touched beyond words."},
+{"message": "All I can say is wow! (Except, of course, I’m grateful.)"},
+{"message": "My heart just keeps thanking you and thanking you."},
+{"message": "You’re a blessing to me."},
+{"message": "Thank you for being my angel."},
+{"message": "This has been a challenging time, and I appreciate you so much."},
+{"message": "You have no idea how much your help has meant."},
+{"message": "For all the little and big ways you’ve pitched in…thanks!"},
+{"message": "There was nothing random about your acts of kindness. Thank you for all you have done."},
+{"message": "I can never thank you enough. But this is a start."},
+{"message": "You always know how to make life brighter for everyone you know."},
+{"message": "I can’t possibly repay you."},
+{"message": "You are always so helpful."},
+{"message": "You make the world a nicer place."},
+{"message": "You went above and beyond, and I am touched and grateful."},
+{"message": "You took common courtesy to an uncommon level. We’re so grateful for your help."},
+]
+
+fup = [
+{"message": "Thank you so much for inviting me to interview for your open account specialist position. I truly appreciate the time you took to talk with me about this opportunity and the company. I enjoyed learning more about your work group and how I might fit into that team. Please don’t hesitate to contact me with any follow-up questions you might have. I hope to talk with you again soon."},
+{"message": "Thank you for your invaluable mentoring these past three months. I’ve had fun getting to know you better, and I’ve learned so much from talking with you and seeing how you work. You are amazing at what you do! I’m grateful to have had the chance to work with you so closely."},
+{"message": "I can’t thank you enough for advising me to send my résumé to your colleague Dana Evans. I now have an interview scheduled with her next week to discuss some freelance work, and I’m really excited about the assignment she’s describing. It was very kind of you to refer me to her. I hope I can find a way to return the favor soon!"},
+]
+
+
+def random_message(messages_list):
+    """returns random message"""
+    i = randint(0, len(messages_list)-1)
+    return messages_list[i]['message']
 
 
