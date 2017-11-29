@@ -278,9 +278,13 @@ You're awesome!
 
           <h1>Add New Event/Contact</h1><br>
           <form class='newevent' action='/add_event', method='POST'>
-              <label for="fname">Contact's Name</label>
-              <input type="text" name="contact_name" placeholder="Name" required>
-              
+              Contact's name
+              <select name='contact_name'>
+              {% for contact in user.contacts %}
+                <option value='{{ contact.name }}'>{{ contact.name }}</option>
+              {% endfor %}
+              </select>
+
               <label for="email">Contact's Email</label>
               <input type="email" name="contact_email" placeholder="Email" required>
               

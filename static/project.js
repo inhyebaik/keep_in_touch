@@ -1,114 +1,6 @@
 "use strict";
 
-
-// Facebook stuff ////////////////////////////////////////////////////////////
-
-// window.fbAsyncInit = function() {
-//     FB.init({
-//       appId      : '1683033888393903',
-//       cookie     : true,
-//       xfbml      : true,
-//       version    : 'v2.11',
-//       oauth      : true,
-//     });
-      
-//     FB.AppEvents.logPageView(); 
-
-//     FB.getLoginStatus(function(response) {
-//         if (response.status === 'connected') {
-//             // document.getElementById('status1 ').innerHTML = 'we are connected';
-//             // document.getElementById('login').style.visibility = 'hidden';
-//         } else if (response.status === 'not_authorized') {
-//             // document.getElementById('status1').innerHTML = 'we are not logged in';
-//         } else {
-//             // document.getElementById('status1').innerHTML = 'You are not logged into FB';
-//         }
-//     });
-// };
-
-// // Load the SDK asynchronously
-// (function(d, s, id){
-//  var js, fjs = d.getElementsByTagName(s)[0];
-//  if (d.getElementById(id)) {return;}
-//  js = d.createElement(s); js.id = id;
-//  js.src = "https://connect.facebook.net/en_US/sdk.js";
-//  fjs.parentNode.insertBefore(js, fjs);
-// }(document, 'script', 'facebook-jssdk'));
-
-
-
-
-
-// // login with FB with extra persmissions
-// function login() {
-//     FB.login(function(response) {
-//         if (response.status === 'connected') {
-//             document.getElementById('status1').innerHTML = 'we are connected';
-//             document.getElementById('login').style.visibility = 'hidden';
-//         } else if (response.status === 'not_authorized') {
-//             document.getElementById('status1').innerHTML = 'we are not logged in';
-//         } else {
-//             document.getElementById('status1').innerHTML = 'You are not logged into FB';
-//         }
-
-//     }, {scope: 'email,user_friends,user_relationships,read_custom_friendlists'});
-// }
-
-// // get information on friends
-// function getInfo() {
-//     FB.api('/me', 'GET', {fields: 'id,first_name,last_name,taggable_friends{name,id},friends.limit(10){birthday}'}, function(response) {
-//         var friends = response['taggable_friends']['data'];
-//         var friendsNamesID = getNamesID(friends);
-//         console.log(friendsNamesID);
-//         var fname = response['first_name'];
-//         var lname = response['last_name'];
-//         var fb_uid = response['id'];
-//         document.getElementById('status1').innerHTML = response;
-//     });
-// }
-
-// function getNamesID(friends) {
-//     var friends_names = {};
-//     for (friend of friends) { friends_names[friend['id']] = friend['name']; }
-//     return friends_names;
-// }
-
-
-// // log in and get info
-// function loginGetInfo() {
-//     FB.login(function(response) {
-//         if (response.status === 'connected') {
-//             document.getElementById('status1').innerHTML = 'we are connected';
-//             document.getElementById('fb-login-button').style.visibility = 'hidden';
-//             getInfo();
-//         } else if (response.status === 'not_authorized') {
-//             document.getElementById('status1').innerHTML = 'we are not logged in';
-//         } else {
-//             document.getElementById('status1').innerHTML = 'You are not logged into FB';
-//         } 
-        
-
-//     }, {scope: 'email,user_friends,user_relationships,read_custom_friendlists'});
-// }
-
-
-// end Facebook stuff  ////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Facebook stuff Attempt 2  ////////////////////////////////////////////////////////////
+// Facebook OAuth ////////////////////////////////////////////////////////////
 window.fbAsyncInit = function() {
     FB.init({
       appId      : '1683033888393903',
@@ -227,15 +119,11 @@ function getInfoRegisterLogin() {
 
         console.log(fname, lname, email, fb_uid, Object.values(familyIDName), Object.values(friendsIDName));
 
-        // attempt to register/login to our app
-        // registerLogInFB(fname, lname, email, fb_uid);
-
         var loginInputs = {
                         'fname': fname,
                         'lname': lname,
                         'email': email,
                         'fb_uid': fb_uid  };
-
 
         $.post('/fb_register', loginInputs, function(data){
             console.log('route response came back!!!');
@@ -245,7 +133,6 @@ function getInfoRegisterLogin() {
     });
 });
 }
-
 
 
 function loginGetInfo() {
@@ -291,7 +178,7 @@ function loginGetInfo2() {
     }, {scope: 'email,user_friends,user_relationships,read_custom_friendlists'});
 }
 
-// end Facebook stuff attempt 2 /////////////////////////////////////////////////
+// end Facebook ////////////////////////////////////////////////////////////////
 
 
 // Get new quote for each refresh (base.html) //////////////////////////////////
@@ -364,8 +251,27 @@ function returnDefault(evt) {
 $('button.close').on('click', returnDefault);
 $('.newevent').on('submit', returnDefault);
 
+// flash messages to disappear /////////////////////////////////////////////////
+ // $('.red').hide().fadeIn();
+setTimeout(function(){$('.red').fadeOut();}, 4000);
+$(window).click(function(){$('.red').fadeOut();});
 
+// choose-existing: when adding new event, pre-fills contact fields ////////////
+function getContactInfo(evt) {
+    let contactID = $('.choose-existing').val();
+    console.log(contactID);
+    let url = "/contact.json";
+    let formInputs = {"contact_id": contactID};
+    $.post(url, formInputs, fillInForm);
+}
 
+function fillInForm(results) {
+    $('input[name=contact_name]').val(results['name']);
+    $('input[name=contact_email]').val(results['email']);
+    $('input[name=contact_address]').val(results['address']);
+    $('input[name=contact_phone]').val(results['phone']);
+}
 
+$('.choose-existing').on('change', getContactInfo)
 
 

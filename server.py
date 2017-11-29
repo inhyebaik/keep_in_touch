@@ -63,6 +63,12 @@ def return_msg():
     return jsonify({"message": msg})
 
 
+@app.route('/contact.json', methods=['POST'])
+def return_contact_info():
+    contact_id = request.form.get('contact_id')
+    contact = Contact.query.get(contact_id)
+    return jsonify({'name': contact.name, 'email': contact.email, 'address': contact.address, 'phone': contact.phone})
+
 @app.route('/markov_text.json', methods=['POST'])
 def markov_text():
     """ 
@@ -117,7 +123,6 @@ def make_text(chains, number_words):
         current_length = len(" ".join(words))
         current_key = tuple(words[-number_words:])
     return " ".join(words)
-
 
 
 

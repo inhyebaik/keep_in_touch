@@ -15,20 +15,8 @@
 
 <body>
 
-<!-- FB OAuth -->
-
 <div id="fb-root"></div>
 
-<!-- 
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11&appId=385706508528517';
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
- -->
 <!-- NAVBAR -->
 
 <div class="container">
@@ -66,9 +54,20 @@
 
           <h1>Add New Event/Contact</h1><br>
           <form id='basenewevent' class='newevent' action='/add_event', method='POST'>
+
               <label for="fname">Contact's Name</label>
-              <input type="text" name="contact_name" placeholder="Name" required>
-              
+
+                <select class='choose-existing' name='choose-existing'>
+                <option disabled selected value>Choose from existing</option>
+                {% for contact in user.contacts %}
+                  <option value='{{ contact.id }}'>{{ contact.name }}</option>
+                {% endfor %}
+              </select>
+              <br>
+
+              <input type="text" name="contact_name" placeholder="New Contact Name"><br>
+
+
               <label for="email">Contact's Email</label>
               <input type="email" name="contact_email" placeholder="Email" required>
               
@@ -184,7 +183,7 @@ You're awesome!
 
 <!-- REGISTRATION MODAL  -->
 
-<div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
 
         <div class="modal-dialog">
         <div class="loginmodal-container">
@@ -224,7 +223,6 @@ You're awesome!
 
 
 <!-- END REGISTRATION MODAL -->
-
 
       <br> <br> <br>
 {% endif %}
@@ -282,9 +280,6 @@ You're awesome!
 
 <script src="/static/project.js"></script>
 </footer>
-
-
-
 
 
 </body>

@@ -72,9 +72,10 @@ def text_reminder(event):
     user_fname = event.contacts[0].user.fname
     contact_name = event.contacts[0].name
     # Send an SMS
-    my_msg = "\n\n\nHello {}, your event's coming up tomorrow for {}.\n\n--------\n\nYour message \
-currently is:\n'{}'\n\n--------\n\nIf you'd like to update this message, please \
-reply with your new message (in one SMS response. Please add 'event_id={}' in your response)".format(user_fname, contact_name, event.template.text, event.id)
+    my_msg = "\n\n\nHello {}, your event's coming up tomorrow for: {}. "\
+            "\n\n--------\n\nYour message currently is: \n'{}'\n\n--------\n\n "\
+            "If you'd like to update this message, please reply with your new message "\
+            "(in one SMS response, with 'event_id={}' at the end)".format(user_fname, contact_name, event.template.text, event.id)
     print user_phone
     message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
     print "MESSAGE SENT to {}".format(user_phone)
