@@ -103,6 +103,7 @@ messages = {
 
 def random_message(key):
     """returns random message"""
+    print key
     i = random.randint(0, len(messages[key])-1)
     return messages[key][i]
 

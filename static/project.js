@@ -225,20 +225,36 @@ $('.datefield').attr('max', maxDate);
 
 
 // show random message templates in textbox when adding new event ////////////// 
-function showMessage(results) {
+function fillWithMessage(results) {
     let msg = results['message']; 
-    $('.template_textarea').text(msg);
+    $('textarea.template_textarea').html(msg);
 }
 
-function randomMessage(evt) {
+function getMessage(evt) {
     let templateType = $(".template_type").val();
     console.log(templateType);
     let url = "/msg.json";
     let formInputs = {"template_type" : templateType};
-    $.post(url, formInputs, showMessage);
+    $.post(url, formInputs, fillWithMessage);
 }
 
-$('.template_type').on('change', randomMessage);
+$('.template_type').on('change', getMessage);
+
+// show random message templates in textbox when adding new event ////////////// 
+function fillWithMessage(results) {
+    let msg = results['message']; 
+    $('textarea.template_textarea2').html(msg);
+}
+
+function getMessage(evt) {
+    let templateType = $(".template_type2").val();
+    console.log(templateType);
+    let url = "/msg.json";
+    let formInputs = {"template_type" : templateType};
+    $.post(url, formInputs, fillWithMessage);
+}
+
+$('.template_type2').on('change', getMessage);
 
 
 

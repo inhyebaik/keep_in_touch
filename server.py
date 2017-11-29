@@ -43,7 +43,9 @@ def fb():
 @app.route('/')
 def index():
     """Homepage."""
-    return render_template("homepage.html")
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
+    return render_template("homepage.html", user=user)
 
 ########### JSON ROUTES FOR AJAX REQUESTS ############
 
