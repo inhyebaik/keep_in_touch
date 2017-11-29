@@ -44,8 +44,17 @@ def fb():
 def index():
     """Homepage."""
     user_id = session.get('user_id')
-    user = User.query.get(user_id)
+    user = User.query.filter(User.id == user_id).first()
     return render_template("homepage.html", user=user)
+
+
+@app.route('/users')
+def user_list():
+    """Show list of users."""
+    users = User.query.all()
+    user_id = session.get('user_id')
+    user = User.query.filter(User.id == user_id).first()
+    return render_template("user_list.html", users=users, user=user)
 
 ########### JSON ROUTES FOR AJAX REQUESTS ############
 
@@ -78,53 +87,6 @@ def markov_text():
     Returns: uniquely generated text using Markov chains 
     """
     pass 
-
-
-def make_chains(text_string, number_words):
-    """Take input text as string; return dictionary of Markov chains.
-    A chain will be a key that consists of a tuple of (word1, word2)
-    and the value would be a list of the word(s) that follow those two
-    words in the input text.
-    For example:
-        >>> chains = make_chains("hi there mary hi there juanita")
-    Each bigram (except the last) will be a key in chains:
-        >>> sorted(chains.keys())
-        [('hi', 'there'), ('mary', 'hi'), ('there', 'mary')]
-    Each item in chains is a list of all possible following words:
-        >>> chains[('hi', 'there')]
-        ['mary', 'juanita']
-        >>> chains[('there','juanita')]
-        [None]
-    """
-    chains = {}
-    text_list = text_string.split()
-
-    for i in range(len(text_list)-number_words):
-        word_combo = tuple(text_list[i:i+number_words])
-        chains[word_combo] = chains.get(word_combo, []) + [text_list[i+number_words]]
-    return chains
-
-
-def make_text(chains, number_words):
-    """Return text from chains."""
-
-    # from tuple / link key
-    # randomly pick an item from its list of values
-    current_key = choice(chains.keys())
-    # while first word in key is not proper, keep picking a random key.
-    while current_key[0].title() != current_key[0] or current_key[0] == "--":
-        current_key = choice(chains.keys())
-
-    words = list(current_key)
-    current_length = len(" ".join(words))
-    # adds last number_words of the k-v pair as new current key
-    # do until the key doesn't exist
-    while current_key in chains.keys() and current_length <= 132:  # w/o hashtag
-        last_word = choice(chains[current_key])
-        words.append(last_word)
-        current_length = len(" ".join(words))
-        current_key = tuple(words[-number_words:])
-    return " ".join(words)
 
 
 
@@ -188,9 +150,6 @@ def fb_register():
 #         print "user not found based on FB credentials; registering them as new user"
 
 
-@app.route('/d3')
-def d3():
-    return render_template('d3_practice.html')
 
 @app.route('/mydata.json')
 def mydata():
@@ -228,11 +187,7 @@ def log_out():
 
 
 
-@app.route('/users')
-def user_list():
-    """Show list of users."""
-    users = User.query.all()
-    return render_template("user_list.html", users=users)
+
 
 
 @app.route('/register_login')
