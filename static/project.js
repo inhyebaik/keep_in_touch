@@ -69,7 +69,7 @@ function getInfo() {
     FB.api('/me', 'GET', {fields: 'id,email,first_name,last_name,family{name,id},taggable_friends{name,id},friends{birthday}'}, function(response) {
         var famdata = response['family']['data']
         var frdata = response['taggable_friends']['data'];
-
+        console.log(frdata);
         var familyIDName = getNamesID(famdata);
         var friendsIDName = getNamesID(frdata);
         var fname = response['first_name'];
@@ -104,15 +104,19 @@ function registerLogInFB(fname, lname, email, fb_uid) {
 
 }
 
-
+var contactsList;
 // makes FB API request; uses that information to register/login to our app)
 function getInfoRegisterLogin() {
-    FB.api('/me', 'GET', {fields: 'id,email,first_name,last_name,family{name,id},taggable_friends{name,id},friends{birthday}'}, function(response) {
+    FB.api('/me', 'GET', {fields: 'id,email,first_name,last_name,picture.width(100).height(100),family{name,id,picture.width(100).height(100)},taggable_friends{name,id,picture.width(100).height(100)},friends{birthday}'}, function(response) {
+        // debugger;
         console.log(response);
         $('#status1').html('we are connected');
-
         var famdata = response['family']['data']
         var frdata = response['taggable_friends']['data'];
+        var cdata = famdata.concat(frdata);
+        console.log(cdata);
+        contactsList = getContacts(cdata);
+        console.log(contactsList);
 
         var familyIDName = getNamesID(famdata);
         var friendsIDName = getNamesID(frdata);
@@ -120,22 +124,39 @@ function getInfoRegisterLogin() {
         var lname = response['last_name'];
         var email = response['email'];
         var fb_uid = response['id'];
-
+        var pic_url = response['picture']['data']['url']
+        console.log(pic_url);
         console.log(fname, lname, email, fb_uid, Object.values(familyIDName), Object.values(friendsIDName));
-
+        
         var loginInputs = {
                         'fname': fname,
                         'lname': lname,
                         'email': email,
-                        'fb_uid': fb_uid  };
-
+                        'fb_uid': fb_uid,
+                        'pic_url': pic_url,
+                        'contacts_list': JSON.stringify(contactsList) };
+        console.log(loginInputs);
         $.post('/fb_register', loginInputs, function(data){
+
             console.log('route response came back!!!');
             console.log(data);
-            if (data['user_id']) window.location.href = `/users/${data['user_id']}`; 
+            
+            if (data['user_id']) window.location.href = `/users/${data['user_id']}`;
+
 
     });
 });
+}
+
+
+
+function getContacts(friends) {
+    let namesList = [];
+    for (let f in friends){
+        let name=friends[f]['name'];
+        let pic_url=friends[f]['picture']['data']['url']
+        namesList.push([name, pic_url]); }
+    return namesList;
 }
 
 

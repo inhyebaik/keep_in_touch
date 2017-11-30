@@ -5,7 +5,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
 from model import User, Event, ContactEvent, Contact, Template, db, connect_to_db
-import random
+import random, json
 from werkzeug.security import generate_password_hash, check_password_hash
 from quotes import *
 import markovify
@@ -38,7 +38,8 @@ client = Client(account, token)
 
 
 
-########### JSON ROUTES FOR AJAX REQUESTS ############
+########### ROUTES FOR AJAX REQUESTS ############
+
 
 @app.route('/quote')
 def return_quote():
@@ -63,6 +64,70 @@ def return_contact_info():
     contact_id = request.form.get('contact_id')
     contact = Contact.query.get(contact_id)
     return jsonify({'name': contact.name, 'email': contact.email, 'address': contact.address, 'phone': contact.phone})
+
+
+def add_fb_conctacts(contacts_list):
+    """If a user registers in via OAuth, add their FB friends as contacts."""
+    user_id = session['user_id']
+    import pdb; pdb.set_trace();
+    print contacts_list
+    for thing in contacts_list:
+        try:
+            print(thing)
+            name = thing[0]
+            pic_url = thing[1]
+            print name, pic_url
+            c = Contact(name=name, pic_url=pic_url, user_id=user_id)
+            print c
+            db.session.add(c)
+            db.session.commit()
+            print "{} add to DB for user_id={}".format(name, user_id)
+        except:
+            pass
+
+
+@app.route('/fb_register', methods=['POST'])
+def fb_register():
+    """Registers user via FB."""
+    print "hit the route /fb_register!"
+    # things from FB API request 
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    fb_uid = request.form.get('fb_uid')
+    email = request.form.get('email')
+    pic_url = request.form.get('pic_url')
+    contacts_list = json.loads(request.form.get('contacts_list'))
+    print contacts_list
+    print "wooooooooo"
+    print "                   "
+    print contacts_list[0][0], contacts_list[0][1]
+    
+    password = request.form.get('fb_uid')
+    hashed_value = generate_password_hash(password)
+
+    db_user = User.query.filter(User.email == email).first()
+
+    # If user exists in DB, add them to session (log in), return db_user.id:
+    if db_user:
+        print "Existing user!!!!"
+        print db_user
+        session['user_id'] = db_user.id
+        return jsonify({'user_id':db_user.id, 'result': 'Existing user!'})
+        # Alert the email is already in use; return message that email exists
+        # return jsonify({'result':"Email already exists in database -- Please try logging in"})
+    else:
+        # Add new_user to database; return new_user.id
+        print "email doesn't exist--> New user being adding to DB and logging in"
+        new_user = User(email=email, password=hashed_value, fname=fname, lname=lname, fb_uid=fb_uid, pic_url=pic_url)
+        db.session.add(new_user)
+        db.session.commit()
+        print "new user added to DB"
+        session['user_id'] = new_user.id
+        print "user added to session"
+        if contacts_list:
+            print "about to add contacts"
+            add_fb_conctacts(contacts_list)
+        return jsonify({'user_id':new_user.id, 'result': 'Newly registered user!'})
 
 
 # @app.route('/contact.json', methods=['POST'])
@@ -93,39 +158,6 @@ def user_list():
     user_id = session.get('user_id')
     user = User.query.filter(User.id == user_id).first()
     return render_template("user_list.html", users=users, user=user)
-
-@app.route('/fb_register', methods=['POST'])
-def fb_register():
-    """Registers user via FB."""
-
-    # things from FB API request 
-    fname = request.form.get('fname')
-    lname = request.form.get('lname')
-    fb_uid = request.form.get('fb_uid')
-    email = request.form.get('email')
-    # phone = request.form.get('phone')
-    password = request.form.get('fb_uid')
-    hashed_value = generate_password_hash(password)
-
-
-    db_user = User.query.filter(User.email == email).first()
-
-    # If user exists in DB, add them to session (log in), return db_user.id:
-    if db_user:
-        print "Existing user!!!!"
-        print db_user
-        session['user_id'] = db_user.id
-        return jsonify({'user_id':db_user.id, 'result': 'Existing user!'})
-        # Alert the email is already in use; return message that email exists
-        # return jsonify({'result':"Email already exists in database -- Please try logging in"})
-    else:
-        # Add new_user to database; return new_user.id
-        print "email doesn't exist. New user...adding to DB and logging in"
-        new_user = User(email=email, password=hashed_value, fname=fname, lname=lname, fb_uid=fb_uid)
-        db.session.add(new_user)
-        db.session.commit()
-        session['user_id'] = new_user.id
-        return jsonify({'user_id':new_user.id, 'result': 'Newly registered user!'})
 
 
 @app.route('/logout')
@@ -572,7 +604,8 @@ if __name__ == "__main__":
         app = threading.Thread(name='app', target=run_app)
         sched.start()
         app.start()
-    run_jobs(app)
+    # run_jobs(app)
+    run_app()
     # Use the DebugToolbar
     # DebugToolbarExtension(app)
     

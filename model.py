@@ -23,9 +23,11 @@ class User(db.Model):
     phone = db.Column(db.String(15))
     fb_uid = db.Column(db.Text)
     fb_at = db.Column(db.Text)
+    # picture from FB
+    pic_url = db.Column(db.Text)
 
 
-    def __init__(self, email, password, fname, lname, phone='', fb_uid='', fb_at=''):
+    def __init__(self, email, password, fname, lname, phone='', fb_uid='', fb_at='', pic_url=''):
         self.email = email
         self.password = generate_password_hash(password)
         self.fname = fname
@@ -33,6 +35,7 @@ class User(db.Model):
         self.phone = phone
         self.fb_uid = fb_uid
         self.fb_at = fb_at
+        self.pic_url=pic_url
         
 
     def __repr__(self):
@@ -48,10 +51,12 @@ class Contact(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(64), nullable=False)  # not fname/lname in case it's "Mom"
-    email = db.Column(db.String(64), nullable=False)
+    email = db.Column(db.String(64))
     phone = db.Column(db.String(15))
     # address information
     address = db.Column(db.Text)
+    # picture from FB
+    pic_url = db.Column(db.Text)
     # A contact belongs to a user
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship("User", backref=db.backref("contacts", order_by=id))

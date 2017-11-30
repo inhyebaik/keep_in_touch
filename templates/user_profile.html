@@ -49,15 +49,73 @@
 <!-- Contacts list, with events -->
 <br><br>
 <p class='green'> People {{user.fname}} Will Keep in Touch With:</p>
-<ul> {% for contact in contacts %}
+
+
+
+
+
+
+
+ <!-- Page Content -->
+    <div class="container">
+
+      <!-- Introduction Row -->
+      <h1 class="my-4">People {{user.fname}} will keep in touch with
+        
+      </h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, explicabo dolores ipsam aliquam inventore corrupti eveniet quisquam quod totam laudantium repudiandae obcaecati ea consectetur debitis velit facere nisi expedita vel?</p>
+
+      <!-- Team Members Row -->
+      <div class="row">
+        <div class="col-lg-12">
+          <h2 class="my-4">Our Team</h2>
+        </div>
+
+{% for contact in contacts|sort(attribute='name') %}
+
+ <div class="col-lg-4 col-sm-6 text-center mb-4">
+          <img class="rounded-circle img-fluid d-block mx-auto" src="{{contact.pic_url}}" alt="">
+          <h3><a data-toggle="modal" data-target="#editcontact-modal-{{contact.id}}">{{contact.name}}</a>
+            <small> </small>
+          </h3>
+          
+          <p>What does this team member to? Keep it short! This is also a great spot for social links!</p>
+        </div>
+{% endfor %}
+
+ 
+
+    </div>
+    <!-- /.container -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ul> {% for contact in contacts|sort(attribute='name') %}
     <li > 
-        <span class="contact-name" id="{{contact.id}}">{{ contact.name }}
+        <span class="contact-name" id="{{contact.id}}"><!-- {{ contact.name }} -->
 
 
            {% if user.id == session.get('user_id') %} 
-                (<a href="/edit_contact/{{contact.id}}" style='font-size: 12px'><b>Edit contact info</b></a>)
+                <!-- (<a href="/edit_contact/{{contact.id}}" style='font-size: 12px'><b>Edit contact info</b></a>) -->
 
-                <a data-toggle="modal" data-target="#editcontact-modal-{{contact.id}}">{{contact.name}}</a>
+                <a style="font-size:120%;color:black;" data-toggle="modal" data-target="#editcontact-modal-{{contact.id}}">{{contact.name}}</a>
+                <br><img src="{{contact.pic_url}}">
           </span>
 
 <!-- EDIT CONTACT INFO MODAL -->
