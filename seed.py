@@ -45,28 +45,6 @@ def example_data():
     db.session.add_all([ce1, ce2, ce3, ce4])
     db.session.commit()
     
-    # ADD INPUTS
-    # np = [ ["greet", "Hello"],
-    #         ["body", "Thank you for meeting with me"],  
-    #         ["sign_off", "Sincerely"] ]
-    # greet = Input(name=np[0][0], text=np[0][1])
-    # body = Input(name=np[1][0], text=np[1][1])
-    # sign_off = Input(name=np[2][0], text=np[2][1])
-    # db.session.add_all([greet, body, sign_off])
-    # db.session.commit()
-    # # Need to add each in association table item in order to be able to call 
-    # # .templates on an input instance, and vice versa. 
-    # # Is there a way to automatically do so? (same for ContactEvent instances)
-    # # ADD TEMPLATEINPUT ASSOCIATIONS
-    # ti1 = TemplateInput(template_id=ty.id, input_id=greet.id)
-    # ti2 = TemplateInput(template_id=ty.id, input_id=body.id)
-    # ti3 = TemplateInput(template_id=ty.id, input_id=sign_off.id)
-    # # t2 is not a thankyou so no thank input.name
-    # ti10 = TemplateInput(template_id=fup.id, input_id=greet.id)
-    # ti20 = TemplateInput(template_id=fup.id, input_id=body.id)
-    # ti30 = TemplateInput(template_id=fup.id, input_id=sign_off.id)
-    # db.session.add_all([ti1, ti2, ti3, ti10, ti20, ti30])
-    # db.session.commit()
 
 if __name__ == "__main__":
 

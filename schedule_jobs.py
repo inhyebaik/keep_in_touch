@@ -86,12 +86,12 @@ def text_reminder(event):
     contact_name = event.contacts[0].name
     # Send an SMS
     my_msg = "\n\n\nHello {}, your event's coming up tomorrow for: {}. "\
-            "\n\n--------\n\nYour message currently is: \n'{}'\n\n--------\n\n "\
+            "\n\n--------\n\nYour message currently is:\n\n\n'{}'\n\n--------\n\n "\
             "If you'd like to update this message, please reply with your new message "\
             "(in one SMS response, with 'event_id={}' at the end)".format(user_fname, contact_name, event.template.text, event.id)
     print user_phone
     message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
-    print "MESSAGE SENT to {}".format(user_phone)
+    print "TEXTED REMINDER TO USER: {}".format(user_phone)
 
 
 
@@ -103,7 +103,7 @@ def text_contact(event):
     # Send an SMS
     my_msg = template_text
     message = client.messages.create(to=contact_phone, from_=twilio_num, body=my_msg)
-    print "MESSAGE SENT to {}".format(contact_phone)
+    print "TEXTED CONTACT: {}".format(contact_phone)
 
 
 
@@ -126,6 +126,7 @@ def send_email(event):
     mail = Mail(from_email, subject, to_email, content)
     # Send email, print confirmation/status
     response = sg.client.mail.send.post(request_body=mail.get())
+    print "CONTACT EMAILED"
     print(response.status_code)
     print(response.body)
     print(response.headers)
@@ -142,13 +143,13 @@ def remind_user(event):
     to_name = event.contacts[0].user.fname
     to_email = Email(to_address, to_name)
     # Create mail to be sent (reminder email)
-    subject = "Remember to Keep in Touch"
-    email_body = "Just wanted to remind you that {} is coming up and we will send a {} message for {} soon!".format(event.date, event.template.name, event.contacts[0].name)
+    subject = 'REMINDER EMAIL FOR {}s MESSAGE'.format(event.contacts[0].name)
+    email_body = "Just wanted to remind you that we will send a {} message for {} soon!".format(event.template.name, event.contacts[0].name)
     content = Content("text/plain", email_body)
     mail = Mail(from_email, subject, to_email, content)
     # Send reminder email and print confirmation/status
     response = sg.client.mail.send.post(request_body=mail.get())
-    print "REMINDER SENT"
+    print "REMINDER EMAIL SENT TO USER"
     print(response.status_code)
     print(response.body)
     print(response.headers)
@@ -161,10 +162,8 @@ def job():
     tmrw_events = return_tmrws_events()
     remind_all_users(tmrw_events)
 
-
 def schedule1():
     # schedule.every().day.at("00:00").do(job) # Check every day at midnight (for real app)
-    # import pdb; pdb.set_trace()
     schedule.every(2).seconds.do(job)  # Testing/demo purposes
     while True:
         schedule.run_pending()
@@ -173,5 +172,3 @@ def schedule1():
 if __name__ == "__main__": 
     connect_to_db(app)
     print datetime.datetime.now() # check what time it is in vagrant
-    # for scheduling emails
-

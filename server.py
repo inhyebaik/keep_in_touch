@@ -19,7 +19,6 @@ from twilio.rest import Client
 
 from schedule_jobs import schedule1
 import threading
-#### have schedule_jobs.py running with server #####
 
 app = Flask(__name__)
 
@@ -38,25 +37,6 @@ kit_email = os.environ.get('KIT_EMAIL')
 client = Client(account, token)
 
 
-@app.route('/fb_test')
-def fb():
-    return render_template('fb_test.html')
-
-@app.route('/')
-def index():
-    """Homepage."""
-    user_id = session.get('user_id')
-    user = User.query.filter(User.id == user_id).first()
-    return render_template("homepage.html", user=user)
-
-
-@app.route('/users')
-def user_list():
-    """Show list of users."""
-    users = User.query.all()
-    user_id = session.get('user_id')
-    user = User.query.filter(User.id == user_id).first()
-    return render_template("user_list.html", users=users, user=user)
 
 ########### JSON ROUTES FOR AJAX REQUESTS ############
 
@@ -84,26 +64,35 @@ def return_contact_info():
     contact = Contact.query.get(contact_id)
     return jsonify({'name': contact.name, 'email': contact.email, 'address': contact.address, 'phone': contact.phone})
 
-@app.route('/markov_text.json', methods=['POST'])
-def markov_text():
-    """ 
-    Args: bodies of text (defaults given)
-    Returns: uniquely generated text using Markov chains 
-    """
-    pass 
+
+# @app.route('/contact.json', methods=['POST'])
+# def contact_stuff(): 
+#     """Return contact events for given contact"""
+#     contact_id = int(request.form.get('contact_id'))
+#     c_events = Contact.query.get(contact_id).events
+#     d = {}
+#     for event in c_events:
+#         d[event.id] = {"date": event.date, "template_name": event.template.name}
+#     return jsonify({"events": d, "contact_id": contact_id})
 
 
+# END JSON ROUTES
 
-@app.route('/contact.json', methods=['POST'])
-def contact_stuff(): 
-    """Return contact events for given contact"""
-    contact_id = int(request.form.get('contact_id'))
-    c_events = Contact.query.get(contact_id).events
-    d = {}
-    for event in c_events:
-        d[event.id] = {"date": event.date, "template_name": event.template.name}
-    return jsonify({"events": d, "contact_id": contact_id})
+@app.route('/')
+def index():
+    """Homepage."""
+    user_id = session.get('user_id')
+    user = User.query.filter(User.id == user_id).first()
+    return render_template("homepage.html", user=user)
 
+
+@app.route('/users')
+def user_list():
+    """Show list of users."""
+    users = User.query.all()
+    user_id = session.get('user_id')
+    user = User.query.filter(User.id == user_id).first()
+    return render_template("user_list.html", users=users, user=user)
 
 @app.route('/fb_register', methods=['POST'])
 def fb_register():
@@ -137,49 +126,6 @@ def fb_register():
         db.session.commit()
         session['user_id'] = new_user.id
         return jsonify({'user_id':new_user.id, 'result': 'Newly registered user!'})
-
-
-# @app.route('/fb_login', methods=['POST'])
-# def fb_login():
-#     """Logs user in via FB."""
-#     fb_uid = request.form.get('fb_uid')
-#     fb_at = request.form.get('fb_at')
-#     user = User.query.filter(User.fb_uid == fb_uid).first()
-#     if user:
-#         print "user found with FB credentials; adding them to session"
-#         session['user_id'] = user.id # add user_id to the session
-#         print session['user_id']
-#         return jsonify({"user_id":user.id})
-#     else:
-#         print "user not found based on FB credentials; registering them as new user"
-
-
-
-@app.route('/mydata.json')
-def mydata():
-    mydata = {
-                "name": "max", 
-                "children": [ 
-                    { 
-                        "name":"Sylvia", 
-                        "children": [
-                                        {"name": "Craig"}, 
-                                        {"name":"Robin"}, 
-                                        {"name": "Anna"} 
-                        ]
-                    },
-
-                {
-                    "name": "David", 
-                    "children": [
-                                    {"name": "Jeff", "size": 3534}, 
-                                    {"name": "Buggy", "size": 5731}
-                    ]
-                }
-                 ]
-                } 
-    
-    return jsonify({"data":mydata})
 
 
 @app.route('/logout')
@@ -254,8 +200,7 @@ def login_process():
     else:
         # Alert if email doesn't exist; prompt and redirect to register/login
         flash("Email does not exist in database: please register")
-        return redirect('/register_login')
-
+        return redirect('/')
 
 
 @app.route('/users/<user_id>')
@@ -275,7 +220,7 @@ def add_event():
         return render_template("event_form.html", user=user)
     else:
         flash("You must log in or register to add events")
-        return redirect("/register_login")
+        return redirect("/")
 
 
 @app.route('/add_event', methods=['POST'])
@@ -337,7 +282,7 @@ def show_event(event_id):
         return render_template("edit_event.html", event=event, user=user)
     else:
         flash("You must log in or register to modify events")
-        return redirect("/register_login")
+        return redirect("/")
 
 
 
@@ -390,7 +335,7 @@ def remove_event():
         return redirect(url)
     else:
         flash("You must log in or register to remove events")
-        return redirect("/register_login")
+        return redirect("/")
 
 
 @app.route('/remove_contact/<contact_id>')
@@ -402,7 +347,7 @@ def confirm(contact_id):
         return render_template('remove_contact.html', contact=contact)
     else:
         flash("You must log in or register to remove contacts")
-        return redirect("/register_login")
+        return redirect("/")
 
 
     
@@ -436,8 +381,7 @@ def remove_contact():
         return redirect(url)
     else:
         flash("You must log in or register to remove contacts")
-        return redirect("/register_login")
-
+        return redirect("/")
 
 
 
@@ -453,7 +397,7 @@ def add_event_for_contact(contact_id):
         return render_template("event_for_contact.html", user=user, contact=contact)
     else:
         flash("You must log in or register to add events")
-        return redirect("/register_login")
+        return redirect("/")
 
 
 
@@ -501,7 +445,7 @@ def edit_profile():
         return render_template('edit_profile.html', user=user)
     else:
         flash("You must log in or register to edit your profile")
-        return redirect("/register_login")
+        return redirect("/")
 
 
 @app.route('/e_profile', methods=['POST'])
@@ -523,7 +467,7 @@ def handle_profile_edits():
         return redirect(url)
     else:
         flash("You must log in or register to add events")
-        return redirect("/register_login")
+        return redirect("/")
 
 
 @app.route('/edit_contact/<contact_id>')
@@ -535,7 +479,7 @@ def edit_contact(contact_id):
         return render_template('edit_contact.html', contact=contact)
     else:
         flash("You must log in or register to add events")
-        return redirect("/register_login")
+        return redirect("/")
 
 
 @app.route('/edit_contact/<contact_id>', methods=['POST'])
