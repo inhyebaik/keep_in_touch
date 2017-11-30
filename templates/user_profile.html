@@ -48,7 +48,6 @@
 
 <!-- Contacts list, with events -->
 <br><br>
-<p class='green'> People {{user.fname}} Will Keep in Touch With:</p>
 
 
 
@@ -60,36 +59,55 @@
     <div class="container">
 
       <!-- Introduction Row -->
-      <h1 class="my-4">People {{user.fname}} will keep in touch with</h1>
+<!--       <h1 class="my-4">People {{user.fname}} will keep in touch with</h1>
       <p>Because it's important</p>
+ -->
 
 
-<h2> Upcoming Events </h2>
+<!-- /////////////////////// UPCOMING EVENTS ///////////////// //////////-->
 {% if upcoming_events %}
-{% for event in upcoming_events %}
-  <li>[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}] 
-    <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">"{{ event.template.name }}"</a> message for {{event.contacts[0].name}}
-  </li>
+  <h2> Upcoming Events </h2>
 
-{%endfor%}
+
+    {% for event in upcoming_events %}
+      <li>[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}] 
+        <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">"{{ event.template.name }}"</a> message for {{event.contacts[0].name}}
+      </li>
+    {%endfor%}
+
 {%endif%}
 
+<a data-toggle="modal" data-target="#eventform-modal"> 
+<button type="button" class="btn btn-default btn-sm">
+<span class="glyphicon glyphicon-plus-sign"></span> New Event
+</button>
+</a>
 
-      <!-- Contacts Row -->
-      <div class="row">
-        <div class="col-lg-12">
-          <h2 class="my-4">Contacts</h2>
-        </div>
+<!-- /////////////////////// END UPCOMING EVENTS ///////////////// ////////-->
+<!-- Contacts Row --> 
+  <div class="row">
+    <div class="col-lg-12">
+      <h2 class="my-4">Contacts</h2>
+    </div>
 
 {% for contact in contacts|sort(attribute='name') %}
 
  <div class="col-lg-4 col-sm-6 text-center mb-4">
-          <img class="rounded-circle img-fluid d-block mx-auto" src="{{contact.pic_url}}" alt="">
-          <h3><a data-toggle="modal" data-target="#editcontact-modal-{{contact.id}}">{{contact.name}}</a>
+          
+          
+            <a data-toggle="modal" data-target="#editcontact-modal-{{contact.id}}" class='DarkBlue'>{{contact.name}}</a>
             <small> </small>
-          </h3>
+             <!-- modal to ADD event for contact -->
+          <a data-toggle="modal" data-target="#addeventcontact-modal-{{contact.id}}">
+                <button type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-plus-sign"></span>
+        </button>
+          </a><br>
 
-<!-- EDIT CONTACT INFO MODAL -->
+        
+
+<img class="rounded-circle img-fluid d-block mx-auto" src="{{contact.pic_url}}" alt="">
+<!-- EDIT CONTACT INFO MODAL //////////////////////////////////////////////////-->
         <div class="modal fade" id="editcontact-modal-{{contact.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
         <div class="loginmodal-container">
@@ -114,77 +132,75 @@
               <input type="phone" name="phone" placeholder="Phone" value='{{ contact.phone }}'>
             
           <input type="submit" class="login loginmodal-submit" value="Save">
+
+                  <!-- link to modal to delete contact -->
+         <a data-toggle="modal" data-target="#removecontact-modal-{{contact.id}}">
+            <button type="button" class="btn btn-default btn-sm">
+             Remove {{contact.name}} from contacts 
+            </button>
+        </a><br>
+
           </form>
 
           </div>
         </div>
       </div>
-<!-- END EDIT CONTACT INFO MODAL -->
+<!-- END EDIT CONTACT INFO MODAL //////////////////////////////////////////////-->
 
 
           <p></p>
-          <!-- link to modal to delete contact -->
-         <a data-toggle="modal" data-target="#removecontact-modal-{{contact.id}}">Delete {{contact.name}}</a><br>
-          <!-- link to modal to add event for contact -->
-          <a data-toggle="modal" data-target="#addeventcontact-modal-{{contact.id}}">Add a new event for {{contact.name}}</a><br>
+
+{% for event in contact.events %}
+
+<li>[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]
+  <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">{{ event.template.name }}</a>
+</li>
 
 
-        {% for event in contact.events %}
+
+<!-- EVENT MODALS (need to pass in EVENT) ###################################-->
+
+      <!-- EDIT EVENT MODAL :: edit_event.html ////////////////////////////////////-->
+              <div class="modal fade" id="editevent-modal-{{event.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+              <div class="modal-dialog">
+              <div class="loginmodal-container">
+
+               <button data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+              </button>
+             
+                <h2><u>Edit Event Details</u></h2>
+                <form action='/handle_edits', method='POST'>
+                <input type='hidden' name='event_id' value='{{ event.id }}'>
+                <input type='hidden' name='contact_id' value='{{ event.contacts[0].id }}'>
+
+      Contact name: <input type='text' name='contact_name' value='{{event.contacts[0].name}}' required> <br>
+      Contact's email: <input type='email' name='contact_email' value='{{event.contacts[0].email}}' required><br>
+      Contact's phone: <input type='phone' name='contact_phone' value='{{event.contacts[0].phone}}'> <br>
+      Contact's address: <input type='text' name='contact_address' value='{{event.contacts[0].address}}'> <br>
+      Date to be sent: 
+      <input type="date" name='date' class="datefield" min="" max="" value="{{event.date.year}}-{{ event.date.month}}-{{ event.date.day}}" data-date-split-input="true" required/><br>
+      Subject: <input type='text' name='template_name' value='{{event.template.name}}'> <br>
+      Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
+
+                <input type="submit" class="login loginmodal-submit" value="Save">
+                </form>
+
+                <form action="/remove_event" method='POST'>
+                    <input type='hidden' name='event_id' value='{{ event.id }}'>
+                    <input type='submit' value="Remove Event">
+                </form>
+
+                </div>
+              </div>
+            </div>
+      <!-- END EDIT EVENT MODAL :: edit_event.html ////////////////////////////////-->
+
+
+<!-- END EVENT MODALS (where you need to pass in an event) ######################################-->
           
-          <li>[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]
-              <!-- <a href="/edit_event/{{event.id}}">{{ event.template.name }}</a> -->
-            <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">{{ event.template.name }}</a>
-          </li>
-
-
-          <!-- EVENT MODALS (need to pass in EVENT) -->
-
-
-
-
-
-<!-- EDIT EVENT MODAL :: edit_event.html -->
-        <div class="modal fade" id="editevent-modal-{{event.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog">
-        <div class="loginmodal-container">
-
-         <button data-dismiss="modal" class="close" type="button">
-          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
-        </button>
-       
-          <h2><u>Edit Event Details</u></h2>
-          <form action='/handle_edits', method='POST'>
-          <input type='hidden' name='event_id' value='{{ event.id }}'>
-          <input type='hidden' name='contact_id' value='{{ event.contacts[0].id }}'>
-
-Contact name: <input type='text' name='contact_name' value='{{event.contacts[0].name}}' required> <br>
-Contact's email: <input type='email' name='contact_email' value='{{event.contacts[0].email}}' required><br>
-Contact's phone: <input type='phone' name='contact_phone' value='{{event.contacts[0].phone}}'> <br>
-Contact's address: <input type='text' name='contact_address' value='{{event.contacts[0].address}}'> <br>
-Date to be sent: 
-<input type="date" name='date' class="datefield" min="" max="" value="{{event.date.year}}-{{ event.date.month}}-{{ event.date.day}}" data-date-split-input="true" required/><br>
-Subject: <input type='text' name='template_name' value='{{event.template.name}}'> <br>
-Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
-
-          <input type="submit" class="login loginmodal-submit" value="Save">
-          </form>
-
-          <form action="/remove_event" method='POST'>
-              <input type='hidden' name='event_id' value='{{ event.id }}'>
-              <input type='submit' value="Remove Event">
-          </form>
-
-          </div>
-        </div>
-      </div>
-<!-- END EDIT EVENT MODAL :: edit_event.html -->
-
-
-<!-- END EVENT MODALS (where you need to pass in an event) -->
-          
-        {% endfor %}
-        
-        </div>
+{% endfor %}
+</div>
 
 
 
@@ -215,7 +231,7 @@ Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
 
 
 
-<!-- ADD EVENT FOR CONTACT MODAL -->
+<!-- ADD EVENT FOR CONTACT MODAL ////////////////////////////////////////////////////////////////-->
         <div class="modal fade" id="addeventcontact-modal-{{contact.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
         <div class="loginmodal-container">
@@ -268,11 +284,11 @@ Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
           </div>
         </div>
       </div>
-<!-- END ADD EVENT FOR CONTACT MODAL -->
+<!-- END ADD EVENT FOR CONTACT MODAL ////////////////////////////////////////////////////////////////-->
 
 
 
-<!-- REMOVE CONTACT MODAL -->
+<!-- REMOVE CONTACT MODAL //////////////////////////////////////////////////////////////////////////-->
     <div class="modal fade" id="removecontact-modal-{{contact.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
       <div class="modal-dialog">
       <div class="loginmodal-container">
@@ -296,7 +312,7 @@ Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
           </div>
         </div>
       </div>
-<!-- END REMOVE CONTACT MODAL -->
+<!-- END REMOVE CONTACT MODAL ////////////////////////////////////////////////////////////////-->
 
 
 
@@ -304,10 +320,7 @@ Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
 
 
 {% endfor %}
-
- 
-
-    </div>
+</div>
 
 
 
@@ -316,7 +329,7 @@ Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
 <br> 
     
 <!-- link to add contact/event modal -->
-<a data-toggle="modal" data-target="#eventform-modal">Create New Event</a></li>
+<a data-toggle="modal" data-target="#eventform-modal">Add Event</a></li>
 
 
 

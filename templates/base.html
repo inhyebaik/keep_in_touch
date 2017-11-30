@@ -60,7 +60,7 @@
 
                 <select class='choose-existing' name='choose-existing'>
                 <option disabled selected value>Choose from existing</option>
-                {% for contact in user.contacts %}
+                {% for contact in user.contacts|sort(attribute='name') %}
                   <option value='{{ contact.id }}'>{{ contact.name }}</option>
                 {% endfor %}
               </select>

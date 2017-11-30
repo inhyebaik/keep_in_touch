@@ -1,8 +1,10 @@
 body {
     font-family: sans-serif;
-    background: url('https://pbs.twimg.com/profile_background_images/485886649104998401/hyuYt7Jf.jpeg') no-repeat;
+    /*background: url('https://pbs.twimg.com/profile_background_images/485886649104998401/hyuYt7Jf.jpeg') no-repeat;*/
+    background: linear-gradient(0deg, #F2F2F2, #F0C27B, #4B1248, #F2F2F2); ;
     font-size: 20px;
 }
+
 
 footer {
     font-size: 12px;
@@ -19,22 +21,6 @@ h1 {
     font-weight: bold;
 }
 
-h2 {
-    font-style: italic;
-}
-
-th {
-    font-size: 20px;
-}
-
-td {
-    font-size: 15px;
-}
-
-td a {
-    font-size: 12px;
-    font-weight: bold;
-}
 
 textarea {
   width: 300px;
@@ -50,6 +36,15 @@ textarea {
     font-size: 30px;
 }
 
+.DarkBlue {
+  color: #121546;
+  font-size: 25px;
+
+}
+
+body a {
+  color: #252854;
+}
 
 
 /****** LOGIN MODAL ******/
