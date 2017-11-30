@@ -5,3 +5,5 @@ venv
 *DS_Store*
 *reference*
 ngrok
+node_modules
+bower_components
