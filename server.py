@@ -17,7 +17,8 @@ from sendgrid.helpers.mail import *
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 
-
+from schedule_jobs import schedule1
+import threading
 #### have schedule_jobs.py running with server #####
 
 app = Flask(__name__)
@@ -33,6 +34,7 @@ token = os.environ.get('TWILIO_TEST_TOKEN')
 twilio_num = os.environ.get('TWILIO_NUMBER')
 my_num = os.environ.get('MY_NUMBER')
 my_email = os.environ.get('MY_EMAIL')
+kit_email = os.environ.get('KIT_EMAIL')
 client = Client(account, token)
 
 
@@ -613,10 +615,21 @@ def handle_reminder_response():
 
 ###############################################################
 if __name__ == "__main__": 
-    app.debug = True
-    app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
+    # app.debug = True
+    # app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
     connect_to_db(app)
+    
+    def run_app():
+        app.run(port=5000, host='0.0.0.0')
+
+    def run_jobs(app):
+        # import pdb; pdb.set_trace()
+        sched = threading.Thread(name='schedule1', target=schedule1)
+        app = threading.Thread(name='app', target=run_app)
+        sched.start()
+        app.start()
+    run_jobs(app)
     # Use the DebugToolbar
     # DebugToolbarExtension(app)
-    app.run(port=5000, host='0.0.0.0')
+    
     

@@ -15,6 +15,7 @@ token = os.environ.get('TWILIO_TEST_TOKEN')
 twilio_num = os.environ.get('TWILIO_NUMBER')
 my_num = os.environ.get('MY_NUMBER')
 my_email = os.environ.get('MY_EMAIL')
+kit_email = os.environ.get('KIT_EMAIL')
 client = Client(account, token)
 
 app = Flask(__name__)
@@ -111,7 +112,7 @@ def send_email(event):
     message = Mail()
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     # Create from_email object from event object arg (the user)
-    from_address = event.contacts[0].email
+    from_address = event.contacts[0].user.email
     from_name = event.contacts[0].user.fname
     from_email = Email(from_address, from_name)
     # Create to_email object from event object arg (the user's contact)
@@ -135,7 +136,7 @@ def remind_user(event):
     message = Mail()
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     # Create from_email object from event object arg
-    from_email = Email(my_email, "Keep in Touch Team")
+    from_email = Email(kit_email, "Keep in Touch Team")
     # Create to email property from event object arg (the user)
     to_address = event.contacts[0].user.email
     to_name = event.contacts[0].user.fname
@@ -160,15 +161,17 @@ def job():
     tmrw_events = return_tmrws_events()
     remind_all_users(tmrw_events)
 
-# schedule.every().day.at("00:00").do(job) # Check every day at midnight (for real app)
-schedule.every(2).seconds.do(job)  # Testing/demo purposes
 
+def schedule1():
+    # schedule.every().day.at("00:00").do(job) # Check every day at midnight (for real app)
+    # import pdb; pdb.set_trace()
+    schedule.every(2).seconds.do(job)  # Testing/demo purposes
+    while True:
+        schedule.run_pending()
 
 
 if __name__ == "__main__": 
     connect_to_db(app)
     print datetime.datetime.now() # check what time it is in vagrant
     # for scheduling emails
-    while True:
-        schedule.run_pending()
 
