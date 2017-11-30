@@ -14,14 +14,15 @@ window.fbAsyncInit = function() {
 
     FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
-            document.getElementById('status1').innerHTML = 'we are connected';
+            // document.getElementById('status1').innerHTML = 'we are connected';
+            $('#status1').html('we are connected');
             console.log('we are connected');
             // document.getElementById('whatever').style.visibility = 'hidden';
         } else if (response.status === 'not_authorized') {
-            document.getElementById('status1').innerHTML = 'we are not logged in';
+            // document.getElementById('status1').innerHTML = 'we are not logged in';
             console.log('we are not logged in');
         } else {
-            document.getElementById('status1').innerHTML = 'You are not logged into FB';
+            // document.getElementById('status1').innerHTML = 'You are not logged into FB';
             console.log('you are not logged into FB');
         }
     });
@@ -41,12 +42,15 @@ window.fbAsyncInit = function() {
 function login() {
     FB.login(function(response) {
         if (response.status === 'connected') {
-            document.getElementById('status1').innerHTML = 'we are connected';
-            // document.getElementById('whatever').style.visibility = 'hidden';
+            $('#status1').html('we are connected');
+            console.log('we are connected');
+            // document.getElementById('status1').innerHTML = 'we are connected';
         } else if (response.status === 'not_authorized') {
-            document.getElementById('status1').innerHTML = 'we are not logged in';
+            // document.getElementById('status1').innerHTML = 'we are not logged in';
+            console.log('we are not logged in');
         } else {
-            document.getElementById('status1').innerHTML = 'You are not logged into FB';
+            // document.getElementById('status1').innerHTML = 'You are not logged into FB';
+            console.log('you are not logged into FB');
         }
 
     }, {scope: 'email,user_friends,user_relationships,read_custom_friendlists'});
@@ -105,7 +109,7 @@ function registerLogInFB(fname, lname, email, fb_uid) {
 function getInfoRegisterLogin() {
     FB.api('/me', 'GET', {fields: 'id,email,first_name,last_name,family{name,id},taggable_friends{name,id},friends{birthday}'}, function(response) {
         console.log(response);
-        document.getElementById('status1').innerHTML = response;
+        $('#status1').html('we are connected');
 
         var famdata = response['family']['data']
         var frdata = response['taggable_friends']['data'];
@@ -141,14 +145,20 @@ function loginGetInfo() {
     // log in FB with scope permissions
     FB.login(function(response) {
         if (response.status === 'connected') {
-            document.getElementById('status1').innerHTML = 'we are connected';
+            $('#status1').html('we are connected');
+            console.log('we are connected');
+            // document.getElementById('status1').innerHTML = 'we are connected';
             // document.getElementById('whatever').style.visibility = 'hidden';
             getInfo();
             
         } else if (response.status === 'not_authorized') {
-            document.getElementById('status1').innerHTML = 'we are not logged in';
+            $('#status1').html('we are not logged in');
+            console.log('we are not logged in');
+            // document.getElementById('status1').innerHTML = 'we are not logged in';
         } else {
-            document.getElementById('status1').innerHTML = 'You are not logged into FB';
+             $('#status1').html('You are not logged into FB');
+             console.log('You are not logged into FB');
+            // document.getElementById('status1').innerHTML = 'You are not logged into FB';
         } 
 
     }, {scope: 'email,user_friends,user_relationships,read_custom_friendlists'});
@@ -163,16 +173,16 @@ function loginGetInfo2() {
     // log in with scope permissions
     FB.login(function(response) {
         if (response.status === 'connected') {
-            document.getElementById('status1').innerHTML = 'we are connected';
+            $('#status1').html('we are connected');
             // document.getElementById('whatever').style.visibility = 'hidden';
     
             // if successful FB login, get info thru FB API and login/register on our app
             getInfoRegisterLogin()
             
         } else if (response.status === 'not_authorized') {
-            document.getElementById('status1').innerHTML = 'we are not logged in';
+            $('#status1').html('we are not logged in');
         } else {
-            document.getElementById('status1').innerHTML = 'You are not logged into FB';
+            $('#status1').html('You are not logged into FB');
         } 
 
     }, {scope: 'email,user_friends,user_relationships,read_custom_friendlists'});
@@ -240,37 +250,42 @@ function getMessage(evt) {
 
 $('.template_type').on('change', getMessage);
 
+// adding event for specific contact
 // show random message templates in textbox when adding new event ////////////// 
-function fillWithMessage(results) {
-    let msg = results['message']; 
-    $('textarea.template_textarea2').html(msg);
+function fillWithMessage2(results) {
+    var msg = results['message']; 
+    $('.template_textarea2').html(msg);
 }
 
-function getMessage(evt) {
-    let templateType = $(".template_type2").val();
-    console.log(templateType);
-    let url = "/msg.json";
-    let formInputs = {"template_type" : templateType};
-    $.post(url, formInputs, fillWithMessage);
+function getMessage2(evt) {
+    var t = $(this).val();
+    console.log("this is this:");
+    console.log($(this).val());
+    console.log(t);
+    var url = "/msg.json";
+    var formInputs = {"template_type" : t};
+    $.post(url, formInputs, fillWithMessage2);
 }
 
-$('.template_type2').on('change', getMessage);
+$('.template_type2').on('change', getMessage2);
 
 
 
 // reset form after closing/submitting /////////////////////////////////////////
 function returnDefault(evt) {
     $('form').trigger('reset');
+    $('.template_textarea2').empty(); 
     $('.template_textarea').empty(); 
 }
 // add event listener on close and submit of forms
 $('button.close').on('click', returnDefault);
-$('.newevent').on('submit', returnDefault);
+// $('.newevent').on('submit', returnDefault);
 
 // flash messages to disappear /////////////////////////////////////////////////
  // $('.red').hide().fadeIn();
 setTimeout(function(){$('.red').fadeOut();}, 4000);
 $(window).click(function(){$('.red').fadeOut();});
+
 
 // choose-existing: when adding new event, pre-fills contact fields ////////////
 function getContactInfo(evt) {

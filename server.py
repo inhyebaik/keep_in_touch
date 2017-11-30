@@ -70,7 +70,9 @@ def return_msg():
     """Return random message for preselected template type"""
     # import pdb; pdb.set_trace()
     template_type = request.form.get('template_type')
+    print template_type
     msg = random_message(template_type)
+    print msg
     return jsonify({"message": msg})
 
 
@@ -184,10 +186,6 @@ def log_out():
     del session['user_id']
     flash("You have successfully logged out!")
     return redirect("/")
-
-
-
-
 
 
 @app.route('/register_login')
@@ -310,6 +308,7 @@ def handle_event_form():
     # add event
     contact_id = new_contact.id
     date = request.form.get('date')
+    print date
     new_event = Event(contact_id=contact_id, template_id=new_template.id, date=date)
     db.session.add(new_event)
     db.session.commit()
@@ -585,7 +584,7 @@ def handle_reminder_response():
     # Get tomorrow's date to fetch the events, formatted to match DB date fields
     t = datetime.datetime.now()
     today = datetime.datetime(t.year, t.month, t.day, 0, 0)
-    tmrw = datetime.datetime(t.year, t.month, t.day+1, 0, 0)
+    # tmrw = datetime.datetime(t.year, t.month, t.day+1, 0, 0)
 
     if "event_id" in user_response.lower():
         eindex = user_response.index("event_id")

@@ -69,42 +69,42 @@ messages = {
 
 
             "ty" :  [
-                    "You’re the best.", 
-                    "I’m humbled and grateful.", 
+                    "You're the best.", 
+                    "I'm humbled and grateful.", 
                     "You knocked me off my feet!", 
                     "My heart is still smiling.", 
                     "Your thoughtfulness is a gift I will always treasure.", 
                     "Sometimes the simplest things mean the most.", 
                     "The banana bread was fabulous. You made my day.", 
-                    "I’m touched beyond words.", 
-                    "All I can say is wow! (Except, of course, I’m grateful.)", 
+                    "I'm touched beyond words.", 
+                    "All I can say is wow! (Except, of course, I'm grateful.)", 
                     "My heart just keeps thanking you and thanking you.", 
-                    "You’re a blessing to me.", 
+                    "You're a blessing to me.", 
                     "Thank you for being my angel.", 
                     "This has been a challenging time, and I appreciate you so much.", 
                     "You have no idea how much your help has meant.", 
-                    "For all the little and big ways you’ve pitched in…thanks!", 
+                    "For all the little and big ways you've pitched in…thanks!", 
                     "There was nothing random about your acts of kindness. Thank you for all you have done.", 
                     "I can never thank you enough. But this is a start.", 
                     "You always know how to make life brighter for everyone you know.", 
-                    "I can’t possibly repay you.", 
+                    "I can't possibly repay you.", 
                     "You are always so helpful.", 
                     "You make the world a nicer place.", 
                     "You went above and beyond, and I am touched and grateful.", 
-                    "You took common courtesy to an uncommon level. We’re so grateful for your help."
+                    "You took common courtesy to an uncommon level. We're so grateful for your help."
                     ],
 
             "fup":  [
-                    "Thank you so much for inviting me to interview for your open account specialist position. I truly appreciate the time you took to talk with me about this opportunity and the company. I enjoyed learning more about your work group and how I might fit into that team. Please don’t hesitate to contact me with any follow-up questions you might have. I hope to talk with you again soon.", 
-                    "Thank you for your invaluable mentoring these past three months. I’ve had fun getting to know you better, and I’ve learned so much from talking with you and seeing how you work. You are amazing at what you do! I’m grateful to have had the chance to work with you so closely.", 
-                    "I can’t thank you enough for advising me to send my résumé to your colleague. I now have an interview scheduled with her next week to discuss some freelance work, and I’m really excited about the assignment she’s describing. It was very kind of you to refer me to her. I hope I can find a way to return the favor soon!"
+                    "Thank you so much for inviting me to interview for your open account specialist position. I truly appreciate the time you took to talk with me about this opportunity and the company. I enjoyed learning more about your work group and how I might fit into that team. Please don't hesitate to contact me with any follow-up questions you might have. I hope to talk with you again soon.", 
+                    "Thank you for your invaluable mentoring these past three months. I've had fun getting to know you better, and I've learned so much from talking with you and seeing how you work. You are amazing at what you do! I'm grateful to have had the chance to work with you so closely.", 
+                    "I can't thank you enough for advising me to send my résumé to your colleague. I now have an interview scheduled with her next week to discuss some freelance work, and I'm really excited about the assignment she's describing. It was very kind of you to refer me to her. I hope I can find a way to return the favor soon!"
                     ],
 }
 
-def random_message(key):
+def random_message(template_type):
     """returns random message"""
-    print key
-    i = random.randint(0, len(messages[key])-1)
-    return messages[key][i]
+    print template_type
+    i = random.randint(0, len(messages[template_type])-1)
+    return messages[template_type][i]
 
 

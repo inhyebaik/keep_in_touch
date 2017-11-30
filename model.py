@@ -75,6 +75,7 @@ class Event(db.Model):
     date = db.Column(db.DateTime, default=(datetime.datetime.today() + datetime.timedelta(days=1)), nullable=False)
     # if reminder is sent
     reminder_sent = db.Column(db.Boolean, default=False)
+    job_done = db.Column(db.Boolean, default=False)
     # an event has one contact, and a contact can have multiple events
     contacts = db.relationship("Contact", secondary="contactsevents", backref="events")
     template = db.relationship("Template", backref=db.backref("event"))

@@ -51,11 +51,11 @@
 <p class='green'> People {{user.fname}} Will Keep in Touch With:</p>
 <ul> {% for contact in contacts %}
     <li > 
-        <span class="contact-name" id="{{contact.id}}"><!-- {{ contact.name }} -->
+        <span class="contact-name" id="{{contact.id}}">{{ contact.name }}
 
 
            {% if user.id == session.get('user_id') %} 
-                <!-- (<a href="/edit_contact/{{contact.id}}" style='font-size: 12px'><b>Edit contact info</b></a>) -->
+                (<a href="/edit_contact/{{contact.id}}" style='font-size: 12px'><b>Edit contact info</b></a>)
 
                 <a data-toggle="modal" data-target="#editcontact-modal-{{contact.id}}">{{contact.name}}</a>
           </span>
@@ -150,10 +150,13 @@ Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
         {% if contact.user_id == session.get('user_id') %}
         <!-- link to modal to add event for contact -->
           <a data-toggle="modal" data-target="#addeventcontact-modal-{{contact.id}}">Add a new event for {{contact.name}}</a><br>
+          <!-- <a data-toggle="modal" data-target="#eventform-modal-{{contact.id}}">Add a new event for {{contact.name}} 2</a><br> -->
         
         <!-- link to add event for contact page -->
 
           <!-- <a href="/add_event/{{contact.id}}"style='font-size: 12px'><b>Add a new event for {{contact.name}}</b></a><br> -->
+
+
 
 
 <!-- ADD EVENT FOR CONTACT MODAL -->
@@ -166,10 +169,10 @@ Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
 
           <h1>Add Event for {{ contact.name}}</h1><br>
           <form id='neweventcontact' class='newevent' action='/handle_new_event_for_contact', method='POST'>
-<!--               Contact's name: {{ contact.name}}<br>
+              Contact's name: {{ contact.name}}<br>
               Contact's email: {{ contact.email }}<br>
               Contact's phone: {{ contact.phone }}<br>
-              Contact's address: {{ contact.address }}<br> -->
+              Contact's address: {{ contact.address }}<br>
           <label for="date">Date to be sent</label> 
               <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" required/><br>
           
@@ -192,9 +195,7 @@ Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
                 <option value='markov'>Random Generator</option>
             </select> 
             <br>
-                <textarea class='template_textarea2' name="body">
-You're awesome!
-                </textarea>
+                <textarea class='template_textarea2' name="body">You're awesome!</textarea>
                 <br>
 
         How do you want to sign off? 
@@ -260,17 +261,12 @@ You're awesome!
 <br>
 <br> 
      {% if user.id == session.get('user_id') %}
-     
      <!-- link to add contact/event modal -->
         <a data-toggle="modal" data-target="#eventform-modal">Create New Event</a></li>
         <!-- link to add contact/event page -->
         <!-- <a href="/add_event"> <b>Add a new contact/event</b></a> -->
-
-
-
-
-
-
-
     {%endif%}
+
+
+
 {% endblock %}

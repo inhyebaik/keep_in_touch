@@ -21,7 +21,7 @@
 
 <div class="container">
 <!-- Navbar for logged in users -->
-{% if session.get('user_id') %}
+{% if session.get('user_id') and user %}
       <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
           

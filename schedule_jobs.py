@@ -36,8 +36,12 @@ def return_todays_events():
 def return_tmrws_events():
     """Checks if there are any events today."""
     t = datetime.datetime.now()
+    if t.month == 11 and t.day+1 == 31:
+        tmrw = datetime.datetime(t.year, 12, 1, 0, 0)
+    else:
     # Get tomorrow's date -- YYYY, MM, DD only to match DB format
-    tmrw = datetime.datetime(t.year, t.month, t.day + 1, 0, 0)
+        tmrw = datetime.datetime(t.year, t.month, t.day + 1, 0, 0)
+
     # Fetch tomorrow's events
     events = Event.query.filter(Event.date == tmrw).all()
     if events == []:
@@ -51,8 +55,12 @@ def send_all_emails(events):
     if events == [] or events == "No events!":
         return "No events today"
     for event in events:
-        send_email(event)
-        text_contact(event)
+        if event.job_done == False:
+            send_email(event)
+            text_contact(event)
+            # change job_done to True
+            event.job_done = True
+            db.session.commit()
 
 
 def remind_all_users(events):
@@ -62,8 +70,12 @@ def remind_all_users(events):
     if events == [] or events == "No events!":
         return "No events today"
     for event in events:
-        text_reminder(event)
-        remind_user(event)
+        if event.reminder_sent == False:
+            text_reminder(event)
+            remind_user(event)
+            # change reminder_sent to True
+            event.reminder_sent = True
+            db.session.commit()
 
 
 def text_reminder(event):
@@ -135,12 +147,10 @@ def remind_user(event):
     mail = Mail(from_email, subject, to_email, content)
     # Send reminder email and print confirmation/status
     response = sg.client.mail.send.post(request_body=mail.get())
+    print "REMINDER SENT"
     print(response.status_code)
     print(response.body)
     print(response.headers)
-    # Set event.reminder_sent to True 
-    event.reminder_sent = True
-    db.session.commit()
 
 # Set the schedule's job list
 def job():
@@ -150,8 +160,8 @@ def job():
     tmrw_events = return_tmrws_events()
     remind_all_users(tmrw_events)
 
-schedule.every().day.at("00:00").do(job) # Check every day at midnight (for real app)
-# schedule.every(2).seconds.do(job)  # Testing/demo purposes
+# schedule.every().day.at("00:00").do(job) # Check every day at midnight (for real app)
+schedule.every(2).seconds.do(job)  # Testing/demo purposes
 
 
 
