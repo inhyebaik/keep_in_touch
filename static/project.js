@@ -14,15 +14,11 @@ window.fbAsyncInit = function() {
 
     FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
-            // document.getElementById('status1').innerHTML = 'we are connected';
             $('#status1').html('we are connected');
             console.log('we are connected');
-            // document.getElementById('whatever').style.visibility = 'hidden';
         } else if (response.status === 'not_authorized') {
-            // document.getElementById('status1').innerHTML = 'we are not logged in';
             console.log('we are not logged in');
         } else {
-            // document.getElementById('status1').innerHTML = 'You are not logged into FB';
             console.log('you are not logged into FB');
         }
     });
@@ -44,12 +40,9 @@ function login() {
         if (response.status === 'connected') {
             $('#status1').html('we are connected');
             console.log('we are connected');
-            // document.getElementById('status1').innerHTML = 'we are connected';
         } else if (response.status === 'not_authorized') {
-            // document.getElementById('status1').innerHTML = 'we are not logged in';
             console.log('we are not logged in');
         } else {
-            // document.getElementById('status1').innerHTML = 'You are not logged into FB';
             console.log('you are not logged into FB');
         }
 
@@ -108,7 +101,6 @@ var contactsList;
 // makes FB API request; uses that information to register/login to our app)
 function getInfoRegisterLogin() {
     FB.api('/me', 'GET', {fields: 'id,email,first_name,last_name,picture.width(100).height(100),family{name,id,picture.width(100).height(100)},taggable_friends{name,id,picture.width(100).height(100)},friends{birthday}'}, function(response) {
-        // debugger;
         console.log(response);
         $('#status1').html('we are connected');
         var famdata = response['family']['data']
@@ -168,18 +160,14 @@ function loginGetInfo() {
         if (response.status === 'connected') {
             $('#status1').html('we are connected');
             console.log('we are connected');
-            // document.getElementById('status1').innerHTML = 'we are connected';
-            // document.getElementById('whatever').style.visibility = 'hidden';
             getInfo();
             
         } else if (response.status === 'not_authorized') {
             $('#status1').html('we are not logged in');
             console.log('we are not logged in');
-            // document.getElementById('status1').innerHTML = 'we are not logged in';
         } else {
              $('#status1').html('You are not logged into FB');
              console.log('You are not logged into FB');
-            // document.getElementById('status1').innerHTML = 'You are not logged into FB';
         } 
 
     }, {scope: 'email,user_friends,user_relationships,read_custom_friendlists'});
@@ -195,7 +183,6 @@ function loginGetInfo2() {
     FB.login(function(response) {
         if (response.status === 'connected') {
             $('#status1').html('we are connected');
-            // document.getElementById('whatever').style.visibility = 'hidden';
     
             // if successful FB login, get info thru FB API and login/register on our app
             getInfoRegisterLogin()

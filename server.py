@@ -8,7 +8,7 @@ from model import User, Event, ContactEvent, Contact, Template, db, connect_to_d
 import random, json
 from werkzeug.security import generate_password_hash, check_password_hash
 from quotes import *
-import markovify
+
 # SendGrid Emailing
 import os, time, json, datetime, schedule, sendgrid
 from sendgrid.helpers.mail import *
@@ -17,6 +17,7 @@ from sendgrid.helpers.mail import *
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 
+# Threading schedule jobs
 from schedule_jobs import schedule1
 import threading
 
@@ -27,14 +28,15 @@ app.secret_key = "ABC"
 app.jinja_env.undefined = StrictUndefined # raise error if you use undefined variable in Jinja2
 
 
-# Source secrets and create client
+# Source secrets and create client for Twilio
 account = os.environ.get('TWILIO_TEST_ACCOUNT')
 token = os.environ.get('TWILIO_TEST_TOKEN')
+client = Client(account, token)
+
 twilio_num = os.environ.get('TWILIO_NUMBER')
 my_num = os.environ.get('MY_NUMBER')
 my_email = os.environ.get('MY_EMAIL')
 kit_email = os.environ.get('KIT_EMAIL')
-client = Client(account, token)
 
 
 
@@ -69,16 +71,11 @@ def return_contact_info():
 def add_fb_conctacts(contacts_list):
     """If a user registers in via OAuth, add their FB friends as contacts."""
     user_id = session['user_id']
-    import pdb; pdb.set_trace();
-    print contacts_list
     for thing in contacts_list:
         try:
-            print(thing)
             name = thing[0]
             pic_url = thing[1]
-            print name, pic_url
             c = Contact(name=name, pic_url=pic_url, user_id=user_id)
-            print c
             db.session.add(c)
             db.session.commit()
             print "{} add to DB for user_id={}".format(name, user_id)
@@ -97,11 +94,7 @@ def fb_register():
     email = request.form.get('email')
     pic_url = request.form.get('pic_url')
     contacts_list = json.loads(request.form.get('contacts_list'))
-    print contacts_list
-    print "wooooooooo"
-    print "                   "
-    print contacts_list[0][0], contacts_list[0][1]
-    
+
     password = request.form.get('fb_uid')
     hashed_value = generate_password_hash(password)
 
@@ -110,7 +103,6 @@ def fb_register():
     # If user exists in DB, add them to session (log in), return db_user.id:
     if db_user:
         print "Existing user!!!!"
-        print db_user
         session['user_id'] = db_user.id
         return jsonify({'user_id':db_user.id, 'result': 'Existing user!'})
         # Alert the email is already in use; return message that email exists
@@ -125,7 +117,7 @@ def fb_register():
         session['user_id'] = new_user.id
         print "user added to session"
         if contacts_list:
-            print "about to add contacts"
+            print "about to add FB contacts"
             add_fb_conctacts(contacts_list)
         return jsonify({'user_id':new_user.id, 'result': 'Newly registered user!'})
 
@@ -240,7 +232,21 @@ def user_profile(user_id):
     """Shows specific user's info; all of their events and contacts."""
     user = User.query.get(user_id)
     contacts = Contact.query.filter(Contact.user_id == user_id).all()
-    return render_template("user_profile.html", user=user, contacts=contacts)
+    upcoming_events = Event.query.order_by(Event.date.asc()).limit(5)
+    return render_template("user_profile.html", user=user, contacts=contacts, upcoming_events=upcoming_events)
+
+
+@app.route('/user_profile')
+def user_profile1():
+    """New user profile / dashboard."""
+    user_id = session.get("user_id")
+    if user_id:
+        user = User.query.get(user_id)
+        contacts = Contact.query.filter(Contact.user_id == user_id).all()
+        return render_template('user_profile1.html', user=user, contacts=contacts)
+    else:
+        flash("You must log in or register to add events")
+        return redirect("/")
 
 
 @app.route('/add_event')
@@ -447,7 +453,7 @@ def handle_new_event_for_contact():
     sign_off = request.form.get('sign_off')
     body = request.form.get('body')
     user_fname = user.fname
-    template_text = "{} {}, \n{} \n{},\n{}".format(greet, contact.name, body, sign_off,
+    template_text = "{} {}, \n{} \n{},\n{}".format(greet, contact.name.encode('utf-8'), body, sign_off,
                                                    user_fname)
     # add template
     template_name = request.form.get('template_name')
@@ -464,7 +470,7 @@ def handle_new_event_for_contact():
     db.session.add(ce)
     db.session.commit()
     # redirect to edit_event page
-    flash("You have successfully added a new event for {}!".format(contact.name))
+    flash("You have successfully added a new event for {}!".format(contact.name.encode('utf-8')))
     url = '/users/{}'.format(user.id)
     return redirect(url)
 
@@ -591,8 +597,8 @@ def handle_reminder_response():
 
 ###############################################################
 if __name__ == "__main__": 
-    # app.debug = True
-    # app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
+    app.debug = True
+    app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
     connect_to_db(app)
     
     def run_app():
@@ -607,6 +613,6 @@ if __name__ == "__main__":
     # run_jobs(app)
     run_app()
     # Use the DebugToolbar
-    # DebugToolbarExtension(app)
+    DebugToolbarExtension(app)
     
     
