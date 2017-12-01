@@ -40,8 +40,12 @@ kit_email = os.environ.get('KIT_EMAIL')
 
 
 
-########### ROUTES FOR AJAX REQUESTS ############
 
+@app.route('/test')
+def return_template():
+    return render_template('homepage1.html')
+
+########### ROUTES FOR AJAX REQUESTS ############
 
 @app.route('/quote')
 def return_quote():
@@ -281,7 +285,7 @@ def handle_event_form():
     sign_off = request.form.get('sign_off')
     body = request.form.get('body')
     user_fname = User.query.get(user_id).fname
-    template_text = "{} {}, \n{} \n{},\n{}".format(greet, name, body, sign_off,
+    template_text = "{} {}, \n{} \n{},\n{}".format(greet, name.encode('utf-8'), body, sign_off,
                                                    user_fname)
 
     # add template
@@ -345,9 +349,7 @@ def modify_db():
     contact.address = request.form.get('contact_address')
     event.date = request.form.get('date')
     db.session.commit()
-    flash("Your message for {} has been modified successfully.".format(contact.name))
-    flash("We'll send it to {} on {}.".format(contact.name, event.date))
-    flash("We'll remind you the day before (on {}/{}/{})".format(event.date.month, event.date.day-1, event.date.year))
+    flash("Message updated successfully. We will remind you the day before (on {}/{}/{})".format(event.date.month, event.date.day-1, event.date.year))
     # redirect user to their profile
     url = '/users/{}'.format(user_id)
     return redirect(url)
@@ -600,19 +602,20 @@ if __name__ == "__main__":
     app.debug = True
     app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
     connect_to_db(app)
+    DebugToolbarExtension(app) # Use the DebugToolbar
     
     def run_app():
         app.run(port=5000, host='0.0.0.0')
 
-    def run_jobs(app):
-        # import pdb; pdb.set_trace()
-        sched = threading.Thread(name='schedule1', target=schedule1)
-        app = threading.Thread(name='app', target=run_app)
-        sched.start()
-        app.start()
+    # def run_jobs(app):
+    #     # import pdb; pdb.set_trace()
+    #     sched = threading.Thread(name='schedule1', target=schedule1)
+    #     app = threading.Thread(name='app', target=run_app)
+    #     sched.start()
+    #     app.start()
     # run_jobs(app)
     run_app()
-    # Use the DebugToolbar
-    DebugToolbarExtension(app)
+
+    
     
     

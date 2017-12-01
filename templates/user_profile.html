@@ -70,9 +70,13 @@
 
 
     {% for event in upcoming_events %}
-      <li>[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}] 
-        <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">"{{ event.template.name }}"</a> message for {{event.contacts[0].name}}
-      </li>
+
+    {% if not event.job_done %}
+
+          <li>[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}] 
+            <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">"{{ event.template.name }}"</a> message for {{event.contacts[0].name}}
+          </li>
+      {% endif %}
     {%endfor%}
 
 {%endif%}
@@ -151,7 +155,13 @@
           <p></p>
 
 {% for event in contact.events %}
+{% if event.job_done %}
 
+      <strike style='color:#808080'>
+        <li>[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}] {{ event.template.name }}</li>
+        </strike>
+
+{% else %} 
 <li>[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]
   <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">{{ event.template.name }}</a>
 </li>
@@ -198,7 +208,7 @@
 
 
 <!-- END EVENT MODALS (where you need to pass in an event) ######################################-->
-          
+{% endif %}  
 {% endfor %}
 </div>
 

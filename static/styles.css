@@ -1,8 +1,14 @@
+html {
+  height: 100%;
+}
 body {
+    height: 100%;
     font-family: sans-serif;
     /*background: url('https://pbs.twimg.com/profile_background_images/485886649104998401/hyuYt7Jf.jpeg') no-repeat;*/
-    background: linear-gradient(0deg, #F2F2F2, #F0C27B, #4B1248, #F2F2F2); ;
+    background: linear-gradient(45deg, #4B1248, #F2F2F2) ;
     font-size: 20px;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 

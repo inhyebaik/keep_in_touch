@@ -88,7 +88,7 @@ def text_reminder(event):
     my_msg = "\n\n\nHello {}, your event's coming up tomorrow for: {}. "\
             "\n\n--------\n\nYour message currently is:\n\n\n'{}'\n\n--------\n\n "\
             "If you'd like to update this message, please reply with your new message "\
-            "(in one SMS response, with 'event_id={}' at the end)".format(user_fname, contact_name, event.template.text, event.id)
+            "(in one SMS response, with 'event_id={}' at the end)".format(user_fname, contact_name.encode('utf-8'), event.template.text.encode('utf-8'), event.id)
     print user_phone
     message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
     print "TEXTED REMINDER TO USER: {}".format(user_phone)
@@ -143,8 +143,8 @@ def remind_user(event):
     to_name = event.contacts[0].user.fname
     to_email = Email(to_address, to_name)
     # Create mail to be sent (reminder email)
-    subject = 'REMINDER EMAIL FOR {}s MESSAGE'.format(event.contacts[0].name)
-    email_body = "Just wanted to remind you that we will send a {} message for {} soon!".format(event.template.name, event.contacts[0].name)
+    subject = 'REMINDER EMAIL FOR {}s MESSAGE'.format(event.contacts[0].id)
+    email_body = "Just wanted to remind you that we will send a {} message for {} soon!".format(event.template.name, event.contacts[0].id)
     content = Content("text/plain", email_body)
     mail = Mail(from_email, subject, to_email, content)
     # Send reminder email and print confirmation/status
@@ -172,3 +172,4 @@ def schedule1():
 if __name__ == "__main__": 
     connect_to_db(app)
     print datetime.datetime.now() # check what time it is in vagrant
+    schedule1()
