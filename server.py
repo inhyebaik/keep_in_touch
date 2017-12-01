@@ -4,9 +4,9 @@ from flask import (Flask, render_template, redirect, request, flash, session,
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
+from werkzeug.security import generate_password_hash, check_password_hash
 from model import User, Event, ContactEvent, Contact, Template, db, connect_to_db
 import random, json
-from werkzeug.security import generate_password_hash, check_password_hash
 from quotes import *
 
 # SendGrid Emailing
@@ -40,10 +40,11 @@ kit_email = os.environ.get('KIT_EMAIL')
 
 
 
-
 @app.route('/test')
 def return_template():
-    return render_template('homepage1.html')
+    user_id = session.get('user_id')
+    user = User.query.filter(User.id == user_id).first()
+    return render_template('homepage1.html', user=user)
 
 ########### ROUTES FOR AJAX REQUESTS ############
 
@@ -109,8 +110,6 @@ def fb_register():
         print "Existing user!!!!"
         session['user_id'] = db_user.id
         return jsonify({'user_id':db_user.id, 'result': 'Existing user!'})
-        # Alert the email is already in use; return message that email exists
-        # return jsonify({'result':"Email already exists in database -- Please try logging in"})
     else:
         # Add new_user to database; return new_user.id
         print "email doesn't exist--> New user being adding to DB and logging in"
@@ -126,17 +125,6 @@ def fb_register():
         return jsonify({'user_id':new_user.id, 'result': 'Newly registered user!'})
 
 
-# @app.route('/contact.json', methods=['POST'])
-# def contact_stuff(): 
-#     """Return contact events for given contact"""
-#     contact_id = int(request.form.get('contact_id'))
-#     c_events = Contact.query.get(contact_id).events
-#     d = {}
-#     for event in c_events:
-#         d[event.id] = {"date": event.date, "template_name": event.template.name}
-#     return jsonify({"events": d, "contact_id": contact_id})
-
-
 # END JSON ROUTES
 
 @app.route('/')
@@ -144,7 +132,10 @@ def index():
     """Homepage."""
     user_id = session.get('user_id')
     user = User.query.filter(User.id == user_id).first()
-    return render_template("homepage.html", user=user)
+    if user:
+        return render_template("homepage3.html", user=user)
+    else:
+        return render_template("not_logged_in_index.html")
 
 
 @app.route('/users')

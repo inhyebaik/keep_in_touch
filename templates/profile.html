@@ -21,32 +21,30 @@
 <!-- NAVBAR -->
 
 
-
-
-<div class="container navbar" >
-<!-- Navbar for logged in users -->
-{% if session.get('user_id') and user %}
-      <nav class="navbar navbar-inverse navbar-fixed-top" >
-        <div class="container-fluid">
-          
-          <div class="navbar-header">
-            <a class="navbar-brand" href="/">Keep in Touch</a>
-          </div>
-
-          <ul class="nav navbar-nav">
-            <li class=""><a href="/">Home</a></li>
-            <li class=""><a href="/users/{{session.get('user_id')}}">My Profile</a></li>
-            <!-- <li><a href="/add_event">Create a New Event</a></li> -->
-            <li class=""><a data-toggle="modal" data-target="#eventform-modal">Create New Event</a></li>
-          </ul>
-
+<div>
+    <nav class="navbar navbar-default tembus">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="/">Keep in Touch</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav navbar-right">
+            <li class=""><a href="/users/{{session.get('user_id')}}">My Profile</a></li>
+            <li class=""><a data-toggle="modal" data-target="#eventform-modal">Create New Event</a></li>
             <li><a href="/logout" id='logoutbutton'>Log Out</a></li>
           </ul>
-        
+          </ul>
         </div>
-      </nav>
-      <br> <br> <br>
+      </div>
+    </nav>
+</div>
+
+
 
 <!-- ADD TOTALLY NEW EVENT/CONTACT MODAL :: event_form.html -->
         <div class="modal fade" id="eventform-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
@@ -121,122 +119,8 @@ You're awesome!
           </div>
         </div>
       </div>
-<!-- END ADD TOTALLY NEW EVENT/CONTACT MODAL -->    
+<!-- END ADD TOTALLY NEW EVENT/CONTACT MODAL -->  
 
-
-
-{% else %}
-<!-- Navbar for users not logged in -->
-      <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-
-          <div class="navbar-header">
-            <a class="navbar-brand" href="/">Keep in Touch</a>
-          </div>
-
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Home</a></li>
-          </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-
-            <li><a data-toggle="modal" data-target="#register-modal">Sign Up</a></li>
-            <li><a data-toggle="modal" data-target="#login-modal">Login</a></li>
-          </ul>
-
-        </div>
-      </nav>
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- LOGIN MODAL -->
-<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-
-        <div class="modal-dialog">
-        <div class="loginmodal-container">
-         <button data-dismiss="modal" class="close" type="button">
-          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
-        </button>
-
-          <h1>Login to Your Account</h1><br>
-          <form action='/login', method='POST'>
-          <input type="text" name="login_email" placeholder="Email">
-          <input type="password" name="login_password" placeholder="Password">
-          <input type="submit" name="login" class="login loginmodal-submit" value="Login">
-          </form>
-
-          <fb:login-button 
-                      class="fb-login-button" 
-                      data-max-rows="1" 
-                      data-size="medium" 
-                      data-show-faces="false" 
-                      data-auto-logout-link="false" 
-                      data-use-continue-as="true"
-                      data-button-type="continue_with" 
-                      onlogin="loginGetInfo2();">
-          </fb:login-button>
-          <br>
-          <a data-dismiss="modal" data-toggle="modal" href="#lost" data-target="#register-modal">Already a user?</a>
-
-          </div>
-      </div>
-  </div>
-
-<!-- REGISTRATION MODAL  -->
-
-    <div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-
-        <div class="modal-dialog">
-        <div class="loginmodal-container">
-         <button data-dismiss="modal" class="close" type="button">
-          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
-        </button>
-          <h1>Register</h1><br>
-
-          <form action='/register', method='POST'>
-          <input type="email" name="email" placeholder="Email">
-          <input type="password" name="password" placeholder="Password">
-          <input type="text" name="fname" placeholder="First Name">
-          <input type="text" name="lname" placeholder="Last Name">
-          <input type="phone" name="phone" placeholder="Phone">
-          <input type="submit" class="login loginmodal-submit" value="Register">
-
-
-          <fb:login-button 
-                      class="fb-login-button" 
-                      data-max-rows="2" 
-                      data-size="medium" 
-                      data-show-faces="false" 
-                      data-auto-logout-link="false" 
-                      data-use-continue-as="true"
-                      data-button-type="continue_with" 
-                      onlogin="loginGetInfo2();">
-          </fb:login-button>
-
-        <a data-dismiss="modal" data-toggle="modal" href="#lost" data-target="#login-modal">Already have an account?</a>
-
-        </form>
-
-
-          </div>
-        </div>
-      </div>
-
-
-<!-- END REGISTRATION MODAL -->
-
-      <br> <br> <br>
-{% endif %}
-</div>
 
 
 
@@ -258,9 +142,9 @@ You're awesome!
 
   <div class="row">
     <div class="col-sm-10">
-        {% block content %} 
+<!--         {% block content %} 
             put your content here 
-        {% endblock %}
+        {% endblock %} -->
     </div>
   </div>
 </div>
@@ -274,6 +158,7 @@ You're awesome!
 
 <footer>
           <div class="container">
+            <div class="row">
             <div class="col-sm-10" >
                 <span> 
 
@@ -284,7 +169,7 @@ You're awesome!
                 <br><br>
               <span id="quote-text"></span> 
               <br><br>
-
+          </div>
           </div>
           </div>
 

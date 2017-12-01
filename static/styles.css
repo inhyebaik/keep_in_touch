@@ -27,6 +27,15 @@ h1 {
     font-weight: bold;
 }
 
+#hello {
+    background: rgba(0,0,0,0.5);
+  background: transparent;
+}
+
+nav div.container-fluid {
+  background: rgba(0,0,0,0.5);
+  background: transparent;
+}
 
 textarea {
   width: 300px;
@@ -147,3 +156,57 @@ body a {
 }
 
 
+
+/*navbar*/
+
+.navbar-default{
+  background-color: transparent; !important; 
+  border: none;
+}
+.navbar-default .navbar-header > a {
+  color: #ecf0f1 ; 
+  border: none;
+}
+.navbar-default .navbar-nav > li > a{
+  color:#ecf0f1 ;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  border-bottom: none;
+  background-color: transparent;
+}
+
+
+.tembus{
+  background-color: transparent !important;
+}
+.hvrcenter {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px transparent;
+  position: relative;
+  overflow: hidden;
+}
+.hvrcenter:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  right: 50%;
+  bottom: 0;
+  background: #ECF0F1;
+  height: 2px;
+  -webkit-transition-property: left, right;
+  transition-property: left, right;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+}
+.hvrcenter:hover:before, .hvrcenter:focus:before, .hvrcenter:active:before {
+  left: 0;
+  right: 0;
+}
