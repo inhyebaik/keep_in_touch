@@ -92,47 +92,42 @@
 <!-- UPCOMING EVENTS CAROUSEL  -->
 <div class="container">
   <h1 id='carousel_h1'>Upcoming events</h1>
+  <h2><a data-toggle="modal" data-target="#eventform-modal">Add Event</a></h2>
   <div class="row">
     <div class="col-md-12">
       <div class="carousel slide multi-item-carousel" id="theCarousel">
         <div class="carousel-inner">
-          <div class="item active">
-            <div class="col-xs-4"><a href="#1"><img src="http://placehold.it/300/f44336/000000" class="img-responsive"></a></div>
-          </div>
-          <div class="item">
-            <div class="col-xs-4"><a href="#1"><img src="http://placehold.it/300/e91e63/000000" class="img-responsive"></a></div>
-          </div>
-          <div class="item">
-            <div class="col-xs-4"><a href="#1"><img src="http://placehold.it/300/9c27b0/000000" class="img-responsive"></a></div>
-          </div>
-          <div class="item">
-            <div class="col-xs-4"><a href="#1"><img src="http://placehold.it/300/673ab7/000000" class="img-responsive"></a></div>
-          </div>
-          <div class="item">
-            <div class="col-xs-4"><a href="#1"><img src="http://placehold.it/300/4caf50/000000" class="img-responsive"></a></div>
-          </div>
-          <div class="item">
-            <div class="col-xs-4"><a href="#1"><img src="http://placehold.it/300/8bc34a/000000" class="img-responsive"></a></div>
-          </div>
-          <!-- add  more items here -->
-          <div class="item">
-            <div class="col-xs-4"><a href="#1"><img src="http://placehold.it/300/8bc34a/000000" class="img-responsive"></a></div>
-          </div>
 
 
-          <!-- Example item start:  -->
-          <div class="item">
-            <div class="col-xs-4"><a data-toggle="modal" data-target="#eventform-modal" class="img-responsive">Add Event</a></div>
-          </div>
-  {% if upcoming_events %}
+    {% if upcoming_events %}
      {% for event in upcoming_events %} 
           {% if not event.job_done %}
-          <div class="item">
-            <div class="col-xs-4"><a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">"{{ event.template.name }}"<img src="{{event.contacts[0].pic_url}}" height='300px' width='300px'class="img-responsive"></a></div>
+          <div class="item thing">
+            <div class="col-xs-4">
+              <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">
+                 [{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]  
+                {{event.template.name}} message for: <br>
+                {{event.contacts[0].name}} 
+                <br>
+                 <img src="{{event.contacts[0].pic_url}}" align="left" class="img-responsive" hspace="10">
+                <span> {{event.template.text[:450]}}...</span>
+              </a>
+            </div>
           </div>
           {% endif %}
    {% endfor %}
 {% endif %}
+          <div class="item active">
+            <div class="col-xs-4"><a href="#1"><img src="http://placehold.it/300/f44336/000000" class="img-responsive"></a></div>
+          </div>
+
+          <div class="item">
+            <div class="col-xs-4"><a data-toggle="modal" data-target="#eventform-modal"><img src="http://placehold.it/300/e91e63/000000" class="img-responsive">add item</a></div>
+          </div>
+
+          <!-- add  more items here -->
+
+
           <!--  Example item end -->
         </div>
         <a class="left carousel-control" href="#theCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
@@ -141,69 +136,10 @@
     </div>
   </div>
 </div>
+<br><br>
 
-<a data-toggle="modal" data-target="#eventform-modal">Add Event</a>
 
 <!-- END UPCOMING EVENTS CAROUSEL -->
-
-
-
-
-
-
-<div class="container">
-<h1 id='carousel_h1'>Upcoming events</h1>
-  <div class="row">
-    <div class="MultiCarousel" data-items="1,3,5,6" data-slide="1" id="MultiCarousel"  data-interval="1000">
-            <div class="MultiCarousel-inner">
-
-  {% if upcoming_events %}
-     {% for event in upcoming_events %} 
-          {% if not event.job_done %}
-                <div class="item">
-                    <div class="pad15">
-                        <p class="lead">{{event.template.name}}</p> 
-                        <p><img src="{{event.contacts[0].pic_url}}"></p>
-                        <p>{{event.contacts[0].name}}</p>
-                        <p>{{event.date.month}}/{{event.date.day}}/{{event.date.year}}</p>
-                    </div>
-                </div>
-          {% endif %}
-   {% endfor %}
-{% endif %}
-
-                <div class="item"><a data-toggle="modal" data-target="#eventform-modal">
-                    <div class="pad15">
-                        <p class="lead"><a data-toggle="modal" data-target="#eventform-modal">Add Event</a></p>
-                        <p> <a data-toggle="modal" data-target="#eventform-modal"></a></li></p>
-                        <p> <a data-toggle="modal" data-target="#eventform-modal">Add Event<span class="glyphicon glyphicon-plus fa-5x"></span></a></p>
-                        <p> -</p>
-                    </div>
-                </a></div>
-                
-            </div>
-            <button class="btn btn-primary leftLst"></button>
-            <button class="btn btn-primary rightLst">></button>
-        </div>
-  </div>
-  <div class="row">
-      <div class="col-md-12 text-center">
-          <br/><br/><br/>
-          <hr/>
-          <p>Settings</p>
-          <p>Change data items for xs,sm,md and lg display items respectively. Ex:data-items="1,3,5,6"</p>
-          <p>Change data slide for slides per click Ex:data-slide="1"</p>
-      </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-
 
 
 
@@ -275,7 +211,7 @@
 <!-- END EDIT CONTACT INFO MODAL //////////////////////////////////////////////-->
 
 
-          <p></p>
+
 
 {% for event in contact.events %}
 {% if event.job_done %}
