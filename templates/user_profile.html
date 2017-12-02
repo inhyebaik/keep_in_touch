@@ -2,14 +2,7 @@
 {% block content %}
 
 <h2>{{ user.fname}} {{user.lname}}'s profile</h2> 
-
-
-    Email: {{ user.email }}
-    <br>
-    Phone: {{ user.phone }}
-    <br>
-
-    <a data-toggle="modal" data-target="#editprofile-modal">Edit My Info</a>
+<a data-toggle="modal" data-target="#editprofile-modal">Edit My Info</a>
 
                               <!-- EDIT PROFILE MODAL -->
                               <div class="modal fade" id="editprofile-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
