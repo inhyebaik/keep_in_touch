@@ -604,7 +604,7 @@ if __name__ == "__main__":
     #     app = threading.Thread(name='app', target=run_app)
     #     sched.start()
     #     app.start()
-    # run_jobs(app)
+    run_jobs(app)
     run_app()
 
     
