@@ -20,6 +20,7 @@
         html {
             position: relative;
             min-height: 100%;
+
         }
         body {
             background-color: #ECEFF1;
@@ -27,6 +28,8 @@
             font-family: 'Nunito', sans-serif;
             font-weight: 300;
             font-size: 16px;
+            padding-top: 70px; 
+
         }
         h1, h2, h3 {
             font-weight: 100;
@@ -39,6 +42,8 @@
             background-color: #F0FFFF;
 
         }
+
+
 
         .img-circle{
             border-radius: 50%;
@@ -147,8 +152,11 @@
 /*navbar*/
 
 .navbar-default{
-  background-color: transparent; !important; 
+  /*background-color: transparent; !important; */
+  background-color: #ECEFF1;
   border-color: none;
+  position: fixed;
+  top: 0;
 }
 .navbar-default .navbar-header > a {
 }
@@ -157,12 +165,12 @@
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-  background-color: transparent;
+  /*background-color: transparent;*/
 }
 
 
 .tembus{
-  background-color: transparent !important;
+  /*background-color: transparent !important;*/
 }
 .hvrcenter {
   display: inline-block;
@@ -180,7 +188,7 @@
   left: 50%;
   right: 50%;
   bottom: 0;
-  background: #ECF0F1;
+  /*background: #ECF0F1;*/
   height: 2px;
   -webkit-transition-property: left, right;
   transition-property: left, right;
@@ -194,6 +202,9 @@
   right: 0;
 }
 
+.main {
+  margin-top: 30px;
+        }
 
 </style>
 
@@ -205,7 +216,7 @@
 
 
 <div>
-    <nav class="navbar navbar-default tembus">
+    <nav class="navbar navbar-default tembus navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -227,6 +238,63 @@
       </div>
     </nav>
 </div>
+
+
+
+
+
+<!-- UPCOMING EVENTS CAROUSEL  -->
+{% if upcoming_events %}
+<div class="container">
+  <h1 id='carousel_h1'>Upcoming events</h1>
+  <h2><a data-toggle="modal" data-target="#eventform-modal">Add Event</a></h2>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="carousel slide multi-item-carousel" id="theCarousel">
+        <div class="carousel-inner">
+
+
+ 
+     {% for event in upcoming_events %} 
+          {% if not event.job_done %}
+          <div class="item active">
+            <div class="col-xs-4">
+              <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">
+                 [{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]  
+                {{event.template.name}} message for: <br>
+                {{event.contacts[0].name}} 
+                <br>
+                 <img src="{{event.contacts[0].pic_url}}" align="left" class="img-responsive" hspace="10">
+                <span> {{event.template.text[:450]}}...</span>
+              </a>
+            </div>
+          </div>
+          {% endif %}
+   {% endfor %}
+
+
+          <div class="item">
+            <div class="col-xs-4"><a data-toggle="modal" data-target="#eventform-modal"><img src="" class="img-responsive" height=200px></a></div>
+          </div>
+
+          <!-- add  more items here -->
+
+
+          <!--  Example item end -->
+        </div>
+        <a class="left carousel-control" href="#theCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
+        <a class="right carousel-control" href="#theCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+<br><br>
+
+
+<!-- END UPCOMING EVENTS CAROUSEL -->
+
+
 
 
  <!-- EDIT PROFILE MODAL -->
@@ -260,61 +328,6 @@
                                       </div>
                                     </div>
 <!-- END EDIT PROFILE MODAL -->
-
-
-
-<!-- UPCOMING EVENTS CAROUSEL  -->
-<div class="container">
-  <h1 id='carousel_h1'>Upcoming events</h1>
-  <h2><a data-toggle="modal" data-target="#eventform-modal">Add Event</a></h2>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="carousel slide multi-item-carousel" id="theCarousel">
-        <div class="carousel-inner">
-
-
-    {% if upcoming_events %}
-     {% for event in upcoming_events %} 
-          {% if not event.job_done %}
-          <div class="item thing">
-            <div class="col-xs-4">
-              <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">
-                 [{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]  
-                {{event.template.name}} message for: <br>
-                {{event.contacts[0].name}} 
-                <br>
-                 <img src="{{event.contacts[0].pic_url}}" align="left" class="img-responsive" hspace="10">
-                <span> {{event.template.text[:450]}}...</span>
-              </a>
-            </div>
-          </div>
-          {% endif %}
-   {% endfor %}
-{% endif %}
-          <div class="item active">
-            <div class="col-xs-4"><a href="#1"><img src="http://placehold.it/300/f44336/000000" class="img-responsive"></a></div>
-          </div>
-
-          <div class="item">
-            <div class="col-xs-4"><a data-toggle="modal" data-target="#eventform-modal"><img src="http://placehold.it/300/e91e63/000000" class="img-responsive"></a></div>
-          </div>
-
-          <!-- add  more items here -->
-
-
-          <!--  Example item end -->
-        </div>
-        <a class="left carousel-control" href="#theCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
-        <a class="right carousel-control" href="#theCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-<br><br>
-
-
-<!-- END UPCOMING EVENTS CAROUSEL -->
-
 
 
 <!-- ADD TOTALLY NEW EVENT/CONTACT MODAL :: event_form.html -->
@@ -408,7 +421,7 @@ You're awesome!
         <div class="grid-item">
             <article class="material-card Purple">
                 <h4>
-                    <span><a data-toggle="modal" data-target="#editcontact-modal-{{contact.id}}">{{contact.name}}</a></span>
+                    <span><a style='color:gray' data-toggle="modal" data-target="#editcontact-modal-{{contact.id}}">{{contact.name}}</a></span>
                 </h4>
                 <div class="mc-content">
                     <div class="img-container">

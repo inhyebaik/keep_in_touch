@@ -44,7 +44,8 @@ kit_email = os.environ.get('KIT_EMAIL')
 def return_template():
     user_id = session.get('user_id')
     user = User.query.filter(User.id == user_id).first()
-    upcoming_events = Event.query.order_by(Event.date.asc())
+    upcoming_events = Event.query.order_by(Event.date.asc()).limit(5).all()
+    print "upcoming events:", upcoming_events
     return render_template('test.html', user=user, contacts=user.contacts, upcoming_events=upcoming_events)
 
 @app.route('/test2')
