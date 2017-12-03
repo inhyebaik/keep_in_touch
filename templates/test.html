@@ -7,7 +7,7 @@
     <meta name="msapplication-tap-highlight" content="no">
  -->
     <title>Profile</title>
-    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,200,500,600,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,200,500,600,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -24,7 +24,7 @@
         body {
             background-color: #ECEFF1;
             color: #37474F;
-            font-family: 'Raleway', sans-serif;
+            font-family: 'Nunito', sans-serif;
             font-weight: 300;
             font-size: 16px;
         }
@@ -142,47 +142,265 @@
 .login-help{
   font-size: 12px;
 }
+
+
+/*navbar*/
+
+.navbar-default{
+  background-color: transparent; !important; 
+  border-color: none;
+}
+.navbar-default .navbar-header > a {
+}
+.navbar-default .navbar-nav > li > a{
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  background-color: transparent;
+}
+
+
+.tembus{
+  background-color: transparent !important;
+}
+.hvrcenter {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px transparent;
+  position: relative;
+  overflow: hidden;
+}
+.hvrcenter:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  right: 50%;
+  bottom: 0;
+  background: #ECF0F1;
+  height: 2px;
+  -webkit-transition-property: left, right;
+  transition-property: left, right;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+}
+.hvrcenter:hover:before, .hvrcenter:focus:before, .hvrcenter:active:before {
+  left: 0;
+  right: 0;
+}
+
+
 </style>
 
 
 </head>
 <body>
 
-<nav class="navbar navbar-toggleable-sm navbar-trans navbar-inverse">
-                <div class="container">
-                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggler-1" aria-controls="navbarToggler-1" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Bootstrap 4 Cover Nav</a>
-                    <div class="collapse navbar-collapse pull-xs-right justify-content-end" id="navbarToggler-1">
-                        <ul class="navbar-nav mt-2 mt-md-0">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Our Work</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Contact</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn btn-outline-white btn-outline" href="#"><i class="fa fa-user"></i> Login
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+<!-- NAVBAR -->
+
+
+<div>
+    <nav class="navbar navbar-default tembus">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" href="/">Keep in Touch</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav navbar-right">
+            <li class=""><a href="/users/{{session.get('user_id')}}">My Profile</a></li>
+            <li><a data-toggle="modal" data-target="#editprofile-modal">Edit My Profile</a></li>
+            <li class=""><a data-toggle="modal" data-target="#eventform-modal">Create New Event</a></li>
+            <li><a href="/logout" id='logoutbutton'>Log Out</a></li>
+          </ul>
+          </ul>
+        </div>
+      </div>
+    </nav>
+</div>
+
+
+ <!-- EDIT PROFILE MODAL -->
+                              <div class="modal fade" id="editprofile-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                      <div class="modal-dialog">
+                                      <div class="loginmodal-container">
+
+                                       <button data-dismiss="modal" class="close" type="button">
+                                        <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+                                      </button>
+
+                                        <h1>Edit My Info</h1><br>
+                                        <form action='/e_profile', method='POST'>
+                                           
+                                            <!-- <label for="fname">First name</label> -->
+                                            <input type="text" name="fname" placeholder="First Name" value='{{ user.fname }}'>
+                                            
+                                            <!-- <label for="lname">Last name</label> -->
+                                            <input type="text" name="lname" placeholder="Last Name" value='{{ user.lname }}'>
+                                            
+                                            <!-- <label for="email">Email</label> -->
+                                            <input type="email" name="email" placeholder="Email" value='{{ user.email }}'>
+
+                                            <!-- <label for="phone">Phone</label> -->
+                                            <input type="phone" name="phone" placeholder="Phone" value='{{ user.phone }}'>
+                                        
+                                        <input type="submit" class="login loginmodal-submit" value="Save">
+                                        </form>
+
+                                        </div>
+                                      </div>
+                                    </div>
+<!-- END EDIT PROFILE MODAL -->
+
+
+
+<!-- UPCOMING EVENTS CAROUSEL  -->
+<div class="container">
+  <h1 id='carousel_h1'>Upcoming events</h1>
+  <h2><a data-toggle="modal" data-target="#eventform-modal">Add Event</a></h2>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="carousel slide multi-item-carousel" id="theCarousel">
+        <div class="carousel-inner">
+
+
+    {% if upcoming_events %}
+     {% for event in upcoming_events %} 
+          {% if not event.job_done %}
+          <div class="item thing">
+            <div class="col-xs-4">
+              <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">
+                 [{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]  
+                {{event.template.name}} message for: <br>
+                {{event.contacts[0].name}} 
+                <br>
+                 <img src="{{event.contacts[0].pic_url}}" align="left" class="img-responsive" hspace="10">
+                <span> {{event.template.text[:450]}}...</span>
+              </a>
+            </div>
+          </div>
+          {% endif %}
+   {% endfor %}
+{% endif %}
+          <div class="item active">
+            <div class="col-xs-4"><a href="#1"><img src="http://placehold.it/300/f44336/000000" class="img-responsive"></a></div>
+          </div>
+
+          <div class="item">
+            <div class="col-xs-4"><a data-toggle="modal" data-target="#eventform-modal"><img src="http://placehold.it/300/e91e63/000000" class="img-responsive"></a></div>
+          </div>
+
+          <!-- add  more items here -->
+
+
+          <!--  Example item end -->
+        </div>
+        <a class="left carousel-control" href="#theCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
+        <a class="right carousel-control" href="#theCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+<br><br>
+
+
+<!-- END UPCOMING EVENTS CAROUSEL -->
+
+
+
+<!-- ADD TOTALLY NEW EVENT/CONTACT MODAL :: event_form.html -->
+        <div class="modal fade" id="eventform-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+        <div class="loginmodal-container">
+         <button data-dismiss="modal" class="close" id='base-new-close' type="button">
+          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+        </button>
+
+          <h1>Create New Event</h1><br>
+          <form id='basenewevent' class='newevent' action='/add_event', method='POST'>
+
+              <!-- <label for="fname">Contact's Name</label> -->
+
+                <select class='choose-existing' name='choose-existing'>
+                <option disabled selected value>Choose from existing</option>
+                {% for contact in user.contacts|sort(attribute='name') %}
+                  <option value='{{ contact.id }}'>{{ contact.name }}</option>
+                {% endfor %}
+              </select>
+              <br>
+
+              <input type="text" name="contact_name" placeholder="Name"><br>
+
+
+              <!-- <label for="email">Contact's Email</label> -->
+              <input type="email" name="contact_email" placeholder="Email" required>
+              
+              <!-- <label for="address">Contact's Address</label> -->
+              <!-- <input type="text" name="contact_address" placeholder="Address"> -->
+            
+              <!-- <label for="phone">Contact's Phone</label> -->
+              <input type="phone" name="contact_phone" placeholder="+1">
+
+          <label for="date">Date to be sent</label> 
+              <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" placeholder='Date to be sent'required/><br>
+          
+          <!-- <label for="subject">Message subject</label>  -->
+          <input type='text' name='template_name' placeholder='Message Subject'required> <br>
+              
+          How do you want to greet them? 
+            <select name='greet'>
+                <option value='Dear'>Dear</option>
+                <option value='Hey'>Hey</option>
+                <option value='Hello'>Hello</option>
+            </select> <br>
+    
+
+        What do you want them to know? <br> ...or choose a prefilled message if you'd like!         
+            <select class='template_type' name='template_type'>
+                <option disabled selected value>Select prefilled</option>
+                <option value='ty'>Thank you</option>
+                <option value='hb'>Happy birthday</option>
+                <option value='fup'>Follow Up</option>
+            </select> 
+            <br>
+                <textarea class='template_textarea' name="body">
+You're awesome!
+                </textarea>
+                <br>
+
+        How do you want to sign off? 
+            <select name='sign_off'>
+                <option value='Sincerely'>Sincerely</option>
+                <option value='Yours'>Yours</option>
+                <option value='Best'>Best</option>
+              </select> <br><br>
+            
+          <input type="submit" class="login loginmodal-submit" id='base-new-submit' value="Add New Contact/Event">
+          </form>
+
+          </div>
+        </div>
+      </div>
+<!-- END ADD TOTALLY NEW EVENT/CONTACT MODAL -->  
+
+
+
     
 <section class="container">
     <div class="page-header">
-        <h1>Profile<br>
+        <h1>My Contacts<br>
             <small>Stay in touch</small></h1>
     </div>
-    <h2>Contacts</h2>
+
     <div class="row active-with-click grid">
 
 {% for contact in contacts|sort(attribute='name') %}
@@ -284,14 +502,13 @@
           <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
         </button>
 
-          <h3>Add Event for {{ contact.name}}</h3><br>
+          <h3>Event for {{ contact.name}}</h3><br>
           <form id='neweventcontact' class='newevent' action='/handle_new_event_for_contact', method='POST'>
           <label for="date">Date to be sent</label> 
               <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" required/><br>
           
           <label for="subject">Message subject</label> <input type='text' name='template_name' required> <br>
-              
-          How do you want to greet them? 
+           <label for=greet>How do you want to greet them? </label>   
             <select name='greet'>
                 <option value='Dear'>Dear</option>
                 <option value='Hey'>Hey</option>
@@ -305,7 +522,6 @@
                 <option value='ty'>Thank you</option>
                 <option value='hb'>Happy birthday</option>
                 <option value='fup'>Follow Up</option>
-                <option value='markov'>Random Generator</option>
             </select> 
             <br>
                 <textarea class='template_textarea2' name="body">You're awesome!</textarea>
@@ -354,6 +570,8 @@
         </div>
       </div>
 <!-- END REMOVE CONTACT MODAL ////////////////////////////////////////////////////////////////-->
+
+
 <!-- EDIT CONTACT INFO MODAL //////////////////////////////////////////////////-->
         <div class="modal fade" id="editcontact-modal-{{contact.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
@@ -401,7 +619,7 @@
 
 
 
-
+<!-- 
         <div class="grid-item">
             <article class="material-card Red">
                 <h2>
@@ -466,399 +684,13 @@
                     <a class="fa fa-fw fa-google-plus"></a>
                 </div>
             </article>
-        </div>
+        </div> -->
 
-        <div class="grid-item">
-            <article class="material-card Purple">
-                <h2>
-                    <span>Clint Eastwood</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        Million Dollar Baby
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-clint-eastwood.jpg">
-                    </div>
-                    <div class="mc-description">
-                        He rose to international fame with his role as the Man with No Name in Sergio Leone's Dollars trilogy of spaghetti Westerns during the 1960s ...
-                        He rose to international fame with his role as the Man with No Name in Sergio Leone's Dollars trilogy of spaghetti Westerns during the 1960s ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
+        
     <!--</div>-->
     <!--<div class="row active-with-hover">-->
-        <div class="grid-item">
-            <article class="material-card Deep-Purple">
-                <h2>
-                    <span>Dustin Hoffman</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        Kramer vs. Kramer
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-dustin-hoffman.jpg">
-                    </div>
-                    <div class="mc-description">
-                        He has been known for his versatile portrayals of antiheroes and vulnerable characters.[3] He won the Academy Award for Kramer vs. Kramer in 1979 ...
-                        He has been known for his versatile portrayals of antiheroes and vulnerable characters.[3] He won the Academy Award for Kramer vs. Kramer in 1979 ...
-                        He has been known for his versatile portrayals of antiheroes and vulnerable characters.[3] He won the Academy Award for Kramer vs. Kramer in 1979 ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-        <div class="grid-item">
-            <article class="material-card Indigo">
-                <h2>
-                    <span>Edward Norton</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        American History X
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-edward-norton.jpg">
-                    </div>
-                    <div class="mc-description">
-                        He has been nominated for three Academy Awards for his work in the films Primal Fear, American History X and Birdman. He also starred in other roles ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-        <div class="grid-item">
-            <article class="material-card Blue">
-                <h2>
-                    <span>Michael Caine</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        Educated Rita
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-michael-caine.jpg">
-                    </div>
-                    <div class="mc-description">
-                        English actor and author. Renowned for his distinctive working class cockney accent, Caine has appeared in over 115 films and is regarded as a British ...
-                        English actor and author. Renowned for his distinctive working class cockney accent, Caine has appeared in over 115 films and is regarded as a British ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-        <div class="grid-item">
-            <article class="material-card Light-Blue">
-                <h2>
-                    <span>Harvey Keitel</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        Pulp Fiction
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-harvey-keitel.jpg">
-                    </div>
-                    <div class="mc-description">
-                        Some of his most notable starring roles were in Martin Scorsese's Mean Streets and Taxi Driver, Ridley Scott's The Duellists and Thelma & Louise, Quentin Tarantino ...
-                        Some of his most notable starring roles were in Martin Scorsese's Mean Streets and Taxi Driver, Ridley Scott's The Duellists and Thelma & Louise, Quentin Tarantino ...
-                        Some of his most notable starring roles were in Martin Scorsese's Mean Streets and Taxi Driver, Ridley Scott's The Duellists and Thelma & Louise, Quentin Tarantino ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-        <div class="grid-item">
-            <article class="material-card Cyan">
-                <h2>
-                    <span>Jack Nicholson</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        The Shining
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-jack-nicholson.jpg">
-                    </div>
-                    <div class="mc-description">
-                        Throughout his career, Nicholson has portrayed unique and challenging roles, many of which include dark portrayals of excitable, neurotic and psychopathic characters ...
-                        Throughout his career, Nicholson has portrayed unique and challenging roles, many of which include dark portrayals of excitable, neurotic and psychopathic characters ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-        <div class="grid-item">
-            <article class="material-card Teal">
-                <h2>
-                    <span>Jeff Bridges</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        The Big Lebowski
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-jeff-bridges.jpg">
-                    </div>
-                    <div class="mc-description">
-                        He comes from a well-known acting family and began his televised acting in 1958 as a child with his father, Lloyd Bridges, and brother, Beau, on television's Sea Hunt ...
-                        He comes from a well-known acting family and began his televised acting in 1958 as a child with his father, Lloyd Bridges, and brother, Beau, on television's Sea Hunt ...
-                        He comes from a well-known acting family and began his televised acting in 1958 as a child with his father, Lloyd Bridges, and brother, Beau, on television's Sea Hunt ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-        <div class="grid-item">
-            <article class="material-card Green">
-                <h2>
-                    <span>Joaquin Phoenix</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        Her
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-joaquin-phoenix.jpg">
-                    </div>
-                    <div class="mc-description">
-                        is an American actor, producer, music video director, musician and activist. For his work as an artist, Phoenix has received a Grammy Award, a Golden Globe Award and three Academy ...
-                        is an American actor, producer, music video director, musician and activist. For his work as an artist, Phoenix has received a Grammy Award, a Golden Globe Award and three Academy ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-        <div class="grid-item">
-            <article class="material-card Light-Green">
-                <h2>
-                    <span>Tom Hanks</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        Forrest Gump
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-tom-hanks.jpg">
-                    </div>
-                    <div class="mc-description">
-                        He is known for his roles in Big (1988), Philadelphia (1993), Forrest Gump (1994), Apollo 13 (1995), Saving Private Ryan, You've Got Mail (both 1998), The Green Mile (1999), Cast Away (2000) ...
-                        He is known for his roles in Big (1988), Philadelphia (1993), Forrest Gump (1994), Apollo 13 (1995), Saving Private Ryan, You've Got Mail (both 1998), The Green Mile (1999), Cast Away (2000) ...
-                        He is known for his roles in Big (1988), Philadelphia (1993), Forrest Gump (1994), Apollo 13 (1995), Saving Private Ryan, You've Got Mail (both 1998), The Green Mile (1999), Cast Away (2000) ...
-                        He is known for his roles in Big (1988), Philadelphia (1993), Forrest Gump (1994), Apollo 13 (1995), Saving Private Ryan, You've Got Mail (both 1998), The Green Mile (1999), Cast Away (2000) ...
-                        He is known for his roles in Big (1988), Philadelphia (1993), Forrest Gump (1994), Apollo 13 (1995), Saving Private Ryan, You've Got Mail (both 1998), The Green Mile (1999), Cast Away (2000) ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-        <div class="grid-item">
-            <article class="material-card Lime">
-                <h2>
-                    <span>Philip Seymour Hoffman</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        25th Hour
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-philip-seymour-hoffman.jpg">
-                    </div>
-                    <div class="mc-description">
-                        Best known for his distinctive supporting and character roles – typically lowlifes, bullies, and misfits – Hoffman was a regular presence in films from the early 1990s until his death at age 46.
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-        <div class="grid-item">
-            <article class="material-card Yellow">
-                <h2>
-                    <span>Paul Newman</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        The Color of Money
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-paul-newman.jpg">
-                    </div>
-                    <div class="mc-description">
-                        He won numerous awards, including an Academy Award for his performance in the 1986 film The Color of Money,[3] a BAFTA Award, a Screen Actors Guild Award, a Cannes Film Festival Award, an Emmy Award ...
-                        He won numerous awards, including an Academy Award for his performance in the 1986 film The Color of Money,[3] a BAFTA Award, a Screen Actors Guild Award, a Cannes Film Festival Award, an Emmy Award ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
 
-        <div class="grid-item">
-            <article class="material-card Orange">
-                <h2>
-                    <span>Kevin Spacey</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        American Beauty
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-kevin-spacey.jpg">
-                    </div>
-                    <div class="mc-description">
-                        He began his career as a stage actor during the 1980s, before being cast in supporting roles in film and television. He gained critical acclaim in the early 1990s, culminating in his first Academy Award ...
-                        He began his career as a stage actor during the 1980s, before being cast in supporting roles in film and television. He gained critical acclaim in the early 1990s, culminating in his first Academy Award ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
+      <!-- 
         <div class="grid-item">
             <article class="material-card Deep-Orange">
                 <h2>
@@ -889,7 +721,7 @@
                     <a class="fa fa-fw fa-google-plus"></a>
                 </div>
             </article>
-        </div>
+        </div> -->
 
 
     </div>

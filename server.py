@@ -44,7 +44,8 @@ kit_email = os.environ.get('KIT_EMAIL')
 def return_template():
     user_id = session.get('user_id')
     user = User.query.filter(User.id == user_id).first()
-    return render_template('test.html', contacts=user.contacts)
+    upcoming_events = Event.query.order_by(Event.date.asc())
+    return render_template('test.html', user=user, contacts=user.contacts, upcoming_events=upcoming_events)
 
 @app.route('/test2')
 def return_test():
@@ -139,7 +140,7 @@ def index():
     if user:
         return render_template("homepage3.html", user=user)
     else:
-        return render_template("not_logged_in_index.html")
+        return render_template("homepage4nl.html")
 
 
 @app.route('/users')
@@ -219,7 +220,7 @@ def login_process():
         else:
             # If password doesn't match, redirect to register/login
             flash("Wrong credentials -- Try again")
-            return redirect('/register_login')
+            return redirect('/')
     else:
         # Alert if email doesn't exist; prompt and redirect to register/login
         flash("Email does not exist in database: please register")
