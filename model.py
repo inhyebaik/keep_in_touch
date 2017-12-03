@@ -84,8 +84,9 @@ class Event(db.Model):
     # an event has one contact, and a contact can have multiple events
     contacts = db.relationship("Contact", secondary="contactsevents", backref="events")
     template = db.relationship("Template", backref=db.backref("event"))
-
-
+    # add this relationship because I'm querying often for a user's events
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship("User", backref=db.backref("events"))
 
 
     def __repr__(self):

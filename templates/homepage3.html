@@ -346,11 +346,9 @@ You're awesome!
 <div class="container">
 
     <!-- Flash messages -->
-    <ul class='red'>
       {% for message in get_flashed_messages() %}
         <li> {{ message.decode('utf-8') }} </li>
       {% endfor %}
-    </ul>
 
   <div class="row">
     <div class="col-sm-10">

@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
 <!--     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="msapplication-tap-highlight" content="no">
- -->
+    <meta name="msapplication-tap-highlight" content="no"> -->
+
     <title>Profile</title>
+    <link rel="stylesheet" href="/static/profile.css">
     <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,200,500,600,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -14,202 +15,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/static/project.js"></script>
 
-
-    <style type="text/css">
-
-        html {
-            position: relative;
-            min-height: 100%;
-
-        }
-        body {
-            background-color: #ECEFF1;
-            color: #37474F;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 300;
-            font-size: 16px;
-            padding-top: 70px; 
-
-        }
-        h1, h2, h3 {
-            font-weight: 100;
-        }
-        .grid-item {
-            text-align: center;
-            width: 200px;
-            padding: 15px;
-            margin-top:10px;
-            background-color: #F0FFFF;
-
-        }
-
-
-
-        .img-circle{
-            border-radius: 50%;
-            display: block;
-            margin: auto;
-        }
-
-        div {
-            text-align: center;
-        }
-
-
-
-/****** LOGIN MODAL ******/
-.loginmodal-container {
-  padding: 30px;
-  max-width: 350px;
-  width: 100% !important;
-  background-color: #F7F7F7;
-  margin: 0 auto;
-  border-radius: 2px;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-}
-
-.loginmodal-container h1 {
-  text-align: center;
-  font-size: 1.8em;
-}
-
-.loginmodal-container input[type=submit] {
-  width: 100%;
-  display: block;
-  margin-bottom: 10px;
-  position: relative;
-}
-
-
-.loginmodal-container input[type=text], input[type=date],input[type=password], input[type=phone], input[type=email] {
-  height: 30px;
-  font-size: 14px;
-  width: 90%;
-  margin-bottom: 10px;
-  -webkit-appearance: none;
-  background: #fff;
-  border: 1px solid #d9d9d9;
-  border-top: 1px solid #c0c0c0;
-  /* border-radius: 2px; */
-  padding: 0 8px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-}
-
-.loginmodal-container input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, input[type=date]:hover, input[type=phone]:hover {
-  border: 1px solid #b9b9b9;
-  border-top: 1px solid #a0a0a0;
-  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-}
-
-.loginmodal {
-  text-align: center;
-  font-size: 14px;
-  font-weight: 700;
-  height: 36px;
-  padding: 0 8px;
-
-}
-
-.loginmodal-submit{
-  /* border: 1px solid #3079ed; */
-  border: 0px;
-  color: #fff;
-  text-shadow: 0 1px rgba(0,0,0,0.1); 
-  background-color: #4d90fe;
-  padding: 17px 0px;
-  font-size: 14px;
-  /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#4787ed)); */
-}
-
-
-.loginmodal-submit:hover {
-  /* border: 1px solid #2f5bb7; */
-  border: 0px;
-  text-shadow: 0 1px rgba(0,0,0,0.3);
-  background-color: #357ae8;
-  /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#357ae8)); */
-}
-
-.loginmodal-container a {
-  text-decoration: none;
-  color: #666;
-  font-weight: 400;
-  text-align: center;
-  display: inline-block;
-  opacity: 0.6;
-  transition: opacity ease 0.5s;
-} 
-
-.login-help{
-  font-size: 12px;
-}
-
-
-/*navbar*/
-
-.navbar-default{
-  /*background-color: transparent; !important; */
-  background-color: #ECEFF1;
-  border-color: none;
-  position: fixed;
-  top: 0;
-}
-.navbar-default .navbar-header > a {
-}
-.navbar-default .navbar-nav > li > a{
-}
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  /*background-color: transparent;*/
-}
-
-
-.tembus{
-  /*background-color: transparent !important;*/
-}
-.hvrcenter {
-  display: inline-block;
-  vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px transparent;
-  position: relative;
-  overflow: hidden;
-}
-.hvrcenter:before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 50%;
-  right: 50%;
-  bottom: 0;
-  /*background: #ECF0F1;*/
-  height: 2px;
-  -webkit-transition-property: left, right;
-  transition-property: left, right;
-  -webkit-transition-duration: 0.3s;
-  transition-duration: 0.3s;
-  -webkit-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
-}
-.hvrcenter:hover:before, .hvrcenter:focus:before, .hvrcenter:active:before {
-  left: 0;
-  right: 0;
-}
-
-.main {
-  margin-top: 30px;
-        }
-
-</style>
-
-
 </head>
+
+
+
 <body>
 
 <!-- NAVBAR -->
@@ -297,36 +106,28 @@
 
 
 
- <!-- EDIT PROFILE MODAL -->
-                              <div class="modal fade" id="editprofile-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                                      <div class="modal-dialog">
-                                      <div class="loginmodal-container">
+<!-- EDIT PROFILE MODAL -->
+<div class="modal fade" id="editprofile-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+        <div class="loginmodal-container">
 
-                                       <button data-dismiss="modal" class="close" type="button">
-                                        <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
-                                      </button>
+         <button data-dismiss="modal" class="close" type="button">
+          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+        </button>
 
-                                        <h1>Edit My Info</h1><br>
-                                        <form action='/e_profile', method='POST'>
-                                           
-                                            <!-- <label for="fname">First name</label> -->
-                                            <input type="text" name="fname" placeholder="First Name" value='{{ user.fname }}'>
-                                            
-                                            <!-- <label for="lname">Last name</label> -->
-                                            <input type="text" name="lname" placeholder="Last Name" value='{{ user.lname }}'>
-                                            
-                                            <!-- <label for="email">Email</label> -->
-                                            <input type="email" name="email" placeholder="Email" value='{{ user.email }}'>
+          <h1>Edit My Info</h1><br>
+          <form action='/e_profile', method='POST'>
+              <input type="text" name="fname" placeholder="First Name" value='{{ user.fname }}'>
+              <input type="text" name="lname" placeholder="Last Name" value='{{ user.lname }}'>
+              <input type="email" name="email" placeholder="Email" value='{{ user.email }}'>
+              <input type="phone" name="phone" placeholder="Phone" value='{{ user.phone }}'>
+          
+          <input type="submit" class="login loginmodal-submit" value="Save">
+          </form>
 
-                                            <!-- <label for="phone">Phone</label> -->
-                                            <input type="phone" name="phone" placeholder="Phone" value='{{ user.phone }}'>
-                                        
-                                        <input type="submit" class="login loginmodal-submit" value="Save">
-                                        </form>
-
-                                        </div>
-                                      </div>
-                                    </div>
+          </div>
+        </div>
+      </div>
 <!-- END EDIT PROFILE MODAL -->
 
 
@@ -630,130 +431,12 @@ You're awesome!
 
 
 
-
-
-<!-- 
-        <div class="grid-item">
-            <article class="material-card Red">
-                <h2>
-                    <span>Christopher Walken</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        The Deer Hunter
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="http://u.lorenzoferrara.net/marlenesco/material-card/thumb-christopher-walken.jpg">
-                    </div>
-                    <div class="mc-description">
-                        He has appeared in more than 100 films and television shows, including The Deer Hunter, Annie Hall, The Prophecy trilogy, The Dogs of War ...
-                        He has appeared in more than 100 films and television shows, including The Deer Hunter, Annie Hall, The Prophecy trilogy, The Dogs of War ...
-                        He has appeared in more than 100 films and television shows, including The Deer Hunter, Annie Hall, The Prophecy trilogy, The Dogs of War ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-
-        <div class="grid-item">
-            <article class="material-card Pink">
-                <h2>
-                    <span>Sean Penn</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        Mystic River
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="http://u.lorenzoferrara.net/marlenesco/material-card/thumb-sean-penn.jpg">
-                    </div>
-                    <div class="mc-description">
-                        He has won two Academy Awards, for his roles in the mystery drama Mystic River (2003) and the biopic Milk (2008). Penn began his acting career in television with a brief appearance in a 1974 episode of Little House on the Prairie ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div> -->
-
-        
-    <!--</div>-->
-    <!--<div class="row active-with-hover">-->
-
-      <!-- 
-        <div class="grid-item">
-            <article class="material-card Deep-Orange">
-                <h2>
-                    <span>Robert De Niro</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        Taxy Driver
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-robert-de-niro.jpg">
-                    </div>
-                    <div class="mc-description">
-                        His first major film roles were in the sports drama Bang the Drum Slowly (1973) and Martin Scorsese's crime film Mean Streets (1973). In 1974, after being turned down for the role of Sonny Corleone in the crime ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div> -->
-
-
     </div>
 </section>
 
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script scr="/static/project.js"></script>
 <script src="https://unpkg.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
-<script>
-    $(function() {
-        var $grid = $('.grid').masonry({
-            itemSelector: '.grid-item',
-            columnWidth: 290,
-        });
-        $('.material-card').materialCard();
-        $('.material-card').on('shown.material-card hidden.material-card', function (event) {
-            $grid.masonry();
-        });
-    });
-</script>
+<script scr="/static/project.js"></script>
+
 </body>
 </html>

@@ -44,8 +44,9 @@ kit_email = os.environ.get('KIT_EMAIL')
 def return_template():
     user_id = session.get('user_id')
     user = User.query.filter(User.id == user_id).first()
-    upcoming_events = Event.query.order_by(Event.date.asc()).limit(5).all()
-    print "upcoming events:", upcoming_events
+    # upcoming_events = Event.query.order_by(Event.date.asc()).limit(5).all()
+    upcoming_events = user.events[:5]
+
     return render_template('test.html', user=user, contacts=user.contacts, upcoming_events=upcoming_events)
 
 @app.route('/test2')
@@ -144,13 +145,13 @@ def index():
         return render_template("homepage4nl.html")
 
 
-@app.route('/users')
-def user_list():
-    """Show list of users."""
-    users = User.query.all()
-    user_id = session.get('user_id')
-    user = User.query.filter(User.id == user_id).first()
-    return render_template("user_list.html", users=users, user=user)
+# @app.route('/users')
+# def user_list():
+#     """Show list of users."""
+#     users = User.query.all()
+#     user_id = session.get('user_id')
+#     user = User.query.filter(User.id == user_id).first()
+#     return render_template("user_list.html", users=users, user=user)
 
 
 @app.route('/logout')
@@ -206,9 +207,7 @@ def login_process():
     email = request.form.get('login_email')
     login_password = request.form.get('login_password')
     # Fetch that user from DB as object
-    print email, login_password
     db_user = User.query.filter(User.email == email).first()
-    print db_user
     # If that user exists in DB:
     if db_user:
         # Verify password; redirect to their profile
@@ -237,29 +236,16 @@ def user_profile(user_id):
     return render_template("user_profile.html", user=user, contacts=contacts, upcoming_events=upcoming_events)
 
 
-@app.route('/user_profile')
-def user_profile1():
-    """New user profile / dashboard."""
-    user_id = session.get("user_id")
-    if user_id:
-        user = User.query.get(user_id)
-        contacts = Contact.query.filter(Contact.user_id == user_id).all()
-        return render_template('user_profile1.html', user=user, contacts=contacts)
-    else:
-        flash("You must log in or register to add events")
-        return redirect("/")
-
-
-@app.route('/add_event')
-def add_event():
-    """Let logged in users go to the new event form."""
-    user_id = session.get("user_id")
-    if user_id:
-        user = User.query.get(user_id)
-        return render_template("event_form.html", user=user)
-    else:
-        flash("You must log in or register to add events")
-        return redirect("/")
+# @app.route('/add_event')
+# def add_event():
+#     """Let logged in users go to the new event form."""
+#     user_id = session.get("user_id")
+#     if user_id:
+#         user = User.query.get(user_id)
+#         return render_template("event_form.html", user=user)
+#     else:
+#         flash("You must log in or register to add events")
+#         return redirect("/")
 
 
 @app.route('/add_event', methods=['POST'])
@@ -295,7 +281,7 @@ def handle_event_form():
     contact_id = new_contact.id
     date = request.form.get('date')
     print date
-    new_event = Event(contact_id=contact_id, template_id=new_template.id, date=date)
+    new_event = Event(contact_id=contact_id, user_id=user_id, template_id=new_template.id, date=date)
     db.session.add(new_event)
     db.session.commit()
 
@@ -375,16 +361,16 @@ def remove_event():
         return redirect("/")
 
 
-@app.route('/remove_contact/<contact_id>')
-def confirm(contact_id):
-    """Confirmation page to delete contact (and their events,templates) from DB."""
-    user_id = session.get("user_id")
-    if user_id:
-        contact = Contact.query.get(contact_id)
-        return render_template('remove_contact.html', contact=contact)
-    else:
-        flash("You must log in or register to remove contacts")
-        return redirect("/")
+# @app.route('/remove_contact/<contact_id>')
+# def confirm(contact_id):
+#     """Confirmation page to delete contact (and their events,templates) from DB."""
+#     user_id = session.get("user_id")
+#     if user_id:
+#         contact = Contact.query.get(contact_id)
+#         return render_template('remove_contact.html', contact=contact)
+#     else:
+#         flash("You must log in or register to remove contacts")
+#         return redirect("/")
 
 
     
@@ -461,7 +447,7 @@ def handle_new_event_for_contact():
     db.session.commit()
     # add event
     date = request.form.get('date')
-    new_event = Event(contact_id=contact_id, template_id=new_template.id, date=date)
+    new_event = Event(contact_id=contact_id, user_id=user_id, template_id=new_template.id, date=date)
     db.session.add(new_event)
     db.session.commit()
     # add ContactEvent association
@@ -474,15 +460,15 @@ def handle_new_event_for_contact():
     return redirect(url)
 
 
-@app.route('/edit_profile')
-def edit_profile():
-    user_id = session.get('user_id')
-    if user_id:
-        user = User.query.get(user_id)
-        return render_template('edit_profile.html', user=user)
-    else:
-        flash("You must log in or register to edit your profile")
-        return redirect("/")
+# @app.route('/edit_profile')
+# def edit_profile():
+#     user_id = session.get('user_id')
+#     if user_id:
+#         user = User.query.get(user_id)
+#         return render_template('edit_profile.html', user=user)
+#     else:
+#         flash("You must log in or register to edit your profile")
+#         return redirect("/")
 
 
 @app.route('/e_profile', methods=['POST'])

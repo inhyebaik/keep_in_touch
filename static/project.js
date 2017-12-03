@@ -244,12 +244,12 @@ $('.datefield').attr('max', maxDate);
 
 // show random message templates in textbox when adding new event ////////////// 
 function fillWithMessage(results) {
-    let msg = results['message']; 
+     msg = results['message']; 
     $('textarea.template_textarea').html(msg);
 }
 
 function getMessage(evt) {
-    let templateType = $(".template_type").val();
+    var templateType = $(".template_type").val();
     console.log(templateType);
     let url = "/msg.json";
     let formInputs = {"template_type" : templateType};
@@ -446,4 +446,14 @@ $(document).ready(function () {
     }
 
 });
+
+
+
+
+$(function() {
+        var $grid = $('.grid').masonry({
+            itemSelector: '.grid-item',
+            columnWidth: 290,
+        }); })
+
 
