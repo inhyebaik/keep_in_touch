@@ -2,17 +2,21 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!--     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="msapplication-tap-highlight" content="no">
-
+ -->
     <title>Profile</title>
     <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,200,500,600,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../dist/material-cards-auto-height.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/static/project.js"></script>
+
+
     <style type="text/css">
+
         html {
             position: relative;
             min-height: 100%;
@@ -31,8 +35,8 @@
             text-align: center;
             width: 200px;
             padding: 15px;
-            border: thin solid black;
             margin-top:10px;
+            background-color: #F0FFFF;
 
         }
 
@@ -73,10 +77,10 @@
 }
 
 
-.loginmodal-container input[type=text], input[type=password], input[type=phone], input[type=email] {
-  height: 44px;
-  font-size: 16px;
-  width: 100%;
+.loginmodal-container input[type=text], input[type=date],input[type=password], input[type=phone], input[type=email] {
+  height: 30px;
+  font-size: 14px;
+  width: 90%;
   margin-bottom: 10px;
   -webkit-appearance: none;
   background: #fff;
@@ -88,7 +92,7 @@
   -moz-box-sizing: border-box;
 }
 
-.loginmodal-container input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, input[type=phone]:hover {
+.loginmodal-container input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, input[type=date]:hover, input[type=phone]:hover {
   border: 1px solid #b9b9b9;
   border-top: 1px solid #a0a0a0;
   -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
@@ -138,19 +142,51 @@
 .login-help{
   font-size: 12px;
 }
-    </style>
+</style>
 
 
 </head>
 <body>
+
+<nav class="navbar navbar-toggleable-sm navbar-trans navbar-inverse">
+                <div class="container">
+                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggler-1" aria-controls="navbarToggler-1" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Bootstrap 4 Cover Nav</a>
+                    <div class="collapse navbar-collapse pull-xs-right justify-content-end" id="navbarToggler-1">
+                        <ul class="navbar-nav mt-2 mt-md-0">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Our Work</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Contact</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-white btn-outline" href="#"><i class="fa fa-user"></i> Login
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+    
 <section class="container">
     <div class="page-header">
         <h1>Profile<br>
             <small>Stay in touch</small></h1>
     </div>
+    <h2>Contacts</h2>
     <div class="row active-with-click grid">
 
 {% for contact in contacts|sort(attribute='name') %}
+
         <div class="grid-item">
             <article class="material-card Purple">
                 <h4>
@@ -162,11 +198,162 @@
                     </div>
                 <div class="mc-description">
                     {% if contact.events %}
-                    <h4>Events</h4>
+                    <h5>Events</h5>
                             {% for event in contact.events %}
-                            <span><small>[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]  : {{event.template.name}}<small></span>
+                            <small><a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]  : {{event.template.name}}</a></small>
 
 
+
+
+
+<!-- EVENT MODALS (need to pass in EVENT) ###################################-->
+
+      <!-- EDIT EVENT MODAL :: edit_event.html ////////////////////////////////////-->
+              <div class="modal fade" id="editevent-modal-{{event.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+              <div class="modal-dialog">
+              <div class="loginmodal-container">
+
+               <button data-dismiss="modal" class="close" type="button">
+                <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+              </button>
+             
+                <h2>Edit Message</h2>
+                <form action='/handle_edits', method='POST'>
+                <input type='hidden' name='event_id' value='{{ event.id }}'>
+                <input type='hidden' name='contact_id' value='{{ event.contacts[0].id }}'>
+
+      Contact name: <input type='text' name='contact_name' value='{{event.contacts[0].name}}' required> <br>
+      Contact's email: <input type='email' name='contact_email' value='{{event.contacts[0].email}}' required><br>
+      Contact's phone: <input type='phone' name='contact_phone' value='{{event.contacts[0].phone}}'> <br>
+<!--       Contact's address: <input type='text' name='contact_address' value='{{event.contacts[0].address}}'> <br> -->
+      Date to be sent: 
+      <input type="date" name='date' class="datefield" min="" max="" value="{{event.date.year}}-{{ event.date.month}}-{{ event.date.day}}" data-date-split-input="true" required/><br>
+      Subject: <input type='text' name='template_name' value='{{event.template.name}}'> <br>
+      Text: <br> <textarea name="template_text">{{event.template.text}}</textarea><br>
+
+                <input type="submit" class="login loginmodal-submit" value="Save">
+                </form>
+
+                <form action="/remove_event" method='POST'>
+                    <input type='hidden' name='event_id' value='{{ event.id }}'>
+                    <input type='submit' value="Remove Event">
+                </form>
+
+                </div>
+              </div>
+            </div>
+      <!-- END EDIT EVENT MODAL :: edit_event.html ////////////////////////////////-->
+
+
+<!-- END EVENT MODALS (where you need to pass in an event) ######################################-->
+
+
+
+
+
+
+
+
+
+
+                        {% endfor %}
+                {% endif %}
+                </div>
+                </div>
+
+               <div class="mc-footer">
+                    <h4>
+                    </h4>
+                    <a data-toggle="modal" data-target="#addeventcontact-modal-{{contact.id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                    <a class="fa fa-fw fa-facebook"></a>
+                    <a class="fa fa-fw fa-twitter"></a>
+                    <a class="fa fa-fw fa-linkedin"></a>
+                    <a class="fa fa-fw fa-google-plus"></a>
+                    <a class="fa fa-calendar-check-o"></a>
+                </div>
+            </article>
+        </div>
+
+
+
+<!-- ADD EVENT FOR CONTACT MODAL ////////////////////////////////////////////////////////////////-->
+        <div class="modal fade" id="addeventcontact-modal-{{contact.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+        <div class="loginmodal-container">
+         <button data-dismiss="modal" class="close" id='user-new-close' type="button">
+          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+        </button>
+
+          <h3>Add Event for {{ contact.name}}</h3><br>
+          <form id='neweventcontact' class='newevent' action='/handle_new_event_for_contact', method='POST'>
+          <label for="date">Date to be sent</label> 
+              <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" required/><br>
+          
+          <label for="subject">Message subject</label> <input type='text' name='template_name' required> <br>
+              
+          How do you want to greet them? 
+            <select name='greet'>
+                <option value='Dear'>Dear</option>
+                <option value='Hey'>Hey</option>
+                <option value='Hello'>Hello</option>
+            </select> <br>
+    
+
+        What do you want them to know? <br> ...or choose a prefilled message if you'd like!         
+            <select class='template_type2' name='template_type2'>
+                <option disabled selected value>Select prefilled</option>
+                <option value='ty'>Thank you</option>
+                <option value='hb'>Happy birthday</option>
+                <option value='fup'>Follow Up</option>
+                <option value='markov'>Random Generator</option>
+            </select> 
+            <br>
+                <textarea class='template_textarea2' name="body">You're awesome!</textarea>
+                <br>
+
+        How do you want to sign off? 
+            <select name='sign_off'>
+                <option value='Sincerely'>Sincerely</option>
+                <option value='Yours'>Yours</option>
+                <option value='Best'>Best</option>
+              </select> <br><br>
+            
+            <input type='hidden' name='contact_id' value='{{ contact.id }}'>
+          <input type="submit" class="login loginmodal-submit" id='user-new-submit' value="Add Event">
+          </form>
+
+          </div>
+        </div>
+      </div>
+<!-- END ADD EVENT FOR CONTACT MODAL ////////////////////////////////////////////////////////////////-->
+
+
+
+<!-- REMOVE CONTACT MODAL //////////////////////////////////////////////////////////////////////////-->
+    <div class="modal fade" id="removecontact-modal-{{contact.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+      <div class="loginmodal-container">
+      <button data-dismiss="modal" class="close" type="button">
+          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+      </button>
+
+      <h3>Are you sure you want to delete <u>{{ contact.name }}</u> as a contact?</h3>
+      and all of the nice messages you had in mind? <br> <br>
+        <ol>
+          {% for event in contact.events %}
+            <li> {{ event.template.name }}</li>
+          {% endfor %}
+        </ol> 
+        <br><br>
+            <form action='/remove_contact', method='POST'>
+                  <input type='hidden' name='contact_id' value='{{contact.id}}'>
+                <input type="submit" class="login loginmodal-submit" value='Yes, remove them out of my life'>
+          </form>
+
+          </div>
+        </div>
+      </div>
+<!-- END REMOVE CONTACT MODAL ////////////////////////////////////////////////////////////////-->
 <!-- EDIT CONTACT INFO MODAL //////////////////////////////////////////////////-->
         <div class="modal fade" id="editcontact-modal-{{contact.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
@@ -206,71 +393,6 @@
         </div>
       </div>
 <!-- END EDIT CONTACT INFO MODAL //////////////////////////////////////////////-->
-
-
-<!-- EVENT MODALS (need to pass in EVENT) ###################################-->
-
-      <!-- EDIT EVENT MODAL :: edit_event.html ////////////////////////////////////-->
-              <div class="modal fade" id="editevent-modal-{{event.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-              <div class="modal-dialog">
-              <div class="loginmodal-container">
-
-               <button data-dismiss="modal" class="close" type="button">
-                <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
-              </button>
-             
-                <h2><u>Edit Event Details</u></h2>
-                <form action='/handle_edits', method='POST'>
-                <input type='hidden' name='event_id' value='{{ event.id }}'>
-                <input type='hidden' name='contact_id' value='{{ event.contacts[0].id }}'>
-
-      Contact name: <input type='text' name='contact_name' value='{{event.contacts[0].name}}' required> <br>
-      Contact's email: <input type='email' name='contact_email' value='{{event.contacts[0].email}}' required><br>
-      Contact's phone: <input type='phone' name='contact_phone' value='{{event.contacts[0].phone}}'> <br>
-      Contact's address: <input type='text' name='contact_address' value='{{event.contacts[0].address}}'> <br>
-      Date to be sent: 
-      <input type="date" name='date' class="datefield" min="" max="" value="{{event.date.year}}-{{ event.date.month}}-{{ event.date.day}}" data-date-split-input="true" required/><br>
-      Subject: <input type='text' name='template_name' value='{{event.template.name}}'> <br>
-      Text: <textarea name="template_text">{{event.template.text}}</textarea><br>
-
-                <input type="submit" class="login loginmodal-submit" value="Save">
-                </form>
-
-                <form action="/remove_event" method='POST'>
-                    <input type='hidden' name='event_id' value='{{ event.id }}'>
-                    <input type='submit' value="Remove Event">
-                </form>
-
-                </div>
-              </div>
-            </div>
-      <!-- END EDIT EVENT MODAL :: edit_event.html ////////////////////////////////-->
-
-
-<!-- END EVENT MODALS (where you need to pass in an event) ######################################-->
-
-
-
-
-
-
-                        {% endfor %}
-                {% endif %}
-                </div>
-                </div>
-
-               <div class="mc-footer">
-                    <h4>
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-address-card-o"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-
-
 
 
 {% endfor %}
@@ -704,40 +826,7 @@
                 </div>
             </article>
         </div>
-        <div class="grid-item">
-            <article class="material-card Amber">
-                <h2>
-                    <span>Marlon Brando</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        The Godfather
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-marlon-brando.jpg">
-                    </div>
-                    <div class="mc-description">
-                        He is hailed for bringing a gripping realism to film acting, and is frequently cited as the greatest and most influential actor of all time.[2] A cultural icon, Brando is most famous for his Academy ...
-                        He is hailed for bringing a gripping realism to film acting, and is frequently cited as the greatest and most influential actor of all time.[2] A cultural icon, Brando is most famous for his Academy ...
-                        He is hailed for bringing a gripping realism to film acting, and is frequently cited as the greatest and most influential actor of all time.[2] A cultural icon, Brando is most famous for his Academy ...
-                        He is hailed for bringing a gripping realism to film acting, and is frequently cited as the greatest and most influential actor of all time.[2] A cultural icon, Brando is most famous for his Academy ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
+
         <div class="grid-item">
             <article class="material-card Orange">
                 <h2>
@@ -801,108 +890,12 @@
                 </div>
             </article>
         </div>
-        <div class="grid-item">
-            <article class="material-card Brown">
-                <h2>
-                    <span>Steve Mcqueen</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        Papillon
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-steve-mcqueen.jpg">
-                    </div>
-                    <div class="mc-description">
-                        Called "The King of Cool", his "anti-hero" persona, developed at the height of the Vietnam War-era counterculture, made him a top box-office draw of the 1960s and 1970s. McQueen received an Academy Award nomination for his ...
-                        Called "The King of Cool", his "anti-hero" persona, developed at the height of the Vietnam War-era counterculture, made him a top box-office draw of the 1960s and 1970s. McQueen received an Academy Award nomination for his ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-        <div class="grid-item">
-            <article class="material-card Grey">
-                <h2>
-                    <span>Rugter Hauer</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        Blade Runner
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-rugter-hauer.jpg">
-                    </div>
-                    <div class="mc-description">
-                        Blonde, blue-eyed, tall and handsome Dutch actor Rutger Hauer has an international reputation for playing everything from romantic leads to action heroes to sinister villains. Hauer was born in Breukelen, a town in the province ...
-                        Blonde, blue-eyed, tall and handsome Dutch actor Rutger Hauer has an international reputation for playing everything from romantic leads to action heroes to sinister villains. Hauer was born in Breukelen, a town in the province ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
-        <div class="grid-item">
-            <article class="material-card Blue-Grey">
-                    <h2>
-                    <span>Morgan Freeman</span>
-                    <strong>
-                        <i class="fa fa-fw fa-star"></i>
-                        Glory
-                    </strong>
-                </h2>
-                <div class="mc-content">
-                    <div class="img-container">
-                        <img class="img-responsive" src="https://dl.dropboxusercontent.com/u/2691310/github/material-card/thumb-morgan-freeman.jpg">
-                    </div>
-                    <div class="mc-description">
-                        Freeman has received Academy Award nominations for his performances in Street Smart, Driving Miss Daisy, The Shawshank Redemption and Invictus ...
-                        Freeman has received Academy Award nominations for his performances in Street Smart, Driving Miss Daisy, The Shawshank Redemption and Invictus ...
-                        Freeman has received Academy Award nominations for his performances in Street Smart, Driving Miss Daisy, The Shawshank Redemption and Invictus ...
-                    </div>
-                </div>
-                <a class="mc-btn-action">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <div class="mc-footer">
-                    <h4>
-                        Social
-                    </h4>
-                    <a class="fa fa-fw fa-facebook"></a>
-                    <a class="fa fa-fw fa-twitter"></a>
-                    <a class="fa fa-fw fa-linkedin"></a>
-                    <a class="fa fa-fw fa-google-plus"></a>
-                </div>
-            </article>
-        </div>
+
+
     </div>
 </section>
 
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="../static/jquery.material-cards.min.js"></script>
 <script scr="/static/project.js"></script>
 <script src="https://unpkg.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
 <script>

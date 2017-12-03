@@ -46,6 +46,10 @@ def return_template():
     user = User.query.filter(User.id == user_id).first()
     return render_template('test.html', contacts=user.contacts)
 
+@app.route('/test2')
+def return_test():
+    return render_template('test_index.html')
+
 ########### ROUTES FOR AJAX REQUESTS ############
 
 @app.route('/quote')
