@@ -2,7 +2,7 @@
 env
 venv
 *pyc
-*DS_Store*
+.DS_Store
 *reference*
 ngrok
 node_modules
