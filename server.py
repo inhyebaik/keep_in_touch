@@ -44,7 +44,7 @@ kit_email = os.environ.get('KIT_EMAIL')
 def return_template():
     user_id = session.get('user_id')
     user = User.query.filter(User.id == user_id).first()
-    return render_template('homepage1.html', user=user)
+    return render_template('test.html', contacts=user.contacts)
 
 ########### ROUTES FOR AJAX REQUESTS ############
 
@@ -604,7 +604,7 @@ if __name__ == "__main__":
     #     app = threading.Thread(name='app', target=run_app)
     #     sched.start()
     #     app.start()
-    run_jobs(app)
+    # run_jobs(app)
     run_app()
 
     

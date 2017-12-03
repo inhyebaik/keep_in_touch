@@ -6,10 +6,9 @@
 <head>
   <meta charset='UTF-8'>
     <link rel="stylesheet" href="/static/styles.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="/static/project.js"></script>
     <title>Keep in Touch</title>
 </head>
 
@@ -25,7 +24,7 @@
 
 <div>
   <header style="">
-    <nav class="navbar navbar-default tembus">
+    <nav class="navbar navbar-default tembus" style="border-color:none;">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -44,6 +43,7 @@
       </div>
     </nav>
 </div>
+
 
 
 
@@ -75,7 +75,7 @@
                       onlogin="loginGetInfo2();">
           </fb:login-button>
           <br>
-          <a data-dismiss="modal" data-toggle="modal" href="#lost" data-target="#register-modal">Already a user?</a>
+          <a data-dismiss="modal" data-toggle="modal" data-target="#register-modal">Already a user?</a>
 
           </div>
       </div>
@@ -137,8 +137,31 @@
       {% endfor %}
     </ul>
 
-    <h1>Keep in Touch</h1>
+
+
+
+
+
+    <div class='container'>
+          <h1>Keep in Touch</h1>
     Keep in Touch lets you automate keeping in touch 
+      <div class='row'>
+        
+        <div class="col-sm-6 col-xs-12"> 
+          <div class='img1'>
+            <img src="/static/img2.png" height='500px'>
+          </div>
+        </div>
+
+        <div class='col-sm-6'>
+          <h1>Keep in Touch</h1>
+          <div> 
+          </div>
+        </div>
+      
+
+      </div>
+    </div>
 
 <br>
 <hr>

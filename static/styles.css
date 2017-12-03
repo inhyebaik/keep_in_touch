@@ -3,12 +3,14 @@ html {
 }
 body {
     height: 100%;
-    font-family: sans-serif;
+    font-family: 'Roboto';
     /*background: url('https://pbs.twimg.com/profile_background_images/485886649104998401/hyuYt7Jf.jpeg') no-repeat;*/
-    background: linear-gradient(45deg, #4B1248, #F2F2F2) ;
+    /*background: linear-gradient(45deg, #4B1248, #F2F2F2) ;*/
+    background-color: white;
     font-size: 20px;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    border-color: none;
 }
 
 
@@ -18,8 +20,6 @@ footer {
    position: relative;
    /*padding: 2px;*/
    bottom:0;
-   /*width:80%;*/
-   /*background: lightGray;*/
 }
 
 h1 {
@@ -60,6 +60,7 @@ textarea {
 body a {
   color: #252854;
 }
+
 
 
 /****** LOGIN MODAL ******/
@@ -116,9 +117,7 @@ body a {
   font-weight: 700;
   height: 36px;
   padding: 0 8px;
-/* border-radius: 3px; */
-/* -webkit-user-select: none;
-  user-select: none; */
+
 }
 
 .loginmodal-submit{
@@ -161,19 +160,15 @@ body a {
 
 .navbar-default{
   background-color: transparent; !important; 
-  border: none;
+  border-color: none;
 }
 .navbar-default .navbar-header > a {
-  color: #ecf0f1 ; 
-  border: none;
 }
 .navbar-default .navbar-nav > li > a{
-  color:#ecf0f1 ;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-  border-bottom: none;
   background-color: transparent;
 }
 
@@ -239,7 +234,6 @@ body a {
     }
     @media all and (transform-3d), (-webkit-transform-3d) {
       > .item{
-        // use your favourite prefixer here
         transition: 500ms ease-in-out left;
         transition: 500ms ease-in-out all;
         backface-visibility: visible;
@@ -269,3 +263,6 @@ body a {
 }
 
 
+img{
+  border: none;
+}
