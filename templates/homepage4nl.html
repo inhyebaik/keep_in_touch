@@ -5,6 +5,7 @@
 
 <head>
   <meta charset='UTF-8'>
+    <link rel="icon" href="http://rs915.pbsrc.com/albums/ac354/Leigh_1995_clh/Harry%20Potter/Hedwig.png~c200">
     <link rel="stylesheet" href="/static/styles.css">
     <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,200,500,600,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -316,7 +317,7 @@
     <!-- Flash messages -->
     <ul class='red'>
       {% for message in get_flashed_messages() %}
-        <li> {{ message.decode('utf-8') }} </li>
+        {{ message.decode('utf-8') }} 
       {% endfor %}
     </ul>
 
@@ -343,8 +344,11 @@
         </div> -->
       <div class="row">
     <div class="col-sm-12">
-      <img src="/static/landingpage2.png">
-
+      <img src="/static/landingpage2.png" usemap='#landingpage'>
+      <map name='landingpage'>
+        <area data-dismiss="modal" data-toggle="modal" coords="103,363,296,389" shape="rect" data-target="#register-modal" alt="login">
+        <area data-dismiss="modal" data-toggle="modal" coords="297,432,103,393" shape="rect" data-target="#login-modal" alt="fb_login" >
+      </map>
     </div>
   </div>
 </div>
@@ -386,11 +390,11 @@
 
 <footer>
           <div class="container">
-            <div class="col-sm-10" >
+            <div class="col-sm-12" >
                 <span> 
 
 
-                  <b>Relationships are important -- </b>Keep in Touch helps you automate keeping in touch with people, meaningfully or at all.
+                  <b>Relationships are important. </b>Keep in Touch helps you automate keeping in touch with people, meaningfully or at all.
 
                 </span>
                 <br><br>
@@ -399,9 +403,10 @@
 
           </div>
           </div>
-
 <script src="/static/project.js"></script>
 </footer>
+
+
 
 
 </body>

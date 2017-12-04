@@ -145,15 +145,6 @@ def index():
         return render_template("homepage4nl.html")
 
 
-# @app.route('/users')
-# def user_list():
-#     """Show list of users."""
-#     users = User.query.all()
-#     user_id = session.get('user_id')
-#     user = User.query.filter(User.id == user_id).first()
-#     return render_template("user_list.html", users=users, user=user)
-
-
 @app.route('/logout')
 def log_out():
     """Log user out; clear out session; confirm log out; redirect to homepage"""
