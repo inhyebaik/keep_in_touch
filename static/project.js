@@ -229,22 +229,30 @@ $('.contact-name').on("click", showOptions);
 
 
 // When creating an event, ensure dates are today or in the future /////////////
-var today1 = new Date();
-var dd = today1.getDate();
-var mm = today1.getMonth()+1; //January is 0!
-var yyyy = today1.getFullYear();
-var maxYear = parseInt(today1.getFullYear())+100;
- if(dd<10){ dd='0'+dd } 
-    if(mm<10){ mm='0'+mm } 
-today1 = yyyy+'-'+mm+'-'+dd;
-var maxDate = maxYear+'-'+mm+'-'+dd;
-$('.datefield').attr('min', today1);
-$('.datefield').attr('max', maxDate);
 
+$(document).ready(function() {
+    var today1 = new Date();
+    var dd = today1.getDate();
+    var mm = today1.getMonth()+1; //January is 0!
+    var yyyy = today1.getFullYear();
+    var maxYear = parseInt(today1.getFullYear())+100;
+     if(dd<10){ 
+        dd='0'+dd ;
+        console.log(dd);} 
+
+        if(mm<10){ mm='0'+mm } 
+    today1 = yyyy+'-'+mm+'-'+dd;
+    var maxDate = maxYear+'-'+mm+'-'+dd;
+    $('.datefield').attr('min', today1);
+    $('.datefield').attr('max', maxDate);
+    console.log("hello!!");
+        // console.log($('.datefield').val());
+})
 
 // show random message templates in textbox when adding new event ////////////// 
 function fillWithMessage(results) {
-     msg = results['message']; 
+    console.log(results);
+    var msg = results['message']; 
     $('textarea.template_textarea').html(msg);
 }
 
@@ -256,7 +264,10 @@ function getMessage(evt) {
     $.post(url, formInputs, fillWithMessage);
 }
 
+
+$(document).ready(function() {
 $('.template_type').on('change', getMessage);
+})
 
 // adding event for specific contact
 // show random message templates in textbox when adding new event ////////////// 
@@ -275,9 +286,9 @@ function getMessage2(evt) {
     $.post(url, formInputs, fillWithMessage2);
 }
 
+$(document).ready(function() {
 $('.template_type2').on('change', getMessage2);
-
-
+})
 
 // reset form after closing/submitting /////////////////////////////////////////
 function returnDefault(evt) {
@@ -294,6 +305,16 @@ $(window).click(function(){$('.red').fadeOut();});
 
 
 // choose-existing: when adding new event, pre-fills contact fields ////////////
+function fillInForm(results) {
+    $('input[name=contact_id]').val(results['id']);
+    $('input[name=contact_name]').val(results['name']);
+    $('input[name=contact_email]').val(results['email']);
+    $('input[name=contact_address]').val(results['address']);
+    $('input[name=contact_phone]').val(results['phone']);
+    $('form.newevent').attr("action", "/handle_new_event_for_contact");
+    $('form.newevent').attr("method", "POST");
+}
+
 function getContactInfo(evt) {
     let contactID = $('.choose-existing').val();
     console.log(contactID);
@@ -302,15 +323,10 @@ function getContactInfo(evt) {
     $.post(url, formInputs, fillInForm);
 }
 
-function fillInForm(results) {
-    $('input[name=contact_name]').val(results['name']);
-    $('input[name=contact_email]').val(results['email']);
-    $('input[name=contact_address]').val(results['address']);
-    $('input[name=contact_phone]').val(results['phone']);
-}
-
+$(document).ready(function () {
 $('.choose-existing').on('change', getContactInfo)
 
+})
 
 
 // Carousel ////////////////////////////////////////////////////////////////////

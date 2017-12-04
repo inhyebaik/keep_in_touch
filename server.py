@@ -73,11 +73,11 @@ def return_msg():
     return jsonify({"message": msg})
 
 
-@app.route('/contact.json', methods=['POST'])
-def return_contact_info():
-    contact_id = request.form.get('contact_id')
-    contact = Contact.query.get(contact_id)
-    return jsonify({'name': contact.name, 'email': contact.email, 'address': contact.address, 'phone': contact.phone})
+# @app.route('/contact.json', methods=['POST'])
+# def return_contact_info():
+#     contact_id = request.form.get('contact_id')
+#     contact = Contact.query.get(contact_id)
+#     return jsonify({'name': contact.name, 'email': contact.email, 'address': contact.address, 'phone': contact.phone})
 
 
 def add_fb_conctacts(contacts_list):
@@ -238,18 +238,28 @@ def user_profile(user_id):
 #         flash("You must log in or register to add events")
 #         return redirect("/")
 
+@app.route('/contact.json', methods=['POST'])
+def return_contact_info():
+    contact_id = request.form.get('contact_id')
+    contact = Contact.query.get(contact_id)
+    return jsonify({'id':contact.id, 'name': contact.name, 'email': contact.email, 'address': contact.address, 'phone': contact.phone})
+
 
 @app.route('/add_event', methods=['POST'])
 def handle_event_form():
     """Validates and adds new event and template to DB."""
     # Need to add the contact and template before creating an event
 
-    # add contact
+    # if for an existing contact
+    
+    id = request.form.get('contact_id')
     name = request.form.get('contact_name')
     email = request.form.get('contact_email')
     phone = request.form.get('contact_phone')
     address = request.form.get('contact_address')
     user_id = session.get("user_id")
+    if id:
+        existing_contact = Contact.query.get(id)
     new_contact = Contact(name=name, email=email, phone=phone, address=address, user_id=user_id)
     db.session.add(new_contact)
     db.session.commit()

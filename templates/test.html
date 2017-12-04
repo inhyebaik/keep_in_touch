@@ -141,7 +141,7 @@
         </button>
 
           <h1>Create New Event</h1><br>
-          <form id='basenewevent' class='newevent' action='/add_event', method='POST'>
+          <form class='newevent' action='/add_event', method='POST'>
 
               <!-- <label for="fname">Contact's Name</label> -->
 
@@ -152,7 +152,8 @@
                 {% endfor %}
               </select>
               <br>
-
+              <!-- if choose-existing then jQuery will set hidden input value of id -->
+              <input type='hidden' name='contact_id'>
               <input type="text" name="contact_name" placeholder="Name"><br>
 
 
@@ -370,11 +371,11 @@ You're awesome!
 
       <h3>Are you sure you want to delete <u>{{ contact.name }}</u> as a contact?</h3>
       and all of the nice messages you had in mind? <br> <br>
-        <ol>
+
           {% for event in contact.events %}
-            <li> {{ event.template.name }}</li>
+            <li> {{ event.template.name }}</li><br>
           {% endfor %}
-        </ol> 
+
         <br><br>
             <form action='/remove_contact', method='POST'>
                   <input type='hidden' name='contact_id' value='{{contact.id}}'>
@@ -435,7 +436,8 @@ You're awesome!
     </div>
 </section>
 
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<!-- <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://unpkg.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
 <script scr="/static/project.js"></script>
 
