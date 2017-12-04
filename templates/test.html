@@ -19,7 +19,6 @@
 </head>
 
 
-
 <body>
 
 <!-- NAVBAR -->
@@ -54,10 +53,10 @@
 
 
 <!-- UPCOMING EVENTS CAROUSEL  -->
-{% if upcoming_events %}
+{% if user.events %}
 <div class="container">
-  <h1 id='carousel_h1'>Upcoming events</h1>
-  <h2><a data-toggle="modal" data-target="#eventform-modal">Add Event</a></h2>
+  <h1 id='carousel_h1'>Queue</h1>
+  <!-- <h4><a data-toggle="modal" data-target="#eventform-modal">&#10753; New Event</a></h4> -->
   <div class="row">
     <div class="col-md-12">
       <div class="carousel slide multi-item-carousel" id="theCarousel">
@@ -65,7 +64,7 @@
 
 
  
-     {% for event in upcoming_events %} 
+     {% for event in user.events %} 
           {% if not event.job_done %}
           <div class="item active">
             <div class="col-xs-4">
@@ -74,7 +73,7 @@
                 {{event.template.name}} message for: <br>
                 {{event.contacts[0].name}} 
                 <br>
-                 <img src="{{event.contacts[0].pic_url}}" align="left" class="img-responsive" hspace="10">
+                 <img src="{{event.contacts[0].pic_url}}" align="left" class="img-responsive sm-circle" hspace="10">
                 <span> {{event.template.text[:450]}}...</span>
               </a>
             </div>
@@ -140,9 +139,10 @@
           <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
         </button>
 
-          <h1>Create New Event</h1><br>
+          <h2>Create New Event</h2>
           <form class='newevent' action='/add_event', method='POST'>
-
+          <label for="date">Date to be sent</label> 
+              <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" placeholder='Date to be sent'required/><br>
               <!-- <label for="fname">Contact's Name</label> -->
 
                 <select class='choose-existing' name='choose-existing'>
@@ -163,24 +163,22 @@
               <!-- <label for="phone">Contact's Phone</label> -->
               <input type="phone" name="contact_phone" placeholder="+1">
 
-          <label for="date">Date to be sent</label> 
-              <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" placeholder='Date to be sent'required/><br>
+
           
           <!-- <label for="subject">Message subject</label>  -->
           <input type='text' name='template_name' placeholder='Message Subject'required> <br>
               
-          How do you want to greet them? 
+<!--           How do you want to greet them? 
             <select name='greet'>
                 <option value='Dear'>Dear</option>
                 <option value='Hey'>Hey</option>
                 <option value='Hello'>Hello</option>
-            </select> <br>
-    
+            </select> <br> -->
+      <label for='template_text'>Message</label> <br>
 
-        What do you want them to know? <br> ...or choose a prefilled message if you'd like!         
             <select class='template_type' name='template_type'>
-                <option disabled selected value>Select prefilled</option>
-                <option value='ty'>Thank you</option>
+                <option disabled selected value>Choose Curated</option>
+                <option value='ty'>Gratitude</option>
                 <option value='hb'>Happy birthday</option>
                 <option value='fup'>Follow Up</option>
             </select> 
@@ -190,12 +188,12 @@ You're awesome!
                 </textarea>
                 <br>
 
-        How do you want to sign off? 
+<!--         Sign off
             <select name='sign_off'>
                 <option value='Sincerely'>Sincerely</option>
                 <option value='Yours'>Yours</option>
                 <option value='Best'>Best</option>
-              </select> <br><br>
+              </select> <br><br> -->
             
           <input type="submit" class="login loginmodal-submit" id='base-new-submit' value="Add New Contact/Event">
           </form>
@@ -216,7 +214,7 @@ You're awesome!
 
     <div class="row active-with-click grid">
 
-{% for contact in contacts|sort(attribute='name') %}
+{% for contact in user.contacts|sort(attribute='name') %}
 
         <div class="grid-item">
             <article class="material-card Purple">
@@ -321,18 +319,18 @@ You're awesome!
               <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" required/><br>
           
           <label for="subject">Message subject</label> <input type='text' name='template_name' required> <br>
-           <label for=greet>How do you want to greet them? </label>   
+           
+           <!-- <label for=greet>How do you want to greet them? </label>   
             <select name='greet'>
                 <option value='Dear'>Dear</option>
                 <option value='Hey'>Hey</option>
                 <option value='Hello'>Hello</option>
-            </select> <br>
+            </select> <br> -->
     
-
-        What do you want them to know? <br> ...or choose a prefilled message if you'd like!         
+        <label for="message">Message</label><br>
             <select class='template_type2' name='template_type2'>
-                <option disabled selected value>Select prefilled</option>
-                <option value='ty'>Thank you</option>
+                <option disabled selected value>Choose Curated</option>
+                <option value='ty'>Gratitude</option>
                 <option value='hb'>Happy birthday</option>
                 <option value='fup'>Follow Up</option>
             </select> 
@@ -340,12 +338,12 @@ You're awesome!
                 <textarea class='template_textarea2' name="body">You're awesome!</textarea>
                 <br>
 
-        How do you want to sign off? 
+<!--         How do you want to sign off? 
             <select name='sign_off'>
                 <option value='Sincerely'>Sincerely</option>
                 <option value='Yours'>Yours</option>
                 <option value='Best'>Best</option>
-              </select> <br><br>
+              </select> <br><br> -->
             
             <input type='hidden' name='contact_id' value='{{ contact.id }}'>
           <input type="submit" class="login loginmodal-submit" id='user-new-submit' value="Add Event">

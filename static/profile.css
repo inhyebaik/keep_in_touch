@@ -1,41 +1,47 @@
 html {
   position: relative;
   min-height: 100%;
-    background-color: #ECEFF1 !important;
-  }
+  background-color: #ECEFF1 !important;
+}
+
 body {
-            background-color: #ECEFF1 !important;
-            color: #37474F;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 300;
-            font-size: 16px;
-            padding-top: 70px; 
+    background-color: #ECEFF1 !important;
+    color: #37474F;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    padding-top: 70px; 
+}
 
-        }
-        h1, h2, h3 {
-            font-weight: 100;
-        }
-        .grid-item {
-            text-align: center;
-            width: 200px;
-            padding: 15px;
-            margin-top:10px;
-            background-color: #F0FFFF;
+h1, h2, h3 {
+    font-weight: 100;
+    font-weight: bolder;
+}
 
-        }
+div {
+    text-align: center;
+}
 
+.grid-item {
+    text-align: center;
+    width: 200px;
+    padding: 15px;
+    margin-top:10px;
+    background-color: #F0FFFF;
+}
 
+.img-circle{
+    border-radius: 50%;
+    display: block;
+    margin: auto;
+}
 
-        .img-circle{
-            border-radius: 50%;
-            display: block;
-            margin: auto;
-        }
-
-        div {
-            text-align: center;
-        }
-
+.sm-circle{
+    border-radius: 50px;
+    width: 80px;
+    display: block;
+    margin: auto;
+}
 
 
 /****** LOGIN MODAL ******/
@@ -76,6 +82,12 @@ body {
   padding: 0 8px;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
+}
+textarea {
+  height: 70px;
+  font-size: 13px;
+  width: 90%;
+  padding: 0 8px;
 }
 
 .loginmodal-container input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, input[type=date]:hover, input[type=phone]:hover {

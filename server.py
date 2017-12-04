@@ -43,11 +43,18 @@ kit_email = os.environ.get('KIT_EMAIL')
 @app.route('/test')
 def return_template():
     user_id = session.get('user_id')
-    user = User.query.filter(User.id == user_id).first()
+    user = User.query.get(user_id)
     # upcoming_events = Event.query.order_by(Event.date.asc()).limit(5).all()
-    upcoming_events = user.events[:5]
-
-    return render_template('test.html', user=user, contacts=user.contacts, upcoming_events=upcoming_events)
+    if user:
+        print "user found:", user
+        try:
+            return render_template('test.html', user=user)
+        except:
+            print "hit pass"
+            pass
+    else:
+        print "not logged in"
+        return redirect("/")
 
 @app.route('/test2')
 def return_test():
@@ -85,7 +92,7 @@ def add_fb_conctacts(contacts_list):
     user_id = session['user_id']
     for thing in contacts_list:
         try:
-            name = thing[0]
+            name = thing[0].encode('utf-8')
             pic_url = thing[1]
             c = Contact(name=name, pic_url=pic_url, user_id=user_id)
             db.session.add(c)
@@ -260,11 +267,14 @@ def handle_event_form():
     db.session.commit()
 
     # get inputs from form for template text
-    greet = request.form.get('greet')
-    sign_off = request.form.get('sign_off')
+    # greet = request.form.get('greet')
+    greet = "Hi"
+    # sign_off = request.form.get('sign_off')
+    sign_off = "Yours"
     body = request.form.get('body')
     user_fname = User.query.get(user_id).fname
-    template_text = "{} {}, \n{} \n{},\n{}".format(greet, name.encode('utf-8'), body, sign_off,
+    contact_fname = name.encode('utf-8').split()[0]
+    template_text = "{} {}, \n{} \n{},\n{}".format(greet, contact_fname, body, sign_off,
                                                    user_fname)
 
     # add template
@@ -432,19 +442,31 @@ def handle_new_event_for_contact():
     # if receiving from create_new_event form AND they updated the contact's information,
     # update DB
     if contact:
-        name = request.form.get('contact_name')
-        email = request.form.get('contact_email')
-        phone = request.form.get('contact_phone')
-        address = request.form.get('contact_address')
-        contact.name, contact.email, contact.phone, contact.address = name, email, phone, address
-        db.session.commit()
-
+        if request.form.get('contact_name'):
+            name = request.form.get('contact_name')
+            contact.name = name
+            db.session.commit()
+        if request.form.get('contact_email'):
+            email = request.form.get('contact_email')
+            contact.email = email
+            db.session.commit()
+        if request.form.get('contact_phone'):
+            phone = request.form.get('contact_phone')
+            contact.phone = phone
+            db.session.commit()
+        if request.form.get('contact_address'):
+            address = request.form.get('contact_address')
+            contact.address = address
+            db.session.commit()
     # get inputs from form for template text
-    greet = request.form.get('greet')
-    sign_off = request.form.get('sign_off')
+    # greet = request.form.get('greet')
+    greet = "Hi"
+    # sign_off = request.form.get('sign_off')
+    sign_off = "Yours"
     body = request.form.get('body')
+    contact_fname = contact.name.encode('utf-8').split()[0]
     user_fname = user.fname
-    template_text = "{} {}, \n{} \n{},\n{}".format(greet, contact.name.encode('utf-8'), body, sign_off,
+    template_text = "{} {}, \n{} \n{},\n{}".format(greet, contact_fname, body, sign_off,
                                                    user_fname)
     # add template
     template_name = request.form.get('template_name')

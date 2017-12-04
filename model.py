@@ -56,7 +56,7 @@ class Contact(db.Model):
     # address information
     address = db.Column(db.Text)
     # picture from FB
-    pic_url = db.Column(db.Text)
+    pic_url = db.Column(db.Text, default="/static/defaultpic.jpg")
     # A contact belongs to a user
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship("User", backref=db.backref("contacts", order_by=id))
@@ -64,7 +64,7 @@ class Contact(db.Model):
 
     def __repr__(self):
         """Provide better representation."""
-        return "<Contact id={} name={}>".format(self.id, self.name)
+        return "<Contact id={} name={}>".format(self.id, self.name.encode('utf-8'))
 
 
 
