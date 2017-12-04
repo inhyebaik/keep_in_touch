@@ -250,16 +250,11 @@ def handle_event_form():
     """Validates and adds new event and template to DB."""
     # Need to add the contact and template before creating an event
 
-    # if for an existing contact
-    
-    id = request.form.get('contact_id')
     name = request.form.get('contact_name')
     email = request.form.get('contact_email')
     phone = request.form.get('contact_phone')
     address = request.form.get('contact_address')
     user_id = session.get("user_id")
-    if id:
-        existing_contact = Contact.query.get(id)
     new_contact = Contact(name=name, email=email, phone=phone, address=address, user_id=user_id)
     db.session.add(new_contact)
     db.session.commit()
@@ -434,6 +429,16 @@ def handle_new_event_for_contact():
     # Get contact object (hidden input from event_for_contact.html)
     contact_id = request.form.get('contact_id')
     contact = Contact.query.get(contact_id)
+    # if receiving from create_new_event form AND they updated the contact's information,
+    # update DB
+    if contact:
+        name = request.form.get('contact_name')
+        email = request.form.get('contact_email')
+        phone = request.form.get('contact_phone')
+        address = request.form.get('contact_address')
+        contact.name, contact.email, contact.phone, contact.address = name, email, phone, address
+        db.session.commit()
+
     # get inputs from form for template text
     greet = request.form.get('greet')
     sign_off = request.form.get('sign_off')

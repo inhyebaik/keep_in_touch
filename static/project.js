@@ -311,6 +311,7 @@ function fillInForm(results) {
     $('input[name=contact_email]').val(results['email']);
     $('input[name=contact_address]').val(results['address']);
     $('input[name=contact_phone]').val(results['phone']);
+    // given an existing contact, change form action 
     $('form.newevent').attr("action", "/handle_new_event_for_contact");
     $('form.newevent').attr("method", "POST");
 }
