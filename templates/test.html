@@ -52,58 +52,38 @@
 
 
 
-<!-- UPCOMING EVENTS CAROUSEL  -->
+<!-- UPCOMING EVENTS  -->
 {% if user.events %}
 <div class="container">
-  <h1 id='carousel_h1'>Queue</h1>
+<h3>&#8678; Messages To Be Sent</h3>
   <!-- <h4><a data-toggle="modal" data-target="#eventform-modal">&#10753; New Event</a></h4> -->
   <div class="row">
-    <div class="col-md-12">
-      <div class="carousel slide multi-item-carousel" id="theCarousel">
-        <div class="carousel-inner">
-
-
- 
-     {% for event in user.events %} 
+    
+     {% for event in user.events|sort(attribute='date') %} 
           {% if not event.job_done %}
-          <div class="item active">
-            <div class="col-xs-4">
+            <div class="col-xs-3 col-lg-2 queue-div">
               <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">
-                 [{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]  
-                {{event.template.name}} message for: <br>
-                {{event.contacts[0].name}} 
-                <br>
-                 <img src="{{event.contacts[0].pic_url}}" align="left" class="img-responsive sm-circle" hspace="10">
-                <span> {{event.template.text[:450]}}...</span>
+                 <span class='queue-text'> <p><span class='queue-name'>{{event.contacts[0].name}}</span><br>
+                  [{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]<br>
+                 <img src="{{event.contacts[0].pic_url}}" class="img-responsive sm-circle" hspace="10">
+              <b><span style='color:black; font-size:15px';>{{event.template.name[:10]}}</span></b></p></span>
               </a>
             </div>
-          </div>
+         
           {% endif %}
    {% endfor %}
 
-
-          <div class="item">
-            <div class="col-xs-4"><a data-toggle="modal" data-target="#eventform-modal"><img src="" class="img-responsive" height=200px></a></div>
-          </div>
-
-          <!-- add  more items here -->
-
-
-          <!--  Example item end -->
-        </div>
-        <a class="left carousel-control" href="#theCarousel" data-slide="prev"><i class="glyphicon glyphicon-chevron-left"></i></a>
-        <a class="right carousel-control" href="#theCarousel" data-slide="next"><i class="glyphicon glyphicon-chevron-right"></i></a>
-      </div>
-    </div>
-  </div>
+ </div>
 </div>
+
+
 {% endif %}
+
+
+
+<!-- END UPCOMING EVENTS -->
+
 <br><br>
-
-
-<!-- END UPCOMING EVENTS CAROUSEL -->
-
-
 
 
 <!-- EDIT PROFILE MODAL -->
@@ -218,18 +198,18 @@ You're awesome!
 
         <div class="grid-item">
             <article class="material-card Purple">
-                <h4>
-                    <span><a style='color:gray' data-toggle="modal" data-target="#editcontact-modal-{{contact.id}}">{{contact.name}}</a></span>
-                </h4>
+                <h3>
+                    <span><a style='color:#0c0c38' data-toggle="modal" data-target="#editcontact-modal-{{contact.id}}">{{contact.name}}</a></span>
+                </h3>
                 <div class="mc-content">
                     <div class="img-container">
                         <img class="img-responsive img-circle" src="{{contact.pic_url}}">
                     </div>
                 <div class="mc-description">
                     {% if contact.events %}
-                    <h5>Events</h5>
+                    <h4>Events</h4>
                             {% for event in contact.events %}
-                            <small><a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">[{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]  : {{event.template.name}}</a></small>
+                           <a style='font-size:13px;'data-toggle="modal" data-target="#editevent-modal-{{event.id}}">{{event.date.month}}/{{event.date.day}}/{{event.date.year}} <b>{{event.template.name}}</b></a>
 
 
 

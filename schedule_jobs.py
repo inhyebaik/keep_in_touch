@@ -42,7 +42,6 @@ def return_tmrws_events():
     else:
     # Get tomorrow's date -- YYYY, MM, DD only to match DB format
         tmrw = datetime.datetime(t.year, t.month, t.day + 1, 0, 0)
-
     # Fetch tomorrow's events
     events = Event.query.filter(Event.date == tmrw).all()
     if events == []:
@@ -75,8 +74,9 @@ def remind_all_users(events):
             text_reminder(event)
             remind_user(event)
             # change reminder_sent to True
-            event.reminder_sent = True
-            db.session.commit()
+            if text_reminder(event) and remind_user(event):
+                event.reminder_sent = True
+                db.session.commit()
 
 
 def text_reminder(event):
@@ -92,6 +92,7 @@ def text_reminder(event):
     print user_phone
     message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
     print "TEXTED REMINDER TO USER: {}".format(user_phone)
+    return True
 
 
 
@@ -153,6 +154,7 @@ def remind_user(event):
     print(response.status_code)
     print(response.body)
     print(response.headers)
+    return True
 
 # Set the schedule's job list
 def job():

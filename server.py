@@ -40,7 +40,7 @@ kit_email = os.environ.get('KIT_EMAIL')
 
 
 
-@app.route('/test')
+@app.route('/profile')
 def return_template():
     user_id = session.get('user_id')
     user = User.query.get(user_id)
@@ -160,11 +160,10 @@ def log_out():
     return redirect("/")
 
 
-@app.route('/register_login')
-def register_form():
-    """Prompts user to register/sign in"""
-
-    return render_template("register_login_form.html")
+# @app.route('/register_login')
+# def register_form():
+#     """Prompts user to register/sign in"""
+#     return render_template("register_login_form.html")
 
 
 @app.route('/register', methods=['POST'])
@@ -298,8 +297,8 @@ def handle_event_form():
 
     # redirect to user profile
     flash("You have successfully added a new event for {}!".format(name))
-    url = '/users/{}'.format(user_id)
-    return redirect(url)
+    # url = '/users/{}'.format(user_id)
+    return redirect('/profile')
 
 
 @app.route('/edit_event/<event_id>')
@@ -340,8 +339,8 @@ def modify_db():
     db.session.commit()
     flash("Message updated successfully. We will remind you the day before (on {}/{}/{})".format(event.date.month, event.date.day-1, event.date.year))
     # redirect user to their profile
-    url = '/users/{}'.format(user_id)
-    return redirect(url)
+    # url = '/users/{}'.format(user_id)
+    return redirect("/profile")
 
 
 @app.route('/remove_event', methods=['POST'])
@@ -360,8 +359,8 @@ def remove_event():
         Template.query.filter(Template.id == template_id).delete()
         db.session.commit()
         flash("You have successfully deleted this event")
-        url = '/users/{}'.format(user_id)
-        return redirect(url)
+        # url = '/users/{}'.format(user_id)
+        return redirect("/profile")
     else:
         flash("You must log in or register to remove events")
         return redirect("/")
@@ -406,8 +405,8 @@ def remove_contact():
         db.session.commit()
         flash("You have successfully deleted this contact")
         user_id = session.get('user_id')
-        url = '/users/{}'.format(user_id)
-        return redirect(url)
+        # url = '/users/{}'.format(user_id)
+        return redirect("/profile")
     else:
         flash("You must log in or register to remove contacts")
         return redirect("/")
@@ -484,8 +483,8 @@ def handle_new_event_for_contact():
     db.session.commit()
     # redirect to edit_event page
     flash("You have successfully added a new event for {}!".format(contact.name.encode('utf-8')))
-    url = '/users/{}'.format(user.id)
-    return redirect(url)
+    # url = '/users/{}'.format(user.id)
+    return redirect("/profile")
 
 
 # @app.route('/edit_profile')
@@ -514,8 +513,8 @@ def handle_profile_edits():
         user.phone = phone
         db.session.commit()
         flash("Your information has been updated successfully.")
-        url = '/users/{}'.format(user_id)
-        return redirect(url)
+        # url = '/users/{}'.format(user_id)
+        return redirect("/profile")
     else:
         flash("You must log in or register to add events")
         return redirect("/")
@@ -547,8 +546,8 @@ def edit_contact_db(contact_id):
     db.session.commit()
     flash("{}'s information has been updated!".format(contact.name))
     user_id = session.get('user_id')
-    url = '/users/{}'.format(user_id)
-    return redirect(url)
+    # url = '/users/{}'.format(user_id)
+    return redirect("/profile")
 
 
 ### TEXTING REMINDER WITH TWILIO ###
@@ -610,22 +609,22 @@ def handle_reminder_response():
 
 ###############################################################
 if __name__ == "__main__": 
-    app.debug = True
-    app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
+    # app.debug = True
+    # app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
     connect_to_db(app)
-    DebugToolbarExtension(app) # Use the DebugToolbar
+    # DebugToolbarExtension(app) # Use the DebugToolbar
     
     def run_app():
         app.run(port=5000, host='0.0.0.0')
 
-    # def run_jobs(app):
-    #     # import pdb; pdb.set_trace()
-    #     sched = threading.Thread(name='schedule1', target=schedule1)
-    #     app = threading.Thread(name='app', target=run_app)
-    #     sched.start()
-    #     app.start()
-    # run_jobs(app)
-    run_app()
+    def run_jobs(app):
+        # import pdb; pdb.set_trace()
+        sched = threading.Thread(name='schedule1', target=schedule1)
+        app = threading.Thread(name='app', target=run_app)
+        sched.start()
+        app.start()
+    run_jobs(app)
+    # run_app()
 
     
     
