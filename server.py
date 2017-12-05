@@ -39,7 +39,6 @@ my_email = os.environ.get('MY_EMAIL')
 kit_email = os.environ.get('KIT_EMAIL')
 
 
-
 @app.route('/profile')
 def return_template():
     user_id = session.get('user_id')
@@ -74,9 +73,7 @@ def return_msg():
     """Return random message for preselected template type"""
     # import pdb; pdb.set_trace()
     template_type = request.form.get('template_type')
-    print template_type
     msg = random_message(template_type)
-    print msg
     return jsonify({"message": msg})
 
 
@@ -192,9 +189,7 @@ def register_process():
         db.session.commit()
         flash("You're now added as a new user! Welcome!")
         session['user_id'] = new_user.id
-        url = '/users/{}'.format(new_user.id)
-        # Redirect to the user's info page
-        return redirect(url)
+        return redirect('/profile')
 
 
 @app.route('/login', methods=['POST'])
@@ -212,8 +207,8 @@ def login_process():
         if check_password_hash(password, login_password):
             session['user_id'] = db_user.id # add user_id to the session
             flash("You have successfully logged in!")
-            url = '/users/{}'.format(db_user.id)
-            return redirect(url)
+            # url = '/users/{}'.format(db_user.id)
+            return redirect('/profile')
         else:
             # If password doesn't match, redirect to register/login
             flash("Wrong credentials -- Try again")
@@ -224,13 +219,13 @@ def login_process():
         return redirect('/')
 
 
-@app.route('/users/<user_id>')
-def user_profile(user_id):
-    """Shows specific user's info; all of their events and contacts."""
-    user = User.query.get(user_id)
-    contacts = Contact.query.filter(Contact.user_id == user_id).all()
-    upcoming_events = Event.query.order_by(Event.date.asc()).limit(5)
-    return render_template("user_profile.html", user=user, contacts=contacts, upcoming_events=upcoming_events)
+# @app.route('/users/<user_id>')
+# def user_profile(user_id):
+#     """Shows specific user's info; all of their events and contacts."""
+#     user = User.query.get(user_id)
+#     contacts = Contact.query.filter(Contact.user_id == user_id).all()
+#     upcoming_events = Event.query.order_by(Event.date.asc()).limit(5)
+#     return render_template("user_profile.html", user=user, contacts=contacts, upcoming_events=upcoming_events)
 
 
 # @app.route('/add_event')
@@ -297,7 +292,6 @@ def handle_event_form():
 
     # redirect to user profile
     flash("You have successfully added a new event for {}!".format(name))
-    # url = '/users/{}'.format(user_id)
     return redirect('/profile')
 
 
@@ -338,8 +332,6 @@ def modify_db():
     event.date = request.form.get('date')
     db.session.commit()
     flash("Message updated successfully. We will remind you the day before (on {}/{}/{})".format(event.date.month, event.date.day-1, event.date.year))
-    # redirect user to their profile
-    # url = '/users/{}'.format(user_id)
     return redirect("/profile")
 
 
@@ -359,7 +351,6 @@ def remove_event():
         Template.query.filter(Template.id == template_id).delete()
         db.session.commit()
         flash("You have successfully deleted this event")
-        # url = '/users/{}'.format(user_id)
         return redirect("/profile")
     else:
         flash("You must log in or register to remove events")
@@ -405,7 +396,6 @@ def remove_contact():
         db.session.commit()
         flash("You have successfully deleted this contact")
         user_id = session.get('user_id')
-        # url = '/users/{}'.format(user_id)
         return redirect("/profile")
     else:
         flash("You must log in or register to remove contacts")
@@ -481,9 +471,7 @@ def handle_new_event_for_contact():
     ce = ContactEvent(contact_id=contact_id, event_id=new_event.id)
     db.session.add(ce)
     db.session.commit()
-    # redirect to edit_event page
     flash("You have successfully added a new event for {}!".format(contact.name.encode('utf-8')))
-    # url = '/users/{}'.format(user.id)
     return redirect("/profile")
 
 
@@ -513,7 +501,6 @@ def handle_profile_edits():
         user.phone = phone
         db.session.commit()
         flash("Your information has been updated successfully.")
-        # url = '/users/{}'.format(user_id)
         return redirect("/profile")
     else:
         flash("You must log in or register to add events")
@@ -546,7 +533,6 @@ def edit_contact_db(contact_id):
     db.session.commit()
     flash("{}'s information has been updated!".format(contact.name))
     user_id = session.get('user_id')
-    # url = '/users/{}'.format(user_id)
     return redirect("/profile")
 
 
