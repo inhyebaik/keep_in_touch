@@ -53,12 +53,13 @@
 
 
 <!-- UPCOMING EVENTS  -->
-{% if user.events %}
+
 <div class="container">
-<h3 style='color:#26466D; font-weight:bold'>&#8678; Messages To Be Sent</h3>
+<h3 style='color:#26466D; font-weight:bold'>&#8678; Messages Queue:</h3>
   <!-- <h4><a data-toggle="modal" data-target="#eventform-modal">&#10753; New Event</a></h4> -->
   <div class="row">
-    
+
+
      {% for event in user.events|sort(attribute='date') %} 
           {% if not event.job_done %}
             <div class="col-xs-3 col-lg-2 queue-div">
@@ -77,7 +78,7 @@
 </div>
 
 
-{% endif %}
+
 
 
 

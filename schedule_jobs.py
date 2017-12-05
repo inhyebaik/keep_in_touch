@@ -144,8 +144,8 @@ def remind_user(event):
     to_name = event.contacts[0].user.fname
     to_email = Email(to_address, to_name)
     # Create mail to be sent (reminder email)
-    subject = '{} MESSAGE -- DOUBLE CHECK'.format(event.template.name)
-    email_body = "Just wanted to remind you that we'll send this out soon. Let us if you want to make edits: {}".format(event.template.text)
+    subject = 'YO, double-check this: {} message'.format(event.template.name)
+    email_body = "Just wanted to remind you that we'll send this out soon. Let us if you want to make edits: \n{}".format(event.template.text)
     content = Content("text/plain", email_body)
     mail = Mail(from_email, subject, to_email, content)
     # Send reminder email and print confirmation/status
