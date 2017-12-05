@@ -55,9 +55,6 @@ def return_template():
         print "not logged in"
         return redirect("/")
 
-@app.route('/test2')
-def return_test():
-    return render_template('test_index.html')
 
 ########### ROUTES FOR AJAX REQUESTS ############
 
@@ -180,7 +177,7 @@ def register_process():
     if db_user:
         # Alert the email is already in use; prompt them to login instead
         flash("Email already exists in database -- Please try logging in")
-        return redirect('/register_login')
+        return redirect('/')
     else:
         # Register new user; add to DB; log them in; save user_id to session
         new_user = User(email=email, password=hashed_value, fname=fname, lname=lname,
@@ -395,7 +392,7 @@ def remove_contact():
         Contact.query.filter(Contact.id == contact_id).delete()
         db.session.commit()
         flash("You have successfully deleted this contact")
-        user_id = session.get('user_id')
+        # user_id = session.get('user_id')
         return redirect("/profile")
     else:
         flash("You must log in or register to remove contacts")
@@ -595,22 +592,22 @@ def handle_reminder_response():
 
 ###############################################################
 if __name__ == "__main__": 
-    # app.debug = True
-    # app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
+    app.debug = True
+    app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
     connect_to_db(app)
-    # DebugToolbarExtension(app) # Use the DebugToolbar
+    DebugToolbarExtension(app) # Use the DebugToolbar
     
     def run_app():
         app.run(port=5000, host='0.0.0.0')
 
-    def run_jobs(app):
-        # import pdb; pdb.set_trace()
-        sched = threading.Thread(name='schedule1', target=schedule1)
-        app = threading.Thread(name='app', target=run_app)
-        sched.start()
-        app.start()
-    run_jobs(app)
-    # run_app()
+    # def run_jobs(app):
+    #     # import pdb; pdb.set_trace()
+    #     sched = threading.Thread(name='schedule1', target=schedule1)
+    #     app = threading.Thread(name='app', target=run_app)
+    #     sched.start()
+    #     app.start()
+    # run_jobs(app)
+    run_app()
 
     
     

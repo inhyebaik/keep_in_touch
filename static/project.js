@@ -91,7 +91,7 @@ function registerLogInFB(fname, lname, email, fb_uid) {
         console.log(data);
         if (data['user_id']){
             // redirect to their profile
-            window.location.href = `/users/${data['user_id']}`;
+            window.location.href = "/profile";
         } 
     });
 
@@ -133,7 +133,7 @@ function getInfoRegisterLogin() {
             console.log('route response came back!!!');
             console.log(data);
             
-            if (data['user_id']) window.location.href = `/users/${data['user_id']}`;
+            if (data['user_id']) window.location.href = "/profile";
 
 
     });

@@ -221,7 +221,7 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav navbar-right">
-            <li class=""><a href="/users/{{session.get('user_id')}}">My Profile</a></li>
+            <li class=""><a href="/profile">My Profile</a></li>
             <li><a data-toggle="modal" data-target="#editprofile-modal">Edit My Profile</a></li>
             <li class=""><a data-toggle="modal" data-target="#eventform-modal">Create New Event</a></li>
             <li><a href="/logout" id='logoutbutton'>Log Out</a></li>
@@ -350,9 +350,9 @@ You're awesome!
 <div class="container">
 
     <!-- Flash messages -->
-      {% for message in get_flashed_messages() %}
+<!--       {% for message in get_flashed_messages() %}
         {{ message.decode('utf-8') }} <br>
-      {% endfor %}
+      {% endfor %} -->
 
   <div class="row">
     <div class="col-sm-10">
