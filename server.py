@@ -600,14 +600,14 @@ if __name__ == "__main__":
     def run_app():
         app.run(port=5000, host='0.0.0.0')
 
-    # def run_jobs(app):
-    #     # import pdb; pdb.set_trace()
-    #     sched = threading.Thread(name='schedule1', target=schedule1)
-    #     app = threading.Thread(name='app', target=run_app)
-    #     sched.start()
-    #     app.start()
-    # run_jobs(app)
-    run_app()
+    def run_jobs(app):
+        # import pdb; pdb.set_trace()
+        sched = threading.Thread(name='schedule1', target=schedule1)
+        app = threading.Thread(name='app', target=run_app)
+        sched.start()
+        app.start()
+    run_jobs(app)
+    # run_app()
 
     
     

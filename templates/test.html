@@ -55,7 +55,7 @@
 <!-- UPCOMING EVENTS  -->
 {% if user.events %}
 <div class="container">
-<h3>&#8678; Messages To Be Sent</h3>
+<h3 style='color:#26466D; font-weight:bold'>&#8678; Messages To Be Sent</h3>
   <!-- <h4><a data-toggle="modal" data-target="#eventform-modal">&#10753; New Event</a></h4> -->
   <div class="row">
     
@@ -63,10 +63,10 @@
           {% if not event.job_done %}
             <div class="col-xs-3 col-lg-2 queue-div">
               <a data-toggle="modal" data-target="#editevent-modal-{{event.id}}">
-                 <span class='queue-text'> <p><span class='queue-name'>{{event.contacts[0].name}}</span><br>
-                  [{{event.date.month}}/{{event.date.day}}/{{event.date.year}}]<br>
+                  <span style='font-size:18px; color:black; font-weight:bold;'>{{event.date.month}} / {{event.date.day}}</span><br>
+                 <span class='queue-text'> <p><span style='font-size: 17px; color: #37474F; font-weight: bolder;'>{{event.contacts[0].name}}</span><br>
                  <img src="{{event.contacts[0].pic_url}}" class="img-responsive sm-circle" hspace="10">
-              <b><span style='color:black; font-size:15px';>{{event.template.name[:10]}}</span></b></p></span>
+              <span style='color:#26466D; font-size:17px';>{{event.template.name}}</span></p></span>
               </a>
             </div>
          
@@ -119,12 +119,10 @@
           <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
         </button>
 
-          <h2>Create New Event</h2>
+          <h3>Create New Event</h3>
           <form class='newevent' action='/add_event', method='POST'>
-          <label for="date">Date to be sent</label> 
-              <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" placeholder='Date to be sent'required/><br>
+          <!-- <label for="date">Date to be sent</label>  -->
               <!-- <label for="fname">Contact's Name</label> -->
-
                 <select class='choose-existing' name='choose-existing'>
                 <option disabled selected value>Choose from existing</option>
                 {% for contact in user.contacts|sort(attribute='name') %}
@@ -147,6 +145,7 @@
           
           <!-- <label for="subject">Message subject</label>  -->
           <input type='text' name='template_name' placeholder='Message Subject'required> <br>
+          <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" placeholder='Date to be sent'required/><br>
               
 <!--           How do you want to greet them? 
             <select name='greet'>
@@ -207,11 +206,17 @@ You're awesome!
                     </div>
                 <div class="mc-description">
                     {% if contact.events %}
-                    <h4>Events</h4>
+                    <h5></h5>
                             {% for event in contact.events %}
-                           <a style='font-size:13px;'data-toggle="modal" data-target="#editevent-modal-{{event.id}}">{{event.date.month}}/{{event.date.day}}/{{event.date.year}} <b>{{event.template.name}}</b></a>
 
 
+                            {% if event.job_done%}
+<p style='line-height: 80%;font-size: 15px;opacity: 0.3;'><a data-toggle="modal" data-target="#editevent-modal-{{event.id}}"><span style='color:black; font-weight:bold;'>{{event.date.month}} / {{event.date.day}}</span> {{event.template.name}}</a><br></p>
+
+                            {% else %}
+                           <p class='contact-event'><a data-toggle="modal" data-target="#editevent-modal-{{event.id}}"><span style='color:black; font-weight:bold;'>{{event.date.month}} / {{event.date.day}}</span> {{event.template.name}}</a><br></p>
+
+                           {%endif%}
 
 
 
@@ -269,7 +274,7 @@ You're awesome!
                 {% endif %}
                 </div>
                 </div>
-
+                <br>
                <div class="mc-footer">
                     <h4>
                     </h4>
