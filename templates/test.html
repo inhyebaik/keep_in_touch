@@ -37,9 +37,9 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav navbar-right">
-            <li class=""><a href="/profile">My Profile</a></li>
-            <li><a data-toggle="modal" data-target="#editprofile-modal">Edit My Profile</a></li>
-            <li class=""><a data-toggle="modal" data-target="#eventform-modal">Create New Event</a></li>
+            <li class=""><a href="/profile">Home</a></li>
+            <li><a data-toggle="modal" data-target="#editprofile-modal">My Info</a></li>
+            <li class=""><a data-toggle="modal" data-target="#eventform-modal">Schedule a Message</a></li>
             <li><a href="/logout" id='logoutbutton'>Log Out</a></li>
           </ul>
           </ul>
@@ -55,7 +55,7 @@
 <!-- UPCOMING EVENTS  -->
 
 <div class="container">
-<h3 style='color:#26466D; font-weight:bold'>&#8678; Messages Queue:</h3>
+<h3 style='color:#26466D; font-weight:bold'>&#8678; Queued Messages</h3>
   <!-- <h4><a data-toggle="modal" data-target="#eventform-modal">&#10753; New Event</a></h4> -->
   <div class="row">
 
@@ -189,11 +189,11 @@ You're awesome!
 <section class="container">
     <div class="page-header">
         <h1>My Contacts<br>
-            <small>Stay in touch</small></h1>
+          <h2><small> <a data-toggle="modal" data-target="#eventform-modal">Add New Contact</a></small></h2> </h1>
     </div>
 
+<small>Facebook Friends</small>
     <div class="row active-with-click grid">
-
 {% for contact in user.contacts|sort(attribute='name') %}
 
         <div class="grid-item">

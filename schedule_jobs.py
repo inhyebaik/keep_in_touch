@@ -74,9 +74,8 @@ def remind_all_users(events):
             text_reminder(event)
             remind_user(event)
             # change reminder_sent to True
-            if text_reminder(event) and remind_user(event):
-                event.reminder_sent = True
-                db.session.commit()
+            event.reminder_sent = True
+            db.session.commit()
 
 
 def text_reminder(event):
@@ -92,7 +91,7 @@ def text_reminder(event):
     print user_phone
     message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
     print "TEXTED REMINDER TO USER: {}".format(user_phone)
-    return True
+    # return True
 
 
 
@@ -118,12 +117,13 @@ def send_email(event):
     from_email = Email(from_address, from_name)
     # Create to_email object from event object arg (the user's contact)
     to_address = event.contacts[0].email
-    to_name = event.contacts[0].name
+    to_name = event.contacts[0].name.encode('utf-8')
     to_email = Email(to_address, to_name)
     # Create mail object from event object arg
-    email_body = event.template.text
+    email_body = event.template.text.encode('utf-8')
     subject = event.template.name
     content = Content("text/plain", email_body)
+    print 
     mail = Mail(from_email, subject, to_email, content)
     # Send email, print confirmation/status
     response = sg.client.mail.send.post(request_body=mail.get())
@@ -140,12 +140,12 @@ def remind_user(event):
     # Create from_email object from event object arg
     from_email = Email(kit_email, "Keep in Touch Team")
     # Create to email property from event object arg (the user)
-    to_address = event.contacts[0].user.email
-    to_name = event.contacts[0].user.fname
+    to_address = event.user.email
+    to_name = event.user.fname
     to_email = Email(to_address, to_name)
     # Create mail to be sent (reminder email)
     subject = 'YO, double-check this: {} message'.format(event.template.name)
-    email_body = "Just wanted to remind you that we'll send this out soon. Let us if you want to make edits: \n{}".format(event.template.text)
+    email_body = "Just wanted to remind you that we'll send this out soon. Let us if you want to make edits: \n{}".format(event.template.text.encode('utf-8'))
     content = Content("text/plain", email_body)
     mail = Mail(from_email, subject, to_email, content)
     # Send reminder email and print confirmation/status
@@ -154,7 +154,7 @@ def remind_user(event):
     print(response.status_code)
     print(response.body)
     print(response.headers)
-    return True
+    # return True
 
 # Set the schedule's job list
 def job():

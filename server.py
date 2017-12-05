@@ -552,11 +552,13 @@ reply with your new message (in one SMS response. Please add 'event_id={}' in yo
 
 @app.route("/sms", methods=['GET', 'POST'])
 def handle_reminder_response():
+    print "msg received from user"
     """Handle user response to reminder"""
     to_number = request.values.get('To') # Keep in Touch's phone
     from_number = request.values.get('From', None) # user's phone
     user_response = request.values.get('Body')
     # Fetch user from DB to update event template text
+    print from_number
     user = User.query.filter(User.phone == from_number).one()
     user_fname = user.fname
     event_id = None
@@ -578,8 +580,10 @@ def handle_reminder_response():
         message = "Thanks, {}! Your new message will be updated in the database as: '{}'".format(user_fname, event.template.text)
         resp = MessagingResponse()
         resp.message(body=message)
+        print "msg sent to user"
         return str(resp)
     else:
+        print "msg fail"
         # Reply to user, prompting to end new message with "event_id=XX"
         for contact in user.contacts:
             for event in contact.events:
@@ -607,6 +611,7 @@ if __name__ == "__main__":
         sched.start()
         app.start()
     run_jobs(app)
+    print datetime.datetime.now()
     # run_app()
 
     
