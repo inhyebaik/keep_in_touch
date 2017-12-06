@@ -1,5 +1,5 @@
 # Keep in Touch
-***
+
 ![alt text](https://github.com/inhyebaik/keep_in_touch/blob/master/static/index.png "Keep in Touch index page")
 
 
