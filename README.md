@@ -6,7 +6,7 @@
 Keep in Touch automates keeping in touch for you. Register through Facebook OAuth gives the app permissions for their friends list, automatically importing friends as contacts. On the user's profile, each contact card shows their scheduled messages (past events appear faded). Upcoming scheduled events appear in the Queued Messages section. 
 
 
-![alt text]( "Keep in Touch User Profile")
+![alt text]("Keep in Touch User Profile")
 
 
 Users can schedule messages for each contact, given their email and U.S. phone number. Messages can be customized or selected from a list of general-purpose messages (scraped from the web using Scrapy). Clicking the option for type of message returns a random message filled in the new message text area. 
