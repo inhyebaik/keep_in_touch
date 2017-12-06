@@ -30,18 +30,18 @@ Keep in Touch will also send users a reminder email and text of upcoming events.
 
 
 Keep in Touch is built using:
-..*Python
-..*JavaScript
-..*PostgreSQL
-..*Flask
-..*SQLAlchemy
-..*jQuery
-..*Jinja
-..*Masrony
-..*Scrapy
+*Python
+*JavaScript
+*PostgreSQL
+*Flask
+*SQLAlchemy
+*jQuery
+*Jinja
+*Masrony
+*Scrapy
 
 
 APIs: 
-..*[Twilio](https://github.com/twilio)
-..*[SendGrid](https://github.com/sendgrid)
-..*[Facebook OAuth](https://developers.facebook.com/docs/facebook-login/web). 
+*[Twilio](https://github.com/twilio)
+*[SendGrid](https://github.com/sendgrid)
+*[Facebook OAuth](https://developers.facebook.com/docs/facebook-login/web). 
