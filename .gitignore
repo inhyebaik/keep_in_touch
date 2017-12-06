@@ -1,7 +1,7 @@
 *secret*
 env
 venv
-*pyc
+*.pyc
 .DS_Store
 *reference*
 ngrok
