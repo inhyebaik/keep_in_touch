@@ -1,6 +1,6 @@
 # Keep in Touch
 
-![alt text](https://github.com/inhyebaik/keep_in_touch/blob/master/static/index.png "Keep in Touch index page")
+![alt text](https://github.com/inhyebaik/keep_in_touch/blob/master/static/readmepics/index.png "Keep in Touch index page")
 
 
 Keep in Touch automates keeping in touch for you. Register through Facebook OAuth gives the app permissions for their friends list, automatically importing friends as contacts. On the user's profile, each contact card shows their scheduled messages (past events appear faded). Upcoming scheduled events appear in the Queued Messages section. 
