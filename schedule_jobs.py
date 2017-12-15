@@ -91,7 +91,6 @@ def text_reminder(event):
     print user_phone
     message = client.messages.create(to=user_phone, from_=twilio_num, body=my_msg)
     print "TEXTED REMINDER TO USER: {}".format(user_phone)
-    # return True
 
 
 
@@ -154,7 +153,6 @@ def remind_user(event):
     print(response.status_code)
     print(response.body)
     print(response.headers)
-    # return True
 
 # Set the schedule's job list
 def job():
@@ -173,5 +171,4 @@ def schedule1():
 
 if __name__ == "__main__": 
     connect_to_db(app)
-    print datetime.datetime.now() # check what time it is in vagrant
     schedule1()

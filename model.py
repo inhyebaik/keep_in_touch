@@ -23,8 +23,7 @@ class User(db.Model):
     phone = db.Column(db.String(15))
     fb_uid = db.Column(db.Text)
     fb_at = db.Column(db.Text)
-    # picture from FB
-    pic_url = db.Column(db.Text)
+    pic_url = db.Column(db.Text) # picture from FB
 
 
     def __init__(self, email, password, fname, lname, phone='', fb_uid='', fb_at='', pic_url=''):
@@ -53,14 +52,11 @@ class Contact(db.Model):
     name = db.Column(db.String(64), nullable=False)  # not fname/lname in case it's "Mom"
     email = db.Column(db.String(64))
     phone = db.Column(db.String(15))
-    # address information
-    address = db.Column(db.Text)
-    # picture from FB
-    pic_url = db.Column(db.Text, default="/static/defaultpic.jpg")
+    address = db.Column(db.Text) # address information
+    pic_url = db.Column(db.Text, default="/static/defaultpic.jpg") # picture from FB
     # A contact belongs to a user
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship("User", backref=db.backref("contacts", order_by=id))
-
 
     def __repr__(self):
         """Provide better representation."""

@@ -1,210 +1,194 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html>
-
 
 <head>
   <meta charset='UTF-8'>
-    <link rel="icon" href="http://rs915.pbsrc.com/albums/ac354/Leigh_1995_clh/Harry%20Potter/Hedwig.png~c200">
-    <link rel="stylesheet" href="/static/styles.css">
-    <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,200,500,600,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <title>Keep in Touch</title>
+  <link rel="icon" href="http://rs915.pbsrc.com/albums/ac354/Leigh_1995_clh/Harry%20Potter/Hedwig.png~c200">
+  <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,200,500,600,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <title>Keep in Touch</title>
+  <style>
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+
+    body {
+      background-color: #ECEFF1;
+      color: #37474F;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+    }
+
+    h1, h2, h3 {
+      font-weight: 100;
+    }
+    .grid-item {
+      text-align: center;
+      width: 200px;
+      padding: 15px;
+      margin-top:10px;
+      background-color: #F0FFFF;
+    }
+
+    .img-circle{
+      border-radius: 50%;
+      display: block;
+      margin: auto;
+    }
+
+    div {
+      text-align: center;
+    }
+
+    footer {
+      font-size: 12px;
+      position: relative;
+      bottom:0;
+    }
+
+    /****** LOGIN MODAL ******/
+    .loginmodal-container {
+      padding: 30px;
+      max-width: 350px;
+      width: 100% !important;
+      background-color: #F7F7F7;
+      margin: 0 auto;
+      border-radius: 2px;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .loginmodal-container h1 {
+      text-align: center;
+      font-size: 1.8em;
+    }
+
+    .loginmodal-container input[type=submit] {
+      width: 100%;
+      display: block;
+      margin-bottom: 10px;
+      position: relative;
+    }
 
 
-<style type="text/css">
+    .loginmodal-container input[type=text], input[type=date],input[type=password], input[type=phone], input[type=email] {
+      height: 30px;
+      font-size: 14px;
+      width: 90%;
+      margin-bottom: 10px;
+      -webkit-appearance: none;
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      border-top: 1px solid #c0c0c0;
+      padding: 0 8px;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+    }
 
-        html {
-            position: relative;
-            min-height: 100%;
-        }
-        body {
-            background-color: #ECEFF1;
-            color: #37474F;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 300;
-            font-size: 16px;
-        }
-        h1, h2, h3 {
-            font-weight: 100;
-        }
-        .grid-item {
-            text-align: center;
-            width: 200px;
-            padding: 15px;
-            margin-top:10px;
-            background-color: #F0FFFF;
+    .loginmodal-container input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, input[type=date]:hover, input[type=phone]:hover {
+      border: 1px solid #b9b9b9;
+      border-top: 1px solid #a0a0a0;
+      -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+      -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    }
 
-        }
+    .loginmodal {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      height: 36px;
+      padding: 0 8px;
+    }
 
-        .img-circle{
-            border-radius: 50%;
-            display: block;
-            margin: auto;
-        }
-
-        div {
-            text-align: center;
-        }
-
-
-
-/****** LOGIN MODAL ******/
-.loginmodal-container {
-  padding: 30px;
-  max-width: 350px;
-  width: 100% !important;
-  background-color: #F7F7F7;
-  margin: 0 auto;
-  border-radius: 2px;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-}
-
-.loginmodal-container h1 {
-  text-align: center;
-  font-size: 1.8em;
-}
-
-.loginmodal-container input[type=submit] {
-  width: 100%;
-  display: block;
-  margin-bottom: 10px;
-  position: relative;
-}
+    .loginmodal-submit{
+      border: 0px;
+      color: #fff;
+      text-shadow: 0 1px rgba(0,0,0,0.1); 
+      background-color: #4d90fe;
+      padding: 17px 0px;
+      font-size: 14px;
+    }
 
 
-.loginmodal-container input[type=text], input[type=date],input[type=password], input[type=phone], input[type=email] {
-  height: 30px;
-  font-size: 14px;
-  width: 90%;
-  margin-bottom: 10px;
-  -webkit-appearance: none;
-  background: #fff;
-  border: 1px solid #d9d9d9;
-  border-top: 1px solid #c0c0c0;
-  /* border-radius: 2px; */
-  padding: 0 8px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-}
+    .loginmodal-submit:hover {
+      border: 0px;
+      text-shadow: 0 1px rgba(0,0,0,0.3);
+      background-color: #357ae8;
+    }
 
-.loginmodal-container input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, input[type=date]:hover, input[type=phone]:hover {
-  border: 1px solid #b9b9b9;
-  border-top: 1px solid #a0a0a0;
-  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-}
+    .loginmodal-container a {
+      text-decoration: none;
+      color: #666;
+      font-weight: 400;
+      text-align: center;
+      display: inline-block;
+      opacity: 0.6;
+      transition: opacity ease 0.5s;
+    } 
 
-.loginmodal {
-  text-align: center;
-  font-size: 14px;
-  font-weight: 700;
-  height: 36px;
-  padding: 0 8px;
+    .login-help{
+      font-size: 12px;
+    }
 
-}
+    /*navbar*/
+    .navbar-default{
+      background-color: transparent; !important; 
+      border-color: none;
+    }
 
-.loginmodal-submit{
-  /* border: 1px solid #3079ed; */
-  border: 0px;
-  color: #fff;
-  text-shadow: 0 1px rgba(0,0,0,0.1); 
-  background-color: #4d90fe;
-  padding: 17px 0px;
-  font-size: 14px;
-  /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#4787ed)); */
-}
+    .navbar-default .navbar-nav > .active > a,
+    .navbar-default .navbar-nav > .active > a:hover,
+    .navbar-default .navbar-nav > .active > a:focus {
+      background-color: transparent;
+    }
 
+    .tembus{
+      background-color: transparent !important;
+    }
+    .hvrcenter {
+      display: inline-block;
+      vertical-align: middle;
+      -webkit-transform: perspective(1px) translateZ(0);
+      transform: perspective(1px) translateZ(0);
+      box-shadow: 0 0 1px transparent;
+      position: relative;
+      overflow: hidden;
+    }
 
-.loginmodal-submit:hover {
-  /* border: 1px solid #2f5bb7; */
-  border: 0px;
-  text-shadow: 0 1px rgba(0,0,0,0.3);
-  background-color: #357ae8;
-  /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#357ae8)); */
-}
+    .hvrcenter:before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: 50%;
+      right: 50%;
+      bottom: 0;
+      background: #ECF0F1;
+      height: 2px;
+      -webkit-transition-property: left, right;
+      transition-property: left, right;
+      -webkit-transition-duration: 0.3s;
+      transition-duration: 0.3s;
+      -webkit-transition-timing-function: ease-out;
+      transition-timing-function: ease-out;
+    }
 
-.loginmodal-container a {
-  text-decoration: none;
-  color: #666;
-  font-weight: 400;
-  text-align: center;
-  display: inline-block;
-  opacity: 0.6;
-  transition: opacity ease 0.5s;
-} 
+    .hvrcenter:hover:before, .hvrcenter:focus:before, .hvrcenter:active:before {
+      left: 0;
+      right: 0;
+    }
 
-.login-help{
-  font-size: 12px;
-}
-
-
-/*navbar*/
-
-.navbar-default{
-  background-color: transparent; !important; 
-  border-color: none;
-}
-.navbar-default .navbar-header > a {
-}
-.navbar-default .navbar-nav > li > a{
-}
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  background-color: transparent;
-}
-
-
-.tembus{
-  background-color: transparent !important;
-}
-.hvrcenter {
-  display: inline-block;
-  vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px transparent;
-  position: relative;
-  overflow: hidden;
-}
-.hvrcenter:before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 50%;
-  right: 50%;
-  bottom: 0;
-  background: #ECF0F1;
-  height: 2px;
-  -webkit-transition-property: left, right;
-  transition-property: left, right;
-  -webkit-transition-duration: 0.3s;
-  transition-duration: 0.3s;
-  -webkit-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
-}
-.hvrcenter:hover:before, .hvrcenter:focus:before, .hvrcenter:active:before {
-  left: 0;
-  right: 0;
-}
-
-
-</style>
+  </style>
+</head>
 
 <body>
-
 <div id="fb-root"></div>
 
 <!-- NAVBAR -->
-
-
-
-
 <div>
   <header style="">
     <nav class="navbar navbar-default tembus" style="border-color:none;">
@@ -228,118 +212,70 @@
 </div>
 
 
-
-
-
 <!-- LOGIN MODAL -->
 <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-
-        <div class="modal-dialog">
-        <div class="loginmodal-container">
-         <button data-dismiss="modal" class="close" type="button">
-          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
-        </button>
-
-          <h1>Log In</h1><br>
-          <form action='/login', method='POST'>
+  <div class="modal-dialog">
+    <div class="loginmodal-container">
+      <button data-dismiss="modal" class="close" type="button">
+        <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+      </button>
+      <h1>Log In</h1><br>
+        <form action='/login', method='POST'>
           <input type="text" name="login_email" placeholder="Email">
           <input type="password" name="login_password" placeholder="Password">
           <input type="submit" name="login" class="login loginmodal-submit" value="Login">
-          </form>
-
-          <fb:login-button 
-                      class="fb-login-button" 
-                      data-max-rows="1" 
-                      data-size="medium" 
-                      data-show-faces="false" 
-                      data-auto-logout-link="false" 
-                      data-use-continue-as="true"
-                      data-button-type="continue_with" 
-                      onlogin="loginGetInfo2();">
-          </fb:login-button>
-          <br>
-          <a data-dismiss="modal" data-toggle="modal" data-target="#register-modal">Already a user?</a>
-
-          </div>
-      </div>
+        </form>
+        <fb:login-button 
+                    class="fb-login-button" 
+                    data-max-rows="1" 
+                    data-size="medium" 
+                    data-show-faces="false" 
+                    data-auto-logout-link="false" 
+                    data-use-continue-as="true"
+                    data-button-type="continue_with" 
+                    onlogin="loginGetInfo2();">
+        </fb:login-button><br>
+      <a data-dismiss="modal" data-toggle="modal" data-target="#register-modal">Already a user?</a>
+    </div>
   </div>
+</div>
 
 <!-- REGISTRATION MODAL  -->
 
-    <div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-
-        <div class="modal-dialog">
-        <div class="loginmodal-container">
-         <button data-dismiss="modal" class="close" type="button">
-          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
-        </button>
-          <h1>Sign Up</h1><br>
-
-          <form action='/register', method='POST'>
-          <input type="email" name="email" placeholder="Email">
-          <input type="password" name="password" placeholder="Password">
-          <input type="text" name="fname" placeholder="First Name">
-          <input type="text" name="lname" placeholder="Last Name">
-          <input type="phone" name="phone" placeholder="Phone">
-          <input type="submit" class="login loginmodal-submit" value="Register">
-
-          
-          <fb:login-button 
-                      class="fb-login-button" 
-                      data-max-rows="2" 
-                      data-size="medium" 
-                      data-show-faces="false" 
-                      data-auto-logout-link="false" 
-                      data-use-continue-as="true"
-                      data-button-type="continue_with" 
-                      onlogin="loginGetInfo2();">
-          </fb:login-button>
-          
-        <a data-dismiss="modal" data-toggle="modal" href="#lost" data-target="#login-modal">Already have an account?</a>
-
-        </form>
-
-
-          </div>
-        </div>
-      </div>
-
+<div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+  <div class="loginmodal-container">
+   <button data-dismiss="modal" class="close" type="button">
+    <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+  </button>
+    <h1>Sign Up</h1><br>
+    <form action='/register', method='POST'>
+    <input type="email" name="email" placeholder="Email">
+    <input type="password" name="password" placeholder="Password">
+    <input type="text" name="fname" placeholder="First Name">
+    <input type="text" name="lname" placeholder="Last Name">
+    <input type="phone" name="phone" placeholder="Phone">
+    <input type="submit" class="login loginmodal-submit" value="Register">
+    <fb:login-button 
+                class="fb-login-button" 
+                data-max-rows="2" 
+                data-size="medium" 
+                data-show-faces="false" 
+                data-auto-logout-link="false" 
+                data-use-continue-as="true"
+                data-button-type="continue_with" 
+                onlogin="loginGetInfo2();">
+    </fb:login-button>
+  <a data-dismiss="modal" data-toggle="modal" href="#lost" data-target="#login-modal">Already have an account?</a>
+  </form>
+    </div>
+  </div>
+</div>
 
 <!-- END REGISTRATION MODAL -->
 
-
-
-
-
-<div class="container">
-
-    <!-- Flash messages -->
-    <ul class='red'>
-
-    </ul>
-
-
-
-
-
-
-    <div class='container'>
-<!--           <h1>Keep in Touch</h1>
-    Keep in Touch lets you automate keeping in touch 
-      <div class='row'>
-        
-        <div class="col-sm-6 col-xs-12"> 
-          <div class='img1'>
-            <img src="/static/img2.png" height='500px'>
-          </div>
-        </div>
-
-        <div class='col-sm-6'>
-          <h1>Keep in Touch</h1>
-          <div> 
-          </div>
-        </div> -->
-      <div class="row">
+<div class='container'>
+  <div class="row">
     <div class="col-sm-12">
       <img src="/static/landingpage2.png" usemap='#landingpage'>
       <map name='landingpage'>
@@ -351,60 +287,27 @@
 </div>
 
 
-      </div>
-    </div>
-
 <br>
 <hr>
 
-  <div class="row">
-    <div class="col-sm-12">
 
-
-<!--     <fb:login-button 
-      class="fb-login-button" 
-      data-max-rows="1" 
-      data-size="medium" 
-      data-show-faces="false" 
-      data-auto-logout-link="false" 
-      data-use-continue-as="true"
-      data-button-type="continue_with" 
-      onlogin="loginGetInfo2();">
-    </fb:login-button> -->
-
-
-
-    </div>
-  </div>
 </div>
 
 <br>
 <br>
 <br>
-
-
-  <hr>
-
+<hr>
 <footer>
-          <div class="container">
-            <div class="col-sm-12" >
-                <span> 
-
-
-                  <b>Relationships are important. </b>Keep in Touch helps you automate keeping in touch with people, meaningfully or at all.
-
-                </span>
-                <br><br>
-              <span id="quote-text"></span> 
-              <br><br>
-
-          </div>
-          </div>
-<script src="/static/project.js"></script>
+  <div class="container">
+    <div class="col-sm-12" >
+      <span> 
+          <b>Relationships are important. </b>Keep in Touch helps you automate keeping in touch with people, meaningfully or at all.
+        </span><br><br>
+      <span id="quote-text"></span><br><br>
+    </div>
+  </div>
+  <script src="/static/project.js"></script>
 </footer>
-
-
-
 
 </body>
 </html>

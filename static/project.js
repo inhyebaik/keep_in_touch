@@ -14,7 +14,6 @@ window.fbAsyncInit = function() {
 
     FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
-            $('#status1').html('we are connected');
             console.log('we are connected');
         } else if (response.status === 'not_authorized') {
             console.log('we are not logged in');
@@ -38,7 +37,6 @@ window.fbAsyncInit = function() {
 function login() {
     FB.login(function(response) {
         if (response.status === 'connected') {
-            $('#status1').html('we are connected');
             console.log('we are connected');
         } else if (response.status === 'not_authorized') {
             console.log('we are not logged in');
@@ -94,14 +92,12 @@ function registerLogInFB(fname, lname, email, fb_uid) {
             window.location.href = "/profile";
         } 
     });
-
 }
 
 var contactsList;
 // makes FB API request; uses that information to register/login to our app)
 function getInfoRegisterLogin() {
     FB.api('/me', 'GET', {fields: 'id,email,first_name,last_name,picture.width(100).height(100),family{name,id,picture.width(100).height(100)},taggable_friends{name,id,picture.width(100).height(100)},friends{birthday}'}, function(response) {
-        console.log(response);
         $('#status1').html('we are connected');
         var famdata = response['family']['data']
         var frdata = response['taggable_friends']['data'];
@@ -116,10 +112,7 @@ function getInfoRegisterLogin() {
         var lname = response['last_name'];
         var email = response['email'];
         var fb_uid = response['id'];
-        var pic_url = response['picture']['data']['url']
-        console.log(pic_url);
-        console.log(fname, lname, email, fb_uid, Object.values(familyIDName), Object.values(friendsIDName));
-        
+        var pic_url = response['picture']['data']['url']        
         var loginInputs = {
                         'fname': fname,
                         'lname': lname,
@@ -127,15 +120,8 @@ function getInfoRegisterLogin() {
                         'fb_uid': fb_uid,
                         'pic_url': pic_url,
                         'contacts_list': JSON.stringify(contactsList) };
-        console.log(loginInputs);
         $.post('/fb_register', loginInputs, function(data){
-
-            console.log('route response came back!!!');
-            console.log(data);
-            
             if (data['user_id']) window.location.href = "/profile";
-
-
     });
 });
 }
@@ -158,16 +144,13 @@ function loginGetInfo() {
     // log in FB with scope permissions
     FB.login(function(response) {
         if (response.status === 'connected') {
-            $('#status1').html('we are connected');
             console.log('we are connected');
             getInfo();
             
         } else if (response.status === 'not_authorized') {
-            $('#status1').html('we are not logged in');
             console.log('we are not logged in');
         } else {
-             $('#status1').html('You are not logged into FB');
-             console.log('You are not logged into FB');
+            console.log('You are not logged into FB');
         } 
 
     }, {scope: 'email,user_friends,user_relationships,read_custom_friendlists'});
@@ -183,10 +166,8 @@ function loginGetInfo2() {
     FB.login(function(response) {
         if (response.status === 'connected') {
             $('#status1').html('we are connected');
-    
             // if successful FB login, get info thru FB API and login/register on our app
-            getInfoRegisterLogin()
-            
+            getInfoRegisterLogin() 
         } else if (response.status === 'not_authorized') {
             $('#status1').html('we are not logged in');
         } else {
@@ -211,10 +192,11 @@ function showEvents(results) {
     let contact_id = results['contact_id'];
     let element = $("#contact-options-"+contact_id);
     if (element.html() === '') {
-    for (let e_id in results['events']) {
-         $(element).append("<li>" + results['events'][e_id]["date"] + ": " + results['events'][e_id]["template_name"] + "</li>");
+        for (let e_id in results['events']) {
+            $(element).append("<li>" + results['events'][e_id]["date"] + ": " + results['events'][e_id]["template_name"] + "</li>");
         }
-    } else {
+    } 
+    else {
         element.html(''); }
 }
 
@@ -225,6 +207,7 @@ function showOptions(evt) {
     let formInputs = { "contact_id" : contact_id};
     $.post(url, formInputs, showEvents);
 }   
+
 $('.contact-name').on("click", showOptions);
 
 
@@ -239,26 +222,21 @@ $(document).ready(function() {
      if(dd<10){ 
         dd='0'+dd ;
         console.log(dd);} 
-
-        if(mm<10){ mm='0'+mm } 
+     if(mm<10){ mm='0'+mm } 
     today1 = yyyy+'-'+mm+'-'+dd;
     var maxDate = maxYear+'-'+mm+'-'+dd;
     $('.datefield').attr('min', today1);
     $('.datefield').attr('max', maxDate);
-    console.log("hello!!");
-        // console.log($('.datefield').val());
 })
 
 // show random message templates in textbox when adding new event ////////////// 
 function fillWithMessage(results) {
-    console.log(results);
     var msg = results['message']; 
     $('textarea.template_textarea').html(msg);
 }
 
 function getMessage(evt) {
     var templateType = $(".template_type").val();
-    console.log(templateType);
     let url = "/msg.json";
     let formInputs = {"template_type" : templateType};
     $.post(url, formInputs, fillWithMessage);
@@ -303,7 +281,6 @@ $('button.close').on('click', returnDefault);
 setTimeout(function(){$('.red').fadeOut();}, 4000);
 $(window).click(function(){$('.red').fadeOut();});
 
-
 // choose-existing: when adding new event, pre-fills contact fields ////////////
 function fillInForm(results) {
     $('input[name=contact_id]').val(results['id']);
@@ -325,152 +302,16 @@ function getContactInfo(evt) {
 }
 
 $(document).ready(function () {
-$('.choose-existing').on('change', getContactInfo)
-
+    $('.choose-existing').on('change', getContactInfo)  
 })
-
-
-// Carousel ////////////////////////////////////////////////////////////////////
-// Instantiate the Bootstrap carousel
-$('.multi-item-carousel').carousel({
-  interval: false
-});
-
-// for every slide in carousel, copy the next slide's item in the slide.
-// Do the same for the next, next item.
-$('.multi-item-carousel .item').each(function(){
-  var next = $(this).next();
-  if (!next.length) {
-    next = $(this).siblings(':first');
-  }
-  next.children(':first-child').clone().appendTo($(this));
-  
-  if (next.next().length>0) {
-    next.next().children(':first-child').clone().appendTo($(this));
-  } else {
-    $(this).siblings(':first').children(':first-child').clone().appendTo($(this));
-  }
-});
-
-
-
-
-
-
-$(document).ready(function () {
-    var itemsMainDiv = ('.MultiCarousel');
-    var itemsDiv = ('.MultiCarousel-inner');
-    var itemWidth = "";
-
-    $('.leftLst, .rightLst').click(function () {
-        var condition = $(this).hasClass("leftLst");
-        if (condition)
-            click(0, this);
-        else
-            click(1, this)
-    });
-
-    ResCarouselSize();
-
-
-
-
-    $(window).resize(function () {
-        ResCarouselSize();
-    });
-
-    //this function define the size of the items
-    function ResCarouselSize() {
-        var incno = 0;
-        var dataItems = ("data-items");
-        var itemClass = ('.item');
-        var id = 0;
-        var btnParentSb = '';
-        var itemsSplit = '';
-        var sampwidth = $(itemsMainDiv).width();
-        var bodyWidth = $('body').width();
-        $(itemsDiv).each(function () {
-            id = id + 1;
-            var itemNumbers = $(this).find(itemClass).length;
-            btnParentSb = $(this).parent().attr(dataItems);
-            itemsSplit = btnParentSb.split(',');
-            $(this).parent().attr("id", "MultiCarousel" + id);
-
-
-            if (bodyWidth >= 1200) {
-                incno = itemsSplit[3];
-                itemWidth = sampwidth / incno;
-            }
-            else if (bodyWidth >= 992) {
-                incno = itemsSplit[2];
-                itemWidth = sampwidth / incno;
-            }
-            else if (bodyWidth >= 768) {
-                incno = itemsSplit[1];
-                itemWidth = sampwidth / incno;
-            }
-            else {
-                incno = itemsSplit[0];
-                itemWidth = sampwidth / incno;
-            }
-            $(this).css({ 'transform': 'translateX(0px)', 'width': itemWidth * itemNumbers });
-            $(this).find(itemClass).each(function () {
-                $(this).outerWidth(itemWidth);
-            });
-
-            $(".leftLst").addClass("over");
-            $(".rightLst").removeClass("over");
-
-        });
-    }
-
-
-    //this function used to move the items
-    function ResCarousel(e, el, s) {
-        var leftBtn = ('.leftLst');
-        var rightBtn = ('.rightLst');
-        var translateXval = '';
-        var divStyle = $(el + ' ' + itemsDiv).css('transform');
-        var values = divStyle.match(/-?[\d\.]+/g);
-        var xds = Math.abs(values[4]);
-        if (e == 0) {
-            translateXval = parseInt(xds) - parseInt(itemWidth * s);
-            $(el + ' ' + rightBtn).removeClass("over");
-
-            if (translateXval <= itemWidth / 2) {
-                translateXval = 0;
-                $(el + ' ' + leftBtn).addClass("over");
-            }
-        }
-        else if (e == 1) {
-            var itemsCondition = $(el).find(itemsDiv).width() - $(el).width();
-            translateXval = parseInt(xds) + parseInt(itemWidth * s);
-            $(el + ' ' + leftBtn).removeClass("over");
-
-            if (translateXval >= itemsCondition - itemWidth / 2) {
-                translateXval = itemsCondition;
-                $(el + ' ' + rightBtn).addClass("over");
-            }
-        }
-        $(el + ' ' + itemsDiv).css('transform', 'translateX(' + -translateXval + 'px)');
-    }
-
-    //It is used to get some elements from btn
-    function click(ell, ee) {
-        var Parent = "#" + $(ee).parent().attr("id");
-        var slide = $(Parent).attr("data-slide");
-        ResCarousel(ell, Parent, slide);
-    }
-
-});
-
 
 
 
 $(function() {
-        var $grid = $('.grid').masonry({
-            itemSelector: '.grid-item',
-            columnWidth: 290,
-        }); })
+    var $grid = $('.grid').masonry({
+        itemSelector: '.grid-item',
+        columnWidth: 290,
+    }); 
+})
 
 

@@ -39,25 +39,6 @@ my_email = os.environ.get('MY_EMAIL')
 kit_email = os.environ.get('KIT_EMAIL')
 
 
-@app.route('/profile')
-def return_template():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    # upcoming_events = Event.query.order_by(Event.date.asc()).limit(5).all()
-    if user:
-        print "user found:", user
-        try:
-            return render_template('test.html', user=user)
-        except:
-            print "hit pass"
-            pass
-    else:
-        print "not logged in"
-        return redirect("/")
-
-
-########### ROUTES FOR AJAX REQUESTS ############
-
 @app.route('/quote')
 def return_quote():
     """Returns random quote from QUOTES."""
@@ -72,13 +53,6 @@ def return_msg():
     template_type = request.form.get('template_type')
     msg = random_message(template_type)
     return jsonify({"message": msg})
-
-
-# @app.route('/contact.json', methods=['POST'])
-# def return_contact_info():
-#     contact_id = request.form.get('contact_id')
-#     contact = Contact.query.get(contact_id)
-#     return jsonify({'name': contact.name, 'email': contact.email, 'address': contact.address, 'phone': contact.phone})
 
 
 def add_fb_conctacts(contacts_list):
@@ -133,8 +107,6 @@ def fb_register():
         return jsonify({'user_id':new_user.id, 'result': 'Newly registered user!'})
 
 
-# END JSON ROUTES
-
 @app.route('/')
 def index():
     """Homepage."""
@@ -146,19 +118,23 @@ def index():
         return render_template("homepage4nl.html")
 
 
+@app.route('/profile')
+def return_template():
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
+    if user:
+        try:
+            return render_template('test.html', user=user)
+        except:
+            pass
+    else:
+        return redirect("/")
+
 @app.route('/logout')
 def log_out():
-    """Log user out; clear out session; confirm log out; redirect to homepage"""
+    """Log user out; clear out session; redirect to homepage"""
     del session['user_id']
-    flash("You have successfully logged out!")
     return redirect("/")
-
-
-# @app.route('/register_login')
-# def register_form():
-#     """Prompts user to register/sign in"""
-#     return render_template("register_login_form.html")
-
 
 @app.route('/register', methods=['POST'])
 def register_process():
@@ -172,7 +148,6 @@ def register_process():
     phone = request.form.get('phone')
     # Fetch that user from DB as object
     db_user = User.query.filter(User.email == email).first()
-
     # If that user exists in DB:
     if db_user:
         # Alert the email is already in use; prompt them to login instead
@@ -180,11 +155,13 @@ def register_process():
         return redirect('/')
     else:
         # Register new user; add to DB; log them in; save user_id to session
-        new_user = User(email=email, password=hashed_value, fname=fname, lname=lname,
+        new_user = User(email=email, 
+                        password=hashed_value, 
+                        fname=fname, 
+                        lname=lname,
                         phone=phone)
         db.session.add(new_user)
         db.session.commit()
-        flash("You're now added as a new user! Welcome!")
         session['user_id'] = new_user.id
         return redirect('/profile')
 
@@ -204,7 +181,6 @@ def login_process():
         if check_password_hash(password, login_password):
             session['user_id'] = db_user.id # add user_id to the session
             flash("You have successfully logged in!")
-            # url = '/users/{}'.format(db_user.id)
             return redirect('/profile')
         else:
             # If password doesn't match, redirect to register/login
@@ -215,52 +191,31 @@ def login_process():
         flash("Email does not exist in database: please register")
         return redirect('/')
 
-
-# @app.route('/users/<user_id>')
-# def user_profile(user_id):
-#     """Shows specific user's info; all of their events and contacts."""
-#     user = User.query.get(user_id)
-#     contacts = Contact.query.filter(Contact.user_id == user_id).all()
-#     upcoming_events = Event.query.order_by(Event.date.asc()).limit(5)
-#     return render_template("user_profile.html", user=user, contacts=contacts, upcoming_events=upcoming_events)
-
-
-# @app.route('/add_event')
-# def add_event():
-#     """Let logged in users go to the new event form."""
-#     user_id = session.get("user_id")
-#     if user_id:
-#         user = User.query.get(user_id)
-#         return render_template("event_form.html", user=user)
-#     else:
-#         flash("You must log in or register to add events")
-#         return redirect("/")
-
 @app.route('/contact.json', methods=['POST'])
 def return_contact_info():
     contact_id = request.form.get('contact_id')
     contact = Contact.query.get(contact_id)
-    return jsonify({'id':contact.id, 'name': contact.name, 'email': contact.email, 'address': contact.address, 'phone': contact.phone})
+    return jsonify({'id':contact.id, 'name': contact.name, 'email': contact.email, 
+                    'address': contact.address, 'phone': contact.phone})
 
 
 @app.route('/add_event', methods=['POST'])
 def handle_event_form():
     """Validates and adds new event and template to DB."""
     # Need to add the contact and template before creating an event
-
     name = request.form.get('contact_name')
     email = request.form.get('contact_email')
     phone = request.form.get('contact_phone')
     address = request.form.get('contact_address')
     user_id = session.get("user_id")
-    new_contact = Contact(name=name, email=email, phone=phone, address=address, user_id=user_id)
+    new_contact = Contact(name=name, 
+                          email=email, 
+                          phone=phone, 
+                          address=address, 
+                          user_id=user_id)
     db.session.add(new_contact)
     db.session.commit()
-
-    # get inputs from form for template text
-    # greet = request.form.get('greet')
     greet = "Hi"
-    # sign_off = request.form.get('sign_off')
     sign_off = "Yours"
     body = request.form.get('body')
     user_fname = User.query.get(user_id).fname
@@ -277,8 +232,10 @@ def handle_event_form():
     # add event
     contact_id = new_contact.id
     date = request.form.get('date')
-    print date
-    new_event = Event(contact_id=contact_id, user_id=user_id, template_id=new_template.id, date=date)
+    new_event = Event(contact_id=contact_id, 
+                      user_id=user_id, 
+                      template_id=new_template.id, 
+                      date=date)
     db.session.add(new_event)
     db.session.commit()
 
@@ -290,21 +247,6 @@ def handle_event_form():
     # redirect to user profile
     flash("You have successfully added a new event for {}!".format(name))
     return redirect('/profile')
-
-
-@app.route('/edit_event/<event_id>')
-def show_event(event_id):
-    """Show specific event to view or modify"""
-
-    user_id = session.get("user_id") # make sure the user is logged in
-    if user_id:
-        user = User.query.get(user_id)
-        event = Event.query.get(event_id)
-        return render_template("edit_event.html", event=event, user=user)
-    else:
-        flash("You must log in or register to modify events")
-        return redirect("/")
-
 
 
 @app.route('/handle_edits', methods=['POST'])
@@ -353,20 +295,6 @@ def remove_event():
         flash("You must log in or register to remove events")
         return redirect("/")
 
-
-# @app.route('/remove_contact/<contact_id>')
-# def confirm(contact_id):
-#     """Confirmation page to delete contact (and their events,templates) from DB."""
-#     user_id = session.get("user_id")
-#     if user_id:
-#         contact = Contact.query.get(contact_id)
-#         return render_template('remove_contact.html', contact=contact)
-#     else:
-#         flash("You must log in or register to remove contacts")
-#         return redirect("/")
-
-
-    
 @app.route('/remove_contact', methods=['POST'])
 def remove_contact():
     """Delete contact (and their events, and templates) from DB."""
@@ -375,7 +303,7 @@ def remove_contact():
     if user_id:
         # delete the ContactEvent association 
         ContactEvent.query.filter(ContactEvent.contact_id == contact_id).delete()
-        #### delete their Events and their templates    
+        # delete their Events and their templates    
         events = Event.query.filter(Event.contact_id == contact_id).all()
         # get the template ids for all of the events for that one contact
         template_ids = []
@@ -392,12 +320,10 @@ def remove_contact():
         Contact.query.filter(Contact.id == contact_id).delete()
         db.session.commit()
         flash("You have successfully deleted this contact")
-        # user_id = session.get('user_id')
         return redirect("/profile")
     else:
         flash("You must log in or register to remove contacts")
         return redirect("/")
-
 
 
 ####### specifically given a contact #################
@@ -413,7 +339,6 @@ def add_event_for_contact(contact_id):
     else:
         flash("You must log in or register to add events")
         return redirect("/")
-
 
 
 @app.route('/handle_new_event_for_contact', methods=['POST'])
@@ -445,10 +370,8 @@ def handle_new_event_for_contact():
             contact.address = address
             db.session.commit()
     # get inputs from form for template text
-    # greet = request.form.get('greet')
     greet = "Hi"
-    # sign_off = request.form.get('sign_off')
-    sign_off = "Yours"
+    sign_off = "Best"
     body = request.form.get('body')
     contact_fname = contact.name.encode('utf-8').split()[0]
     user_fname = user.fname
@@ -461,7 +384,10 @@ def handle_new_event_for_contact():
     db.session.commit()
     # add event
     date = request.form.get('date')
-    new_event = Event(contact_id=contact_id, user_id=user_id, template_id=new_template.id, date=date)
+    new_event = Event(contact_id=contact_id, 
+                      user_id=user_id, 
+                      template_id=new_template.id, 
+                      date=date)
     db.session.add(new_event)
     db.session.commit()
     # add ContactEvent association
@@ -470,18 +396,6 @@ def handle_new_event_for_contact():
     db.session.commit()
     flash("You have successfully added a new event for {}!".format(contact.name.encode('utf-8')))
     return redirect("/profile")
-
-
-# @app.route('/edit_profile')
-# def edit_profile():
-#     user_id = session.get('user_id')
-#     if user_id:
-#         user = User.query.get(user_id)
-#         return render_template('edit_profile.html', user=user)
-#     else:
-#         flash("You must log in or register to edit your profile")
-#         return redirect("/")
-
 
 @app.route('/e_profile', methods=['POST'])
 def handle_profile_edits():
@@ -503,17 +417,6 @@ def handle_profile_edits():
         flash("You must log in or register to add events")
         return redirect("/")
 
-
-@app.route('/edit_contact/<contact_id>')
-def edit_contact(contact_id):
-    user_id = session.get('user_id')
-    if user_id:
-        user = User.query.get(user_id)
-        contact = Contact.query.get(contact_id)
-        return render_template('edit_contact.html', contact=contact)
-    else:
-        flash("You must log in or register to add events")
-        return redirect("/")
 
 
 @app.route('/edit_contact/<contact_id>', methods=['POST'])
@@ -569,7 +472,7 @@ def handle_reminder_response():
 
     if "event_id" in user_response.lower():
         eindex = user_response.index("event_id")
-        # Get event_id from incoming text (recipients were instructed to end reply with 'event_id=XX')
+        # Get event_id from incoming text
         event_id = int(user_response[(eindex + len("event_id=")):])
         event = Event.query.get(event_id)
         new_text = user_response[:eindex].rstrip()
@@ -590,7 +493,9 @@ def handle_reminder_response():
                 if event.date == tmrw:
                     # Will unfortunately have to send this to every event tomorrow
                     my_msg = "You didn't add 'event_id={id}' in your response. Please text us the same message with the 'event_id={id}' at the end".format(id=event.id)
-                    message = client.messages.create(to=from_number, from_=to_number, body=my_msg)
+                    message = client.messages.create(to=from_number, 
+                                                     from_=to_number, 
+                                                     body=my_msg)
 
 
 
@@ -605,7 +510,6 @@ if __name__ == "__main__":
         app.run(port=5000, host='0.0.0.0')
 
     def run_jobs(app):
-        # import pdb; pdb.set_trace()
         sched = threading.Thread(name='schedule1', target=schedule1)
         app = threading.Thread(name='app', target=run_app)
         sched.start()

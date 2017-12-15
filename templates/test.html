@@ -3,10 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="http://rs915.pbsrc.com/albums/ac354/Leigh_1995_clh/Harry%20Potter/Hedwig.png~c200">
-<!--     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="msapplication-tap-highlight" content="no"> -->
-
     <title>Profile</title>
     <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,200,500,600,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -40,7 +36,6 @@
             <li class=""><a href="/profile">Home</a></li>
             <li><a data-toggle="modal" data-target="#editprofile-modal">My Info</a></li>
             <li class=""><a data-toggle="modal" data-target="#eventform-modal">New Message</a></li>
-            <li class=""><a data-toggle="modal" data-target="#eventform-modal">New Message</a></li>
             <li><a href="/logout" id='logoutbutton'>Log Out</a></li>
           </ul>
           </ul>
@@ -57,9 +52,7 @@
 
 <div class="container">
 <h3 style='color:#26466D; font-weight:bold'>&#8678; Queued Messages</h3>
-  <!-- <h4><a data-toggle="modal" data-target="#eventform-modal">&#10753; New Event</a></h4> -->
   <div class="row">
-
 
      {% for event in user.events|sort(attribute='date') %} 
           {% if not event.job_done %}
@@ -145,16 +138,9 @@
 
 
           
-          <!-- <label for="subject">Message subject</label>  -->
           <input type='text' name='template_name' placeholder='Message Subject'required> <br>
           <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" placeholder='Date to be sent'required/><br>
               
-<!--           How do you want to greet them? 
-            <select name='greet'>
-                <option value='Dear'>Dear</option>
-                <option value='Hey'>Hey</option>
-                <option value='Hello'>Hello</option>
-            </select> <br> -->
       <label for='template_text'>Message</label> <br>
 
             <select class='template_type' name='template_type'>
@@ -168,13 +154,6 @@
 You're awesome!
                 </textarea>
                 <br>
-
-<!--         Sign off
-            <select name='sign_off'>
-                <option value='Sincerely'>Sincerely</option>
-                <option value='Yours'>Yours</option>
-                <option value='Best'>Best</option>
-              </select> <br><br> -->
             
           <input type="submit" class="login loginmodal-submit" id='base-new-submit' value="Add New Contact/Event">
           </form>
@@ -193,7 +172,6 @@ You're awesome!
 
     </div>
 
-<small>Facebook Friends</small>
     <div class="row active-with-click grid">
 {% for contact in user.contacts|sort(attribute='name') %}
 
@@ -306,13 +284,7 @@ You're awesome!
               <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" required/><br>
           
           <label for="subject">Message subject</label> <input type='text' name='template_name' required> <br>
-           
-           <!-- <label for=greet>How do you want to greet them? </label>   
-            <select name='greet'>
-                <option value='Dear'>Dear</option>
-                <option value='Hey'>Hey</option>
-                <option value='Hello'>Hello</option>
-            </select> <br> -->
+          
     
         <label for="message">Message</label><br>
             <select class='template_type2' name='template_type2'>
@@ -324,13 +296,6 @@ You're awesome!
             <br>
                 <textarea class='template_textarea2' name="body">You're awesome!</textarea>
                 <br>
-
-<!--         How do you want to sign off? 
-            <select name='sign_off'>
-                <option value='Sincerely'>Sincerely</option>
-                <option value='Yours'>Yours</option>
-                <option value='Best'>Best</option>
-              </select> <br><br> -->
             
             <input type='hidden' name='contact_id' value='{{ contact.id }}'>
           <input type="submit" class="login loginmodal-submit" id='user-new-submit' value="Add Event">
@@ -418,7 +383,6 @@ You're awesome!
     </div>
 </section>
 
-<!-- <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script> -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://unpkg.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
 <script scr="/static/project.js"></script>

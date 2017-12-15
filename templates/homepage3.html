@@ -1,390 +1,333 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html>
-
-
 <head>
   <meta charset='UTF-8'>
   <link rel="icon" href="http://rs915.pbsrc.com/albums/ac354/Leigh_1995_clh/Harry%20Potter/Hedwig.png~c200">
-    <link rel="stylesheet" href="/static/styles.css">
-    <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,200,500,600,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="/static/project.js"></script>
-    <title>Keep in Touch</title>
+  <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,200,500,600,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="/static/project.js"></script>
+  <title>Keep in Touch</title>
+  <style>
+    html {
+        position: relative;
+        min-height: 100%;
+    }
+    body {
+        background-color: #ECEFF1;
+        color: #37474F;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 300;
+        font-size: 16px;
+    }
+    h1, h2, h3 {
+        font-weight: 100;
+    }
+    .grid-item {
+        text-align: center;
+        width: 200px;
+        padding: 15px;
+        margin-top:10px;
+        background-color: #F0FFFF;
+
+    }
+
+    .img-circle{
+        border-radius: 50%;
+        display: block;
+        margin: auto;
+    }
+
+    div {
+        text-align: center;
+    }
+
+    footer {
+      font-size: 12px;
+      position: relative;
+      bottom:0;
+    }
+
+    /****** LOGIN MODAL ******/
+    .loginmodal-container {
+      padding: 30px;
+      max-width: 350px;
+      width: 100% !important;
+      background-color: #F7F7F7;
+      margin: 0 auto;
+      border-radius: 2px;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .loginmodal-container h1 {
+      text-align: center;
+      font-size: 1.8em;
+    }
+
+    .loginmodal-container input[type=submit] {
+      width: 100%;
+      display: block;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .loginmodal-container input[type=text], input[type=date],input[type=password], input[type=phone], input[type=email] {
+      height: 30px;
+      font-size: 14px;
+      width: 90%;
+      margin-bottom: 10px;
+      -webkit-appearance: none;
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      border-top: 1px solid #c0c0c0;
+      /* border-radius: 2px; */
+      padding: 0 8px;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+    }
+
+    .loginmodal-container input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, input[type=date]:hover, input[type=phone]:hover {
+      border: 1px solid #b9b9b9;
+      border-top: 1px solid #a0a0a0;
+      -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+      -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .loginmodal {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      height: 36px;
+      padding: 0 8px;
+
+    }
+
+    .loginmodal-submit{
+      border: 0px;
+      color: #fff;
+      text-shadow: 0 1px rgba(0,0,0,0.1); 
+      background-color: #4d90fe;
+      padding: 17px 0px;
+      font-size: 14px;
+    }
 
 
-<style type="text/css">
+    .loginmodal-submit:hover {
+      border: 0px;
+      text-shadow: 0 1px rgba(0,0,0,0.3);
+      background-color: #357ae8;
+    }
 
-        html {
-            position: relative;
-            min-height: 100%;
-        }
-        body {
-            background-color: #ECEFF1;
-            color: #37474F;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 300;
-            font-size: 16px;
-        }
-        h1, h2, h3 {
-            font-weight: 100;
-        }
-        .grid-item {
-            text-align: center;
-            width: 200px;
-            padding: 15px;
-            margin-top:10px;
-            background-color: #F0FFFF;
+    .loginmodal-container a {
+      text-decoration: none;
+      color: #666;
+      font-weight: 400;
+      text-align: center;
+      display: inline-block;
+      opacity: 0.6;
+      transition: opacity ease 0.5s;
+    } 
 
-        }
-
-        .img-circle{
-            border-radius: 50%;
-            display: block;
-            margin: auto;
-        }
-
-        div {
-            text-align: center;
-        }
+    .login-help{
+      font-size: 12px;
+    }
 
 
+    /****** NAVBAR ******/
 
-/****** LOGIN MODAL ******/
-.loginmodal-container {
-  padding: 30px;
-  max-width: 350px;
-  width: 100% !important;
-  background-color: #F7F7F7;
-  margin: 0 auto;
-  border-radius: 2px;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-}
+    .navbar-default{
+      background-color: transparent; !important; 
+      border-color: none;
+    }
 
-.loginmodal-container h1 {
-  text-align: center;
-  font-size: 1.8em;
-}
+    .navbar-default .navbar-nav > .active > a,
+    .navbar-default .navbar-nav > .active > a:hover,
+    .navbar-default .navbar-nav > .active > a:focus {
+      background-color: transparent;
+    }
 
-.loginmodal-container input[type=submit] {
-  width: 100%;
-  display: block;
-  margin-bottom: 10px;
-  position: relative;
-}
-
-
-.loginmodal-container input[type=text], input[type=date],input[type=password], input[type=phone], input[type=email] {
-  height: 30px;
-  font-size: 14px;
-  width: 90%;
-  margin-bottom: 10px;
-  -webkit-appearance: none;
-  background: #fff;
-  border: 1px solid #d9d9d9;
-  border-top: 1px solid #c0c0c0;
-  /* border-radius: 2px; */
-  padding: 0 8px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-}
-
-.loginmodal-container input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, input[type=date]:hover, input[type=phone]:hover {
-  border: 1px solid #b9b9b9;
-  border-top: 1px solid #a0a0a0;
-  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-}
-
-.loginmodal {
-  text-align: center;
-  font-size: 14px;
-  font-weight: 700;
-  height: 36px;
-  padding: 0 8px;
-
-}
-
-.loginmodal-submit{
-  /* border: 1px solid #3079ed; */
-  border: 0px;
-  color: #fff;
-  text-shadow: 0 1px rgba(0,0,0,0.1); 
-  background-color: #4d90fe;
-  padding: 17px 0px;
-  font-size: 14px;
-  /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#4787ed)); */
-}
-
-
-.loginmodal-submit:hover {
-  /* border: 1px solid #2f5bb7; */
-  border: 0px;
-  text-shadow: 0 1px rgba(0,0,0,0.3);
-  background-color: #357ae8;
-  /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#357ae8)); */
-}
-
-.loginmodal-container a {
-  text-decoration: none;
-  color: #666;
-  font-weight: 400;
-  text-align: center;
-  display: inline-block;
-  opacity: 0.6;
-  transition: opacity ease 0.5s;
-} 
-
-.login-help{
-  font-size: 12px;
-}
-
-
-/*navbar*/
-
-.navbar-default{
-  background-color: transparent; !important; 
-  border-color: none;
-}
-.navbar-default .navbar-header > a {
-}
-.navbar-default .navbar-nav > li > a{
-}
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  background-color: transparent;
-}
-
-
-.tembus{
-  background-color: transparent !important;
-}
-.hvrcenter {
-  display: inline-block;
-  vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px transparent;
-  position: relative;
-  overflow: hidden;
-}
-.hvrcenter:before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 50%;
-  right: 50%;
-  bottom: 0;
-  background: #ECF0F1;
-  height: 2px;
-  -webkit-transition-property: left, right;
-  transition-property: left, right;
-  -webkit-transition-duration: 0.3s;
-  transition-duration: 0.3s;
-  -webkit-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
-}
-.hvrcenter:hover:before, .hvrcenter:focus:before, .hvrcenter:active:before {
-  left: 0;
-  right: 0;
-}
-
-
-</style>
-
-
+    .tembus{
+      background-color: transparent !important;
+    }
+    .hvrcenter {
+      display: inline-block;
+      vertical-align: middle;
+      -webkit-transform: perspective(1px) translateZ(0);
+      transform: perspective(1px) translateZ(0);
+      box-shadow: 0 0 1px transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .hvrcenter:before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: 50%;
+      right: 50%;
+      bottom: 0;
+      background: #ECF0F1;
+      height: 2px;
+      -webkit-transition-property: left, right;
+      transition-property: left, right;
+      -webkit-transition-duration: 0.3s;
+      transition-duration: 0.3s;
+      -webkit-transition-timing-function: ease-out;
+      transition-timing-function: ease-out;
+    }
+    .hvrcenter:hover:before, .hvrcenter:focus:before, .hvrcenter:active:before {
+      left: 0;
+      right: 0;
+    }
+  </style>
 </head>
 
 
 <body>
-
 <div id="fb-root"></div>
 
 <!-- NAVBAR -->
-
-
 <div>
-    <nav class="navbar navbar-default tembus">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span> 
-          </button>
-          <a class="navbar-brand" href="/">Keep in Touch</a>
-        </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-          <ul class="nav navbar-nav navbar-right">
-            <li class=""><a href="/profile">My Profile</a></li>
-            <li><a data-toggle="modal" data-target="#editprofile-modal">Edit My Profile</a></li>
-            <li class=""><a data-toggle="modal" data-target="#eventform-modal">Create New Event</a></li>
-            <li><a href="/logout" id='logoutbutton'>Log Out</a></li>
-          </ul>
-          </ul>
-        </div>
+  <nav class="navbar navbar-default tembus">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span> 
+        </button>
+        <a class="navbar-brand" href="/">Keep in Touch</a>
       </div>
-    </nav>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav navbar-right">
+          <li class=""><a href="/profile">My Profile</a></li>
+          <li><a data-toggle="modal" data-target="#editprofile-modal">Edit My Profile</a></li>
+          <li class=""><a data-toggle="modal" data-target="#eventform-modal">Create New Event</a></li>
+          <li><a href="/logout" id='logoutbutton'>Log Out</a></li>
+        </ul>
+        </ul>
+      </div>
+    </div>
+  </nav>
 </div>
 
 
  <!-- EDIT PROFILE MODAL -->
-      <div class="modal fade" id="editprofile-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-              <div class="modal-dialog">
-              <div class="loginmodal-container">
+<div class="modal fade" id="editprofile-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="loginmodal-container">
 
-               <button data-dismiss="modal" class="close" type="button">
-                <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
-              </button>
+      <button data-dismiss="modal" class="close" type="button">
+        <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+      </button>
 
-                <h1>Edit My Info</h1><br>
-                <form action='/e_profile', method='POST'>
-                   
-                    <!-- <label for="fname">First name</label> -->
-                    <input type="text" name="fname" placeholder="First Name" value='{{ user.fname }}'>
-                    
-                    <!-- <label for="lname">Last name</label> -->
-                    <input type="text" name="lname" placeholder="Last Name" value='{{ user.lname }}'>
-                    
-                    <!-- <label for="email">Email</label> -->
-                    <input type="email" name="email" placeholder="Email" value='{{ user.email }}'>
+      <h1>Edit My Info</h1><br>
+        <form action='/e_profile', method='POST'>
+            <input type="text" name="fname" placeholder="First Name" value='{{ user.fname }}'>
+            <input type="text" name="lname" placeholder="Last Name" value='{{ user.lname }}'>
+            <input type="email" name="email" placeholder="Email" value='{{ user.email }}'>
+            <input type="phone" name="phone" placeholder="Phone" value='{{ user.phone }}'>
+            <input type="submit" class="login loginmodal-submit" value="Save">
+        </form>
 
-                    <!-- <label for="phone">Phone</label> -->
-                    <input type="phone" name="phone" placeholder="Phone" value='{{ user.phone }}'>
-                
-                <input type="submit" class="login loginmodal-submit" value="Save">
-                </form>
-
-                </div>
-              </div>
-            </div>
+      </div>
+  </div>
+</div>
 <!-- END EDIT PROFILE MODAL -->
 
 
 
 <!-- ADD TOTALLY NEW EVENT/CONTACT MODAL :: event_form.html -->
-        <div class="modal fade" id="eventform-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog">
-        <div class="loginmodal-container">
-         <button data-dismiss="modal" class="close" id='base-new-close' type="button">
-          <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
-        </button>
+<div class="modal fade" id="eventform-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+  <div class="loginmodal-container">
+   <button data-dismiss="modal" class="close" id='base-new-close' type="button">
+    <span aria-hidden="true">×</span> <span class="sr-only">Close</span></button>
+    <h1>Create New Event</h1><br>
+    <form id='basenewevent' class='newevent' action='/add_event', method='POST'>
+      <label for="fname">Contact's Name</label>
+        <select class='choose-existing' name='choose-existing'>
+        <option disabled selected value>Choose from existing</option>
+        {% for contact in user.contacts|sort(attribute='name') %}
+          <option value='{{ contact.id }}'>{{ contact.name }}</option>
+        {% endfor %}
+      </select><br>
+        <!-- if choose-existing then jQuery will set hidden input value of id -->
+      <input type='hidden' name='contact_id'>
+      <input type="text" name="contact_name" placeholder="New Contact Name"><br>
+      <label for="email">Contact's Email</label>
+      <input type="email" name="contact_email" placeholder="Email" required>
+      <label for="address">Contact's Address</label>
+      <input type="text" name="contact_address" placeholder="Address">
+      <label for="phone">Contact's Phone</label>
+      <input type="phone" name="contact_phone" placeholder="+1">
 
-          <h1>Create New Event</h1><br>
-          <form id='basenewevent' class='newevent' action='/add_event', method='POST'>
+      <label for="date">Date to be sent</label> 
+        <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" required/><br>
 
-              <label for="fname">Contact's Name</label>
+      <label for="subject">Message subject</label> <input type='text' name='template_name' required> <br>
+        
+      How do you want to greet them? 
+      <select name='greet'>
+          <option value='Dear'>Dear</option>
+          <option value='Hey'>Hey</option>
+          <option value='Hello'>Hello</option>
+      </select> <br>
 
-                <select class='choose-existing' name='choose-existing'>
-                <option disabled selected value>Choose from existing</option>
-                {% for contact in user.contacts|sort(attribute='name') %}
-                  <option value='{{ contact.id }}'>{{ contact.name }}</option>
-                {% endfor %}
-              </select>
-              <br>
-              <!-- if choose-existing then jQuery will set hidden input value of id -->
-              <input type='hidden' name='contact_id'>
-              <input type="text" name="contact_name" placeholder="New Contact Name"><br>
 
-              <label for="email">Contact's Email</label>
-              <input type="email" name="contact_email" placeholder="Email" required>
-              
-              <label for="address">Contact's Address</label>
-              <input type="text" name="contact_address" placeholder="Address">
-            
-              <label for="phone">Contact's Phone</label>
-              <input type="phone" name="contact_phone" placeholder="+1">
-
-          <label for="date">Date to be sent</label> 
-              <input type="date" name='date' class="datefield" min="" max="" data-date-split-input="true" required/><br>
-          
-          <label for="subject">Message subject</label> <input type='text' name='template_name' required> <br>
-              
-          How do you want to greet them? 
-            <select name='greet'>
-                <option value='Dear'>Dear</option>
-                <option value='Hey'>Hey</option>
-                <option value='Hello'>Hello</option>
-            </select> <br>
-    
-
-        What do you want them to know? <br> ...or choose a prefilled message if you'd like!         
-            <select class='template_type' name='template_type'>
-                <option disabled selected value>Select prefilled</option>
-                <option value='ty'>Thank you</option>
-                <option value='hb'>Happy birthday</option>
-                <option value='fup'>Follow Up</option>
-                <option value='markov'>Random Generator</option>
-            </select> 
-            <br>
-                <textarea class='template_textarea' name="body">
+    What do you want them to know? <br> ...or choose a prefilled message if you'd like!         
+      <select class='template_type' name='template_type'>
+          <option disabled selected value>Select prefilled</option>
+          <option value='ty'>Thank you</option>
+          <option value='hb'>Happy birthday</option>
+          <option value='fup'>Follow Up</option>
+          <option value='markov'>Random Generator</option>
+      </select> <br>
+          <textarea class='template_textarea' name="body">
 You're awesome!
-                </textarea>
-                <br>
+          </textarea><br>
 
-        How do you want to sign off? 
-            <select name='sign_off'>
-                <option value='Sincerely'>Sincerely</option>
-                <option value='Yours'>Yours</option>
-                <option value='Best'>Best</option>
-              </select> <br><br>
-            
-
-          <input type="submit" class="login loginmodal-submit" id='base-new-submit' value="Add New Contact/Event">
-          </form>
-
-          </div>
-        </div>
-      </div>
-<!-- END ADD TOTALLY NEW EVENT/CONTACT MODAL -->  
-
-
-
-
-
-<div class="container">
-
-
-
-  <div class="row">
-    <div class="col-sm-10">
-      <img src="/static/landingpage.png">
+    How do you want to sign off? 
+      <select name='sign_off'>
+          <option value='Sincerely'>Sincerely</option>
+          <option value='Yours'>Yours</option>
+          <option value='Best'>Best</option>
+        </select> <br><br>
+    
+        <input type="submit" class="login loginmodal-submit" id='base-new-submit' value="Add New Contact/Event">
+      </form>
 
     </div>
   </div>
 </div>
+<!-- END ADD TOTALLY NEW EVENT/CONTACT MODAL -->  
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <img src="/static/landingpage.png">
+    </div>
+  </div>
+</div>
+
 
 <br>
 <br>
 <br>
 
-
-  <hr>
-
+<hr>
 <footer>
-          <div class="container">
-            <div class="col-sm-12" >
-                <span> 
-
-
-                  <b>Relationships are important. </b>Keep in Touch helps you automate keeping in touch with people, meaningfully or at all.
-
-                </span>
-                <br><br>
-              <span id="quote-text"></span> 
-              <br><br>
-
-          </div>
-          </div>
-
+  <div class="container">
+    <div class="col-sm-12">
+      <span> 
+        <b>Relationships are important. </b>Keep in Touch helps you automate keeping in touch with people, meaningfully or at all.
+        </span><br><br> 
+        <span id="quote-text"></span><br><br>
+    </div>
+  </div>
 </footer>
-
 <script src="/static/project.js"></script>
-
 </body>
 </html>
