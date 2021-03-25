@@ -64,7 +64,7 @@ pyOpenSSL==17.3.0
 python-dateutil==2.6.1
 python-http-client==3.0.0
 pytz==2017.3
-PyYAML==3.11
+PyYAML==5.4
 pyzmq==16.0.2
 queuelib==1.4.2
 requests==2.7.0
