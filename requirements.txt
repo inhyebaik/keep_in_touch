@@ -42,7 +42,7 @@ jupyter-core==4.3.0
 lxml==4.1.1
 markovify==0.6.4
 MarkupSafe==0.23
-mistune==0.7.4
+mistune==0.8.1
 nbconvert==5.3.1
 nbformat==4.4.0
 pandocfilters==1.4.2
